@@ -1095,7 +1095,7 @@ pre{white-space:pre-wrap;font:inherit;background:var(--sf2);border-radius:.6rem;
 <section><h2>Posts do mês</h2><ol class="idx">${ps.map(x=>`<li><a href="#${esc(x.id)}"><span>${x.dia}/${p.mes+1} ${DIAS_C[dow(x.dia,p.mes,p.ano)]}</span><b>${esc(x.titulo||x.tema)}</b></a></li>`).join("")}</ol></section>
 ${(e.pilares||[]).length?`<section><h2>Estratégia</h2><ul>${e.pilares.map(pl=>`<li><b>${esc(pl.nome)} (${+pl.pct||0}%)</b>: ${esc(pl.descricao)}</li>`).join("")}</ul>${e.frequencia?`<p><b>Frequência:</b> ${esc(e.frequencia)}</p>`:""}</section>`:""}
 ${ps.map(post).join("")}
-<p class="sub" style="margin-top:2rem;text-align:center">Pauta feita pela isadsign · @isadsign.co</p></main></body></html>`}
+<p class="sub" style="margin-top:2rem;text-align:center">Pauta feita pela isadsign · @isadsign.co</p></main>`}
 /* PDF with a clickable index: each line jumps to its post, each post links back */
 let jspdfLib=null;
 function loadJsPdf(){if(jspdfLib)return jspdfLib;jspdfLib=new Promise((res,rej)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";s.onload=()=>window.jspdf?res(window.jspdf.jsPDF):rej(new Error("jspdf"));s.onerror=()=>{jspdfLib=null;rej(new Error("jspdf"))};document.head.appendChild(s)});return jspdfLib}
