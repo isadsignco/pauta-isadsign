@@ -1,15 +1,11 @@
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pauta isadsign</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <meta name="robots" content="noindex">
-<title>Sua pauta isadsign</title>
 <style>
-/* Layout: frosted top bar, hero with the month, then stacked cards (sobre, estratégia, calendário, posts). Post opens in a sheet. Read-only: the client views and copies, never edits. */
+/* Layout: frosted top bar; a code gate first, then the month (hero, próximo post, calendário, posts, estratégia, marca) stacked in one column. Post opens in a sheet. Read-only. */
 :root{
   --bg:#f5f5f7; --surface:#ffffff; --surface-2:#f0f0f3; --fg:#1d1d1f; --fg-2:#6e6e73; --line:rgba(0,0,0,.09);
-  --accent:#d6237f; --accent-soft:rgba(214,35,127,.1); --on-accent:#ffffff;
+  --accent:#d6237f; --accent-soft:rgba(214,35,127,.1); --on-accent:#ffffff; --danger:#d70015;
   --c-car:#d6237f; --c-reel:#5856d6; --c-est:#c76a00; --c-sto:#248a3d;
   --bar:rgba(245,245,247,.78); --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 28px rgba(0,0,0,.06);
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;
@@ -18,40 +14,61 @@
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --fg:#f5f5f7; --fg-2:#98989d; --line:rgba(255,255,255,.1);
-  --accent:#ff4fa3; --accent-soft:rgba(255,79,163,.16); --on-accent:#1a0010;
+  --accent:#ff4fa3; --accent-soft:rgba(255,79,163,.16); --on-accent:#1a0010; --danger:#ff6961;
   --c-car:#ff4fa3; --c-reel:#7d7aff; --c-est:#ffb340; --c-sto:#4cd964;
   --bar:rgba(22,22,24,.72); --shadow:0 1px 2px rgba(0,0,0,.4); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --fg:#f5f5f7; --fg-2:#98989d; --line:rgba(255,255,255,.1);
-  --accent:#ff4fa3; --accent-soft:rgba(255,79,163,.16); --on-accent:#1a0010;
+  --accent:#ff4fa3; --accent-soft:rgba(255,79,163,.16); --on-accent:#1a0010; --danger:#ff6961;
   --c-car:#ff4fa3; --c-reel:#7d7aff; --c-est:#ffb340; --c-sto:#4cd964;
   --bar:rgba(22,22,24,.72); --shadow:0 1px 2px rgba(0,0,0,.4); color-scheme:dark}
 
 html{font-size:16px;-webkit-text-size-adjust:100%}
 @media (min-width:1800px){html{font-size:19px}}
 @media (min-width:2400px){html{font-size:24px}}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);font-size:1rem;line-height:1.47;letter-spacing:-.011em;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:1rem;line-height:1.47;letter-spacing:-.011em;-webkit-font-smoothing:antialiased}
 *{box-sizing:border-box}
-button{font:inherit;color:inherit;letter-spacing:inherit;cursor:pointer}
+button,input{font:inherit;color:inherit;letter-spacing:inherit}
+button{cursor:pointer}
 :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bar)}
 
 .wrap{max-width:64rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-.top{position:sticky;top:0;z-index:20;background:var(--bar);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bar);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
 .top .wrap{display:flex;align-items:center;gap:1rem;height:3.25rem}
-.brand{font-weight:600;font-size:1.0625rem;letter-spacing:-.02em;margin-right:auto;white-space:nowrap;color:inherit;text-decoration:none}
+.brand{font-weight:600;font-size:1.0625rem;letter-spacing:-.02em;margin-right:auto;white-space:nowrap}
 .brand small{font-weight:400;color:var(--fg-2);margin-left:.35rem}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;border:0;border-radius:999px;padding:.6rem 1.15rem;font-size:.9375rem;font-weight:500;white-space:nowrap;background:var(--surface-2);color:var(--fg)}
+.btn.primary{background:var(--accent);color:var(--on-accent)}
+.btn.link{background:none;color:var(--accent);padding:.4rem .2rem}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.sm{padding:.35rem .8rem;font-size:.8125rem}
 
-.hero{padding-block:3rem 1.75rem}
+/* Gate */
+.gate{max-width:26rem;margin:4rem auto;padding:2rem 1.5rem;text-align:center}
+.gate .eyebrow{justify-content:center}
+.gate h1{font-size:clamp(1.75rem,6vw,2.25rem);letter-spacing:-.03em;line-height:1.1;margin:0 0 .5rem;text-wrap:balance}
+.gate p{color:var(--fg-2);margin:0 0 1.5rem;text-wrap:pretty}
+.gate form{display:flex;flex-direction:column;gap:.75rem}
+.gate input[type=text]{width:100%;background:var(--surface-2);border:1px solid transparent;border-radius:var(--r-sm);padding:.8rem .9rem;font-family:var(--mono);font-size:1.25rem;letter-spacing:.12em;text-align:center;text-transform:uppercase;outline:none}
+.gate input[type=text]:focus{border-color:var(--accent);background:var(--surface)}
+.gate .btn.primary{padding:.8rem 1rem;font-size:1rem}
+.gate .remember{display:flex;align-items:center;justify-content:center;gap:.45rem;font-size:.875rem;color:var(--fg-2)}
+.gate .err{color:var(--danger);font-size:.875rem;margin:0}
+
+.hero{padding-block:2.75rem 1.5rem}
 .eyebrow{font-size:.8125rem;font-weight:600;color:var(--accent);margin:0 0 .4rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
-.hero h1{font-size:clamp(2.25rem,6vw,3.75rem);line-height:1.04;letter-spacing:-.035em;font-weight:700;margin:0;text-wrap:balance}
-.hero p.sub{color:var(--fg-2);font-size:clamp(1.0625rem,1.6vw,1.3125rem);margin:.75rem 0 0;max-width:40rem;text-wrap:pretty}
-.tag{font-size:.6875rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:var(--surface-2);color:var(--fg-2);border-radius:999px;padding:.15rem .5rem}
-.counts{display:flex;flex-wrap:wrap;gap:1.75rem;margin-top:1.75rem}
+.hero h1{font-size:clamp(2.1rem,6vw,3.5rem);line-height:1.04;letter-spacing:-.035em;font-weight:700;margin:0;text-wrap:balance}
+.hero p.sub{color:var(--fg-2);font-size:clamp(1.0625rem,1.6vw,1.25rem);margin:.75rem 0 0;max-width:40rem;text-wrap:pretty}
+.months{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1.25rem}
+.months button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:.35rem .85rem;font-size:.8125rem}
+.months button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.counts{display:flex;flex-wrap:wrap;gap:1.75rem;margin-top:1.5rem}
 .count b{display:block;font-size:1.875rem;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1}
 .count span{font-size:.8125rem;color:var(--fg-2);display:flex;align-items:center;gap:.35rem}
 .dot{width:.5rem;height:.5rem;border-radius:50%;display:inline-block;flex:none}
 
-.stack{display:flex;flex-direction:column;gap:1.25rem;padding-bottom:4rem}
+.stack{display:flex;flex-direction:column;gap:1.25rem;padding-bottom:3rem}
 .panel{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow)}
 .card{padding:1.4rem 1.5rem}
 @media (max-width:640px){.card{padding:1.15rem 1.1rem}}
@@ -91,10 +108,8 @@ button{font:inherit;color:inherit;letter-spacing:inherit;cursor:pointer}
 .day.today{box-shadow:inset 0 0 0 2px var(--accent)}
 .day .n{font-size:.8125rem;font-weight:600;font-variant-numeric:tabular-nums}
 .day .hol{font-size:.6875rem;color:var(--accent);line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.pill{border:0;border-radius:.4rem;padding:.2rem .35rem;font-size:.6875rem;font-weight:600;text-align:left;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.pill{border:0;border-radius:.4rem;padding:.2rem .35rem;font-size:.6875rem;font-weight:600;text-align:left;color:var(--on-accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
 .pill.Carrossel{background:var(--c-car)} .pill.Reels{background:var(--c-reel)} .pill.Estático{background:var(--c-est)} .pill.Stories{background:var(--c-sto)}
-:root[data-theme="dark"] .pill{color:#000}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pill{color:#000}}
 @media (max-width:640px){.day{min-height:3.6rem;padding:.3rem}.pill{font-size:0;height:.55rem;padding:0;border-radius:3px}.day .hol{display:none}.cal{gap:.25rem}}
 
 .toolbar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;margin-bottom:1rem}
@@ -109,19 +124,10 @@ button{font:inherit;color:inherit;letter-spacing:inherit;cursor:pointer}
 .post .pm{display:flex;align-items:center;gap:.45rem;font-size:.8125rem;color:var(--fg-2);font-variant-numeric:tabular-nums}
 .post h3{margin:0;font-size:1.0625rem;letter-spacing:-.015em;font-weight:600;line-height:1.3}
 .post p{margin:0;font-size:.875rem;color:var(--fg-2);line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;border:0;border-radius:999px;padding:.6rem 1.15rem;font-size:.9375rem;font-weight:500;white-space:nowrap;background:var(--surface-2);text-decoration:none;color:var(--fg)}
-.btn.link{background:none;color:var(--accent);padding:.4rem .2rem}
-.btn:disabled{opacity:.4;cursor:default}
-.state{padding:3.5rem 1.5rem;text-align:center;color:var(--fg-2);margin-top:3rem}
-.state h1{color:var(--fg);font-size:1.5rem;letter-spacing:-.02em;margin:0 0 .5rem}
-.state p{margin:0 auto 1.25rem;max-width:28rem}
-.foot{color:var(--fg-2);font-size:.8125rem;text-align:center;padding:0 0 3rem}
-.foot a{color:var(--accent);text-decoration:none}
+.foot{color:var(--fg-2);font-size:.8125rem;text-align:center;padding:0 0 3rem;display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;align-items:center}
 
 /* Sheet */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:40;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
-.scrim[hidden]{display:none}
 .sheet{background:var(--surface);border-radius:var(--r-lg);width:min(46rem,100%);max-height:100%;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column}
 @media (max-width:640px){.scrim{align-items:flex-end;padding:0}.sheet{border-radius:var(--r-lg) var(--r-lg) 0 0;max-height:92%;padding-bottom:env(safe-area-inset-bottom,0px)}}
 .sh-top{position:sticky;top:0;background:var(--surface);padding:1rem 1.25rem .75rem;border-bottom:1px solid var(--line);display:flex;gap:.75rem;align-items:flex-start;z-index:1}
@@ -142,7 +148,7 @@ button{font:inherit;color:inherit;letter-spacing:inherit;cursor:pointer}
 .check li::before{content:"";width:.95rem;height:.95rem;margin-top:.15rem;border-radius:.3rem;border:1.5px solid var(--fg-2)}
 .hook{background:var(--surface-2);border-radius:var(--r-sm);padding:.7rem .85rem;margin-bottom:.4rem;font-weight:500}
 .slides{display:flex;gap:.6rem;overflow-x:auto;padding-bottom:.35rem;scroll-snap-type:x mandatory}
-.slide{flex:0 0 min(15rem,78%);aspect-ratio:4/5;background:var(--surface-2);border-radius:var(--r-md);padding:1rem;scroll-snap-align:start;display:flex;flex-direction:column;gap:.5rem;overflow:auto}
+.slide{flex:0 0 min(15rem,78%);aspect-ratio:4/5;max-width:100%;background:var(--surface-2);border-radius:var(--r-md);padding:1rem;scroll-snap-align:start;display:flex;flex-direction:column;gap:.5rem;overflow:auto}
 .slide .sn{font-size:.75rem;color:var(--fg-2);font-variant-numeric:tabular-nums}
 .slide b{font-size:1.0625rem;letter-spacing:-.015em;line-height:1.25}
 .slide p{margin:0;font-size:.875rem;line-height:1.4}
@@ -153,30 +159,15 @@ button{font:inherit;color:inherit;letter-spacing:inherit;cursor:pointer}
 .beat p{margin:0 0 .2rem}
 .beat .sm{font-size:.8125rem;color:var(--fg-2)}
 .caption{white-space:pre-wrap;background:var(--surface-2);border-radius:var(--r-sm);padding:.85rem .95rem;font-size:.9375rem;line-height:1.5}
-.tags{display:flex;flex-wrap:wrap;gap:.35rem}
-.tags span{font-size:.8125rem;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:.2rem .6rem}
 .sh-nav{display:flex;justify-content:space-between;gap:.5rem;padding:.75rem 1.25rem 1.1rem;border-top:1px solid var(--line)}
 .toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:.6rem 1.1rem;border-radius:999px;font-size:.875rem;font-weight:500;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.2)}
-.toast[hidden]{display:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
-
-/* Print: the whole pauta as a document, every post expanded */
-.print-only{display:none}
-@media print{
-  :root{--bg:#fff;--surface:#fff;--shadow:none}
-  .top,.no-print,.scrim,.toast{display:none!important}
-  .print-only{display:block}
-  .panel{border:1px solid #ddd;break-inside:avoid}
-  .print-post{break-inside:avoid;border-top:1px solid #ddd;padding-top:1rem;margin-top:1rem}
-  .slides{flex-wrap:wrap;overflow:visible}.slide{aspect-ratio:auto;flex:1 1 12rem}
-}
 </style>
-</head>
-<body>
+
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="./">Pauta <small>isadsign</small></a>
-    <button type="button" class="btn no-print" id="printBtn" hidden>Salvar PDF</button>
+    <div class="brand">Pauta <small>isadsign</small></div>
+    <button type="button" class="btn sm" id="sairBtn" hidden>Sair</button>
   </div>
 </header>
 
@@ -188,6 +179,8 @@ button{font:inherit;color:inherit;letter-spacing:inherit;cursor:pointer}
 <div class="toast" id="toast" hidden></div>
 
 <script>
+/* Pauta do cliente, criptografada com o código de acesso (PBKDF2-SHA256 + AES-GCM). Gerado por cliente/gerar.mjs. */
+const ACESSO=/*ACESSO*/null/*FIM*/;
 (function(){
 const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const DIAS=["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
@@ -198,61 +191,76 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const daysIn=(m,y)=>new Date(y,m+1,0).getDate();
 const dow=(d,m,y)=>new Date(y,m,d).getDay();
+const LS="pauta-codigo";
 
-let p=null, filtroFormato="Todos", filtroPilar=null, openId=null;
+let pautas=[], p=null, filtroFormato="Todos", filtroPilar=null, openId=null;
 
 function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>el.hidden=true,2200)}
-async function copy(text){try{await navigator.clipboard.writeText(text);toast("Copiado")}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast("Copiado")}catch(_){toast("Selecione e copie o texto")}ta.remove()}}
+async function copy(text){try{await navigator.clipboard.writeText(text);toast("Copiado")}catch(e){toast("Selecione o texto e copie")}}
 function sorted(){return [...p.posts].sort((a,b)=>a.dia-b.dia||FORMATOS.indexOf(a.formato)-FORMATOS.indexOf(b.formato))}
 function today(){const n=new Date();return n.getFullYear()===p.ano&&n.getMonth()===p.mes?n.getDate():null}
-function isPast(x){const n=new Date();return new Date(p.ano,p.mes,x.dia+1)<=n}
+function isPast(x){return new Date(p.ano,p.mes,x.dia+1)<=new Date()}
+const lsGet=()=>{try{return localStorage.getItem(LS)}catch(e){return null}};
+const lsSet=v=>{try{v?localStorage.setItem(LS,v):localStorage.removeItem(LS)}catch(e){}};
 
-/* ---------- Load: ?c=<arquivo> abre pautas/<arquivo>.json ---------- */
-const param=new URLSearchParams(location.search).get("c");
-const nome=param&&/^[a-z0-9-]+$/.test(param)?param:null;
-if(param&&!nome)renderState("Link inválido","Confira o link que a isadsign enviou para você.");
-else{
-  renderState("Carregando sua pauta…","");
-  fetch(`pautas/${nome||"exemplo"}.json`,{cache:"no-cache"}).then(r=>{if(!r.ok)throw r.status;return r.json()}).then(abrir).then(data=>{
-    if(!data||!Array.isArray(data.posts))throw "formato";
-    p=data;p.exemplo=!nome;render()
-  }).catch(err=>renderState(...(err===404?["Pauta não encontrada","Esse link pode ter mudado. Peça o link atualizado para a isadsign."]:err==="chave"?["Link incompleto","Abra o link inteiro que a isadsign enviou, sem cortar o final."]:["Não foi possível abrir a pauta","Verifique a conexão e tente de novo."])))
-}
-/* Client pautas are encrypted (AES-GCM); the key is the link's #fragment, never sent to the server */
-async function abrir(f){
-  if(!f||!f.data)return f;
-  const k=location.hash.slice(1);if(!k)throw "chave";
-  const ub=s=>Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0));
-  try{const key=await crypto.subtle.importKey("raw",ub(k),"AES-GCM",false,["decrypt"]);
-    return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub(f.iv)},key,ub(f.data))))}
-  catch(e){throw "chave"}}
-function renderState(t,msg){$("#app").innerHTML=`<div class="panel state"><h1>${esc(t)}</h1>${msg?`<p>${esc(msg)}</p>`:""}${msg?`<a class="btn" href="https://instagram.com/isadsign.co" rel="noopener">Falar com a isadsign</a>`:""}</div>`}
+/* ---------- Código de acesso ---------- */
+const ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const norm=c=>String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+async function abrir(codigo){
+  const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(norm(codigo)),"PBKDF2",false,["deriveKey"]);
+  const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt:ub(ACESSO.salt),iterations:ACESSO.iter,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"]);
+  const txt=new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub(ACESSO.iv)},key,ub(ACESSO.data)));
+  return JSON.parse(txt)}
 
-/* ---------- Page ---------- */
+function gate(err){
+  $("#sairBtn").hidden=true;
+  $("#app").innerHTML=`<section class="panel gate"><p class="eyebrow">Sua pauta de conteúdo</p><h1>${esc(ACESSO?ACESSO.cliente:"Pauta")}</h1><p>Digite o código de acesso que a isadsign enviou para você.</p>
+  <form id="gateForm" autocomplete="off"><label for="codigo" class="eyebrow" style="justify-content:center;color:var(--fg-2)">Código de acesso</label><input type="text" id="codigo" inputmode="text" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX" maxlength="12" required>
+  <label class="remember"><input type="checkbox" id="lembrar" checked> Lembrar neste aparelho</label>
+  ${err?`<p class="err" role="alert">${esc(err)}</p>`:""}<button type="submit" class="btn primary" id="entrarBtn">Ver minha pauta</button></form></section>`;
+  const f=$("#gateForm"),inp=$("#codigo");
+  inp.addEventListener("input",()=>{const v=norm(inp.value).slice(0,8);inp.value=v.length>4?v.slice(0,4)+"-"+v.slice(4):v});
+  f.addEventListener("submit",async e=>{e.preventDefault();const b=$("#entrarBtn");b.disabled=true;b.textContent="Abrindo…";
+    try{const d=await abrir(inp.value);if($("#lembrar").checked)lsSet(norm(inp.value));entrar(d)}
+    catch(_){gate("Código incorreto. Confira as letras e os números e tente de novo.");$("#codigo").focus()}});
+  setTimeout(()=>inp.focus(),50)}
+
+function entrar(d){
+  pautas=(d.pautas||[]).filter(x=>x&&Array.isArray(x.posts)).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes));
+  if(!pautas.length){$("#app").innerHTML=`<section class="panel gate"><h1>Nenhuma pauta ainda</h1><p>A pauta do mês aparece aqui assim que estiver pronta.</p></section>`;return}
+  const n=new Date();p=pautas.find(x=>x.ano===n.getFullYear()&&x.mes===n.getMonth())||pautas[0];
+  $("#sairBtn").hidden=false;render()}
+$("#sairBtn").onclick=()=>{lsSet(null);pautas=[];p=null;gate()};
+
+/* ---------- Página ---------- */
 function render(){
   const mes=MESES[p.mes];
   document.title=`${p.cliente} · Pauta de ${mes}`;
-  $("#printBtn").hidden=false;
   const counts=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(c=>c[1]);
-  let h=`<section class="hero"><p class="eyebrow">${esc(p.arroba||p.nicho||"Pauta")}${p.exemplo?'<span class="tag">Exemplo</span>':""}</p>
+  let h=`<section class="hero"><p class="eyebrow">${esc(p.arroba||p.nicho||"Pauta")}</p>
   <h1>${esc(p.cliente)}: sua pauta de ${mes.toLowerCase()}</h1>
   <p class="sub">${p.estrategia&&p.estrategia.resumo?esc(p.estrategia.resumo):`Tudo o que vai ao ar em ${mes.toLowerCase()} de ${p.ano}.`}</p>
+  ${pautas.length>1?`<div class="months" role="group" aria-label="Escolher mês">${pautas.map((x,i)=>`<button type="button" data-mes="${i}" aria-pressed="${x===p}">${MESES[x.mes]} ${x.ano}</button>`).join("")}</div>`:""}
   <div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts no mês</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></section>
   <div class="stack">`;
   const t=today(),nx=t?sorted().find(x=>x.dia>=t):null;
-  if(nx)h+=`<button type="button" class="next no-print" data-post="${esc(nx.id)}"><span class="d"><b>${nx.dia}</b><small>${DIAS_C[dow(nx.dia,p.mes,p.ano)]}</small></span><span class="t"><span>${nx.dia===t?"Hoje":"Próximo post"} · ${esc(nx.formato)}</span><h3>${esc(nx.titulo||nx.tema)}</h3></span></button>`;
-  h+=calendarHTML()+postsHTML()+strategyHTML()+profileHTML()+printHTML()+`</div>`;
-  h+=`<p class="foot no-print">Pauta feita por <a href="https://instagram.com/isadsign.co" rel="noopener">@isadsign.co</a></p>`;
+  if(nx)h+=`<button type="button" class="next" data-post="${esc(nx.id)}"><span class="d"><b>${nx.dia}</b><small>${DIAS_C[dow(nx.dia,p.mes,p.ano)]}</small></span><span class="t"><span>${nx.dia===t?"Hoje":"Próximo post"} · ${esc(nx.formato)}</span><h3>${esc(nx.titulo||nx.tema)}</h3></span></button>`;
+  h+=calendarHTML()+postsHTML()+strategyHTML()+profileHTML()+`</div><p class="foot">Pauta feita pela isadsign · @isadsign.co</p>`;
   $("#app").innerHTML=h;
-  bind();
+  bind();window.scrollTo({top:0});
 }
 function bind(){
   const a=$("#app");
+  a.querySelectorAll("[data-mes]").forEach(b=>b.onclick=()=>{p=pautas[+b.dataset.mes];filtroFormato="Todos";filtroPilar=null;render()});
   a.querySelectorAll("[data-post]").forEach(b=>b.onclick=()=>openPost(b.dataset.post));
-  a.querySelectorAll("[data-filtro]").forEach(b=>b.onclick=()=>{filtroFormato=b.dataset.filtro;rerenderPosts()});
   a.querySelectorAll(".pillar").forEach(b=>b.onclick=()=>{filtroPilar=filtroPilar===b.dataset.pilar?null:b.dataset.pilar;a.querySelectorAll(".pillar").forEach(x=>x.setAttribute("aria-pressed",x.dataset.pilar===filtroPilar));rerenderPosts();if(filtroPilar)$("#postsCard").scrollIntoView({behavior:"smooth",block:"start"})});
+  bindPosts();
 }
-function rerenderPosts(){const el=$("#postsCard");el.outerHTML=postsHTML();$("#postsCard").querySelectorAll("[data-post]").forEach(b=>b.onclick=()=>openPost(b.dataset.post));$("#postsCard").querySelectorAll("[data-filtro]").forEach(b=>b.onclick=()=>{filtroFormato=b.dataset.filtro;rerenderPosts()});const cl=$("#clearPilar");if(cl)cl.onclick=()=>{filtroPilar=null;document.querySelectorAll(".pillar").forEach(x=>x.setAttribute("aria-pressed","false"));rerenderPosts()}}
+function bindPosts(){const c=$("#postsCard");
+  c.querySelectorAll("[data-post]").forEach(b=>b.onclick=()=>openPost(b.dataset.post));
+  c.querySelectorAll("[data-filtro]").forEach(b=>b.onclick=()=>{filtroFormato=b.dataset.filtro;rerenderPosts()});
+  const cl=$("#clearPilar");if(cl)cl.onclick=()=>{filtroPilar=null;document.querySelectorAll(".pillar").forEach(x=>x.setAttribute("aria-pressed","false"));rerenderPosts()}}
+function rerenderPosts(){$("#postsCard").outerHTML=postsHTML();bindPosts()}
 
 function calendarHTML(){
   const n=daysIn(p.mes,p.ano),first=dow(1,p.mes,p.ano),t=today();
@@ -266,7 +274,7 @@ function calendarHTML(){
 function postsHTML(){
   const present=FORMATOS.filter(f=>p.posts.some(x=>x.formato===f));
   const list=sorted().filter(x=>(filtroFormato==="Todos"||x.formato===filtroFormato)&&(!filtroPilar||x.pilar===filtroPilar));
-  return `<section class="panel card no-print" id="postsCard"><div class="toolbar"><h2>Posts</h2>${present.length>1?`<div class="seg" role="group" aria-label="Filtrar por formato">${["Todos",...present].map(f=>`<button type="button" data-filtro="${f}" aria-pressed="${filtroFormato===f}">${f}</button>`).join("")}</div>`:""}</div>
+  return `<section class="panel card" id="postsCard"><div class="toolbar"><h2>Posts</h2>${present.length>1?`<div class="seg" role="group" aria-label="Filtrar por formato">${["Todos",...present].map(f=>`<button type="button" data-filtro="${f}" aria-pressed="${filtroFormato===f}">${f}</button>`).join("")}</div>`:""}</div>
   ${filtroPilar?`<p class="lead">Pilar: ${esc(filtroPilar)} · <button type="button" class="btn link" id="clearPilar">ver todos</button></p>`:""}
   <div class="posts">${list.map(x=>`<button type="button" class="post${isPast(x)?" past":""}" data-post="${esc(x.id)}"><span class="pm"><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${esc(x.formato)} · ${DIAS_C[dow(x.dia,p.mes,p.ano)]}, ${x.dia}/${p.mes+1}${x.pilar?" · "+esc(x.pilar):""}</span><h3>${esc(x.titulo||x.tema)}</h3><p>${esc(x.descricao||(x.ganchos||[])[0]||x.objetivo||"")}</p></button>`).join("")||`<p class="lead">Nenhum post com esse filtro.</p>`}</div></section>`}
 
@@ -274,8 +282,8 @@ function strategyHTML(){
   const e=p.estrategia;if(!e)return "";
   const tm=(p.briefing&&p.briefing.temas)||[];
   return `<section class="panel card"><h2>Estratégia do mês</h2><p class="lead">${p.objetivo?`Objetivo: ${esc(p.objetivo)}. `:""}Os pilares mostram como o conteúdo se divide. Toque em um para ver só os posts dele.</p>
-  <div class="pillars">${(e.pilares||[]).map(pl=>`<button type="button" class="pillar" data-pilar="${esc(pl.nome)}" aria-pressed="${filtroPilar===pl.nome}"><span class="pt">${esc(pl.nome)}<span class="pct">${pl.pct}%</span></span><span class="bar"><i style="width:${Math.min(100,+pl.pct||0)}%"></i></span><p>${esc(pl.descricao)}</p></button>`).join("")}</div>
-  <div class="meta">${e.frequencia?`<span><b>Frequência</b> ${esc(e.frequencia)}</span>`:""}${(e.datas||[]).length?`<span><b>Datas do mês</b> ${e.datas.map(d=>`${d.dia}/${p.mes+1} ${esc(d.nome)}`).join(" · ")}</span>`:""}${tm.length?`<span><b>Temas</b> ${tm.map(esc).join(" · ")}</span>`:""}</div></section>`}
+  <div class="pillars">${(e.pilares||[]).map(pl=>`<button type="button" class="pillar" data-pilar="${esc(pl.nome)}" aria-pressed="${filtroPilar===pl.nome}"><span class="pt">${esc(pl.nome)}<span class="pct">${+pl.pct||0}%</span></span><span class="bar"><i style="width:${Math.min(100,+pl.pct||0)}%"></i></span><p>${esc(pl.descricao)}</p></button>`).join("")}</div>
+  <div class="meta">${e.frequencia?`<span><b>Frequência</b> ${esc(e.frequencia)}</span>`:""}${(e.datas||[]).length?`<span><b>Datas do mês</b> ${e.datas.map(d=>`${+d.dia}/${p.mes+1} ${esc(d.nome)}`).join(" · ")}</span>`:""}${tm.length?`<span><b>Temas</b> ${tm.map(esc).join(" · ")}</span>`:""}</div></section>`}
 
 function profileHTML(){
   const pf=p.perfil;if(!pf||!(pf.resumo||(pf.produtos||[]).length))return "";
@@ -287,9 +295,10 @@ function profileHTML(){
   ${(pf.diferenciais||[]).length?`<div class="fact"><h4>Diferenciais</h4>${li(pf.diferenciais.slice(0,5))}</div>`:""}
   ${pf.visual?`<div class="fact"><h4>Identidade visual</h4><p>${esc(pf.visual)}</p></div>`:""}</div></section>`}
 
-/* ---------- Post content (sheet and print share it) ---------- */
-function postBody(x,withCopy){
-  const cp=k=>withCopy?` <button type="button" data-copy="${k}">Copiar</button>`:"";
+/* ---------- Post ---------- */
+function whenTxt(x){return `${DIAS[dow(x.dia,p.mes,p.ano)]}, ${x.dia} de ${MESES[p.mes].toLowerCase()}`}
+function postBody(x){
+  const cp=k=>` <button type="button" data-copy="${k}">Copiar</button>`;
   let b="";
   if(x.descricao)b+=`<div class="sec"><h5>O que é este post</h5><p class="desc">${esc(x.descricao)}</p></div>`;
   b+=`<div class="sec kv">${x.objetivo?`<div><b>Objetivo</b><span>${esc(x.objetivo)}</span></div>`:""}${x.horario?`<div><b>Quando vai ao ar</b><span>${esc(x.horario)}</span></div>`:""}${x.metrica?`<div><b>Como vamos medir</b><span>${esc(x.metrica)}</span></div>`:""}</div>`;
@@ -303,19 +312,14 @@ function postBody(x,withCopy){
   if(x.legenda)b+=`<div class="sec"><h5>Legenda${cp("legenda")}</h5><div class="caption">${esc(x.legenda)}${(x.hashtags||[]).length?"\n\n"+esc(x.hashtags.join(" ")):""}</div></div>`;
   if(x.cta)b+=`<div class="sec"><h5>Chamada para ação</h5><p style="margin:0">${esc(x.cta)}</p></div>`;
   return b}
-function whenTxt(x){return `${DIAS[dow(x.dia,p.mes,p.ano)]}, ${x.dia} de ${MESES[p.mes].toLowerCase()}`}
-function printHTML(){return `<section class="print-only"><h2>Posts</h2>${sorted().map(x=>`<div class="print-post"><p class="eyebrow">${esc(x.formato)} · ${esc(whenTxt(x))}${x.pilar?" · "+esc(x.pilar):""}</p><h3 style="margin:0 0 .75rem">${esc(x.titulo||x.tema)}</h3><div class="sh-body" style="padding:0">${postBody(x,false)}</div></div>`).join("")}</section>`}
-
 function openPost(id){openId=id;renderSheet();$("#scrim").hidden=false;document.body.style.overflow="hidden";setTimeout(()=>{const x=$("#sheet .x");x&&x.focus()},30)}
 function closeSheet(){$("#scrim").hidden=true;document.body.style.overflow="";openId=null}
 $("#scrim").addEventListener("click",e=>{if(e.target.id==="scrim")closeSheet()});
 document.addEventListener("keydown",e=>{if(!openId)return;if(e.key==="Escape")closeSheet();if(e.key==="ArrowRight"){const n=$("#nextP");n&&!n.disabled&&n.click()}if(e.key==="ArrowLeft"){const v=$("#prevP");v&&!v.disabled&&v.click()}});
-$("#printBtn").onclick=()=>window.print();
-
 function renderSheet(){
   const list=sorted(),i=list.findIndex(x=>x.id===openId),x=list[i];if(!x)return closeSheet();
   $("#sheet").innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow"><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${esc(x.formato)}${x.pilar?" · "+esc(x.pilar):""}</p><h2 id="shTitle">${esc(x.titulo||x.tema)}</h2><p class="when">${esc(whenTxt(x))}</p></div><button type="button" class="x" aria-label="Fechar">✕</button></div>
-  <div class="sh-body">${postBody(x,true)}</div>
+  <div class="sh-body">${postBody(x)}</div>
   <div class="sh-nav"><button type="button" class="btn link" id="prevP" ${i===0?"disabled":""}>‹ Anterior</button><span style="align-self:center;color:var(--fg-2);font-size:.8125rem;font-variant-numeric:tabular-nums">${i+1} de ${list.length}</span><button type="button" class="btn link" id="nextP" ${i===list.length-1?"disabled":""}>Próximo ›</button></div>`;
   $("#sheet .x").onclick=closeSheet;
   $("#prevP").onclick=()=>{if(i>0){openId=list[i-1].id;renderSheet();$("#sheet").scrollTop=0}};
@@ -326,7 +330,9 @@ function renderSheet(){
     if(k==="telas")copy(x.telas.map((t,j)=>`Tela ${j+1}: ${t.texto}${t.recurso?" ("+t.recurso+")":""}`).join("\n"));
     if(k==="legenda")copy(x.legenda+((x.hashtags||[]).length?"\n\n"+x.hashtags.join(" "):""))});
 }
+
+/* ---------- Início ---------- */
+if(!ACESSO){$("#app").innerHTML=`<section class="panel gate"><h1>Página sem pauta</h1><p>Esta página ainda não recebeu a pauta de nenhum cliente.</p></section>`}
+else{const salvo=lsGet();if(salvo)abrir(salvo).then(entrar).catch(()=>{lsSet(null);gate()});else gate()}
 })();
 </script>
-</body>
-</html>
