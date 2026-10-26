@@ -17,6 +17,20 @@ O app roda no claude.ai, como página da Central isadsign, e usa o Claude da pr�
 ## Arquivos
 
 - `index.html`: o app inteiro (HTML, CSS e JavaScript em um arquivo).
+- `site/index.html`: página do cliente, só de leitura, para ele ver a pauta do mês.
+- `site/pautas/*.json`: uma pauta por arquivo. `exemplo.json` é a do Café Aurora.
+
+## Página do cliente
+
+O cliente abre `site/?c=<arquivo>` e vê a pauta de `site/pautas/<arquivo>.json`: resumo do mês, próximo post, calendário, posts (com filtro por formato e pilar), estratégia e perfil da marca. Cada post abre com descrição, o que produzir, slides ou roteiro, legenda e CTA, com botões de copiar. "Salvar PDF" imprime a pauta inteira com todos os posts abertos. Sem `?c=`, a página mostra o exemplo.
+
+Para publicar a pauta de um cliente:
+
+1. No app, abra a pauta e toque em **Arquivo do site**. Sai um `.json` com o nome do cliente e do mês (ex.: `ousion-dezembro-2026.json`).
+2. Coloque o arquivo em `site/pautas/` e faça o commit.
+3. Envie ao cliente o link `.../site/?c=ousion-dezembro-2026`.
+
+A pasta `site/` é estática: funciona no GitHub Pages ou em qualquer hospedagem simples. O link não é listado em lugar nenhum e a página pede para não ser indexada, mas quem tiver o link consegue abrir.
 
 ## Como atualizar
 

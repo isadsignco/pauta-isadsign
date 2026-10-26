@@ -530,7 +530,7 @@ function renderResult(progress){
  const mesNome=MESES[p.mes];
  const counts=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(c=>c[1]);
  let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow">${esc(p.arroba||p.nicho||"Pauta")}${p.exemplo?'<span class="tag">Exemplo</span>':""}</p><h2>${esc(p.cliente)} · ${mesNome} ${p.ano}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
- <div class="actions">${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${downloads&&p.posts.length?`<button class="btn ghost" id="dlMd" type="button">Baixar .md</button>`:""}${!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
+ <div class="actions">${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${downloads&&p.posts.length?`<button class="btn ghost" id="dlMd" type="button">Baixar .md</button><button class="btn ghost" id="dlSite" type="button" title="Arquivo para a página do cliente (site/pautas)">Arquivo do site</button>`:""}${!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
  <div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
  if(progress)html+=`<div class="panel progress"><div class="pl">${esc(progress.label)}<span>${esc(progress.detail||"")}</span></div><div class="track"><i style="width:${Math.round(progress.pct*100)}%"></i></div></div>`;
  const pf=p.perfil;
@@ -553,6 +553,7 @@ function renderResult(progress){
  r.querySelectorAll("[data-filtro]").forEach(b=>b.onclick=()=>{filtroFormato=b.dataset.filtro;renderResult(progress)});
  const ca=$("#copyAll");if(ca)ca.onclick=()=>copy(toMarkdown(p));
  const dl=$("#dlMd");if(dl)dl.onclick=async()=>{try{await downloads.save({filename:`pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}.md`,data:toMarkdown(p)})}catch(err){if(err&&err.code!=="cancelled")toast("Não foi possível baixar")}};
+ const ds=$("#dlSite");if(ds)ds.onclick=async()=>{const d=JSON.parse(JSON.stringify(p));delete d.exemplo;try{await downloads.save({filename:`${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}.json`,data:JSON.stringify(d,null,1)});toast("Coloque o arquivo em site/pautas")}catch(err){if(err&&err.code!=="cancelled")toast("Não foi possível baixar")}};
  const del=$("#delBtn");if(del)del.onclick=()=>confirmDelete(del,p);
 }
 function confirmDelete(btn,p){if(btn.dataset.armed){deletePauta(p);return}btn.dataset.armed="1";btn.textContent="Toque para confirmar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.textContent="Excluir"}},3500)}
