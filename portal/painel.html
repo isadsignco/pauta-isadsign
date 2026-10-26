@@ -62,7 +62,7 @@ const rand=n=>[...crypto.getRandomValues(new Uint8Array(n))];
 const novoCodigo=()=>{const s=rand(8).map(n=>ALFABETO[n%ALFABETO.length]).join("");return s.slice(0,4)+"-"+s.slice(4)};
 const novoToken=nome=>`${slug(nome).slice(0,60)||"cliente"}-${rand(6).map(n=>(n%36).toString(36)).join("")}`;
 const linkDe=c=>`${cfg.siteUrl||location.href.replace(/painel\.html.*$/,"")}#${c.token}`;
-const msgDe=c=>`Oi! Sua pauta de conteúdo está aqui: ${linkDe(c)}\nCódigo de acesso: ${c.codigo}`;
+const msgDe=c=>`Oi! Este é o seu perfil na isadsign, com todas as suas pautas de conteúdo: ${linkDe(c)}\nCódigo de acesso: ${c.codigo}\nO link e o código são sempre os mesmos. Cada pauta nova aparece lá.`;
 const quando=d=>new Date(d).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
 
 function tela(html){$("#app").innerHTML=html}
@@ -193,7 +193,7 @@ function renderPasta(c){
   tela(`<div><button type="button" class="btn link" id="voltar">‹ Todos os clientes</button></div>
   <section class="panel card"><p class="eyebrow">Pasta do cliente</p>
    <form class="inline" id="nomeForm"><input type="text" id="nomeIn" value="${esc(c.nome)}" aria-label="Nome do cliente" maxlength="120"><button type="submit" class="btn">Salvar nome</button></form></section>
-  <section class="panel card"><h2>Link de visualização</h2><p class="lead">O cliente abre este link, digita o código e vê só as pautas dele.</p>
+  <section class="panel card"><h2>Link do perfil</h2><p class="lead">Um link e um código por cliente, sempre os mesmos. O cliente abre, digita o código e vê o perfil com todas as pautas dele. Cada pauta que você publica aparece lá.</p>
    <p class="linkbox">${esc(linkDe(c))}</p>
    <div class="kv2"><div><b>Código de acesso</b><span class="mono">${esc(c.codigo)}</span></div><div><b>Cliente desde</b><span>${new Date(c.criado_em).toLocaleDateString("pt-BR")}</span></div></div>
    <div class="actions"><button type="button" class="btn" id="cpLink">Copiar link</button><button type="button" class="btn" id="cpMsg">Copiar mensagem</button><a class="btn" href="${esc(linkDe(c))}" target="_blank" rel="noopener">Abrir como cliente</a><button type="button" class="btn" id="novoCod">Gerar novo código</button></div></section>

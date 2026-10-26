@@ -44,7 +44,7 @@ Para os clientes abrirem, o app precisa estar compartilhado como "qualquer pesso
 
 Site comum, fora do Claude, onde o cliente vê a pauta e responde, e a resposta fica salva para a isadsign. Endereço: `https://isadsignco.github.io/pauta-isadsign/portal/`.
 
-- **Cliente** (`portal/#<token>`): digita o código, vê só as pautas dele (calendário, posts, estratégia), baixa PDF ou HTML, imprime, e responde cada pauta com **Aprovar**, **Pedir revisão** ou **Reprovar**, com comentários. Para pedir revisão ou reprovar, o comentário é obrigatório.
+- **Cliente** (`portal/#<token>`, um link e um código por cliente, sempre os mesmos): digita o código e cai no **perfil**, com as pautas que esperam resposta em destaque, as outras pautas por mês e o resumo da marca. Abre cada pauta (calendário, posts, estratégia), baixa PDF ou HTML, imprime, e responde com **Aprovar**, **Pedir revisão** ou **Reprovar**, com comentários. Para pedir revisão ou reprovar, o comentário é obrigatório.
 - **Você** recebe um e-mail a cada resposta e vê tudo no **painel** (`portal/painel.html`, com login): respostas novas, publicar pauta, pasta de cada cliente com link, código, pautas e respostas, trocar código, tirar pauta do portal e excluir cliente.
 - As pautas continuam sendo geradas no app do Claude. No app, toque em **Arquivo para o portal** e envie o arquivo no painel, em **Publicar pauta**.
 
