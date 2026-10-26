@@ -659,7 +659,7 @@ function renderResult(progress){
  const mesNome=MESES[p.mes];
  const counts=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(c=>c[1]);
  let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow"><span class="eb">${esc(p.arroba||p.nicho||"Pauta")}</span><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${p.exemplo?'<span class="tag">Exemplo</span>':""}${!modoCliente&&!p.exemplo?statusChip(p):""}</p><h2>${esc(p.cliente)} · ${mesNome} ${p.ano}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
- <div class="actions">${!modoCliente&&dono&&artifactCap&&db&&!p.exemplo&&!busy&&p.posts.length?`<button class="btn lib" id="libBtn" type="button">Liberar para o cliente</button>`:""}${downloads&&p.posts.length&&!busy?`<button class="btn ghost" id="dlPdf" type="button">Baixar PDF</button><button class="btn ghost" id="dlHtml" type="button">Baixar HTML</button>`:""}${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${!modoCliente&&!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
+ <div class="actions">${!modoCliente&&dono&&artifactCap&&db&&!p.exemplo&&!busy&&p.posts.length?`<button class="btn lib" id="libBtn" type="button">Liberar para o cliente</button>`:""}${downloads&&p.posts.length&&!busy?`<button class="btn ghost" id="dlPdf" type="button">Baixar PDF</button><button class="btn ghost" id="dlHtml" type="button">Baixar HTML</button>`:""}${!modoCliente&&downloads&&!p.exemplo&&p.posts.length&&!busy?`<button class="btn ghost" id="dlPortal" type="button">Arquivo para o portal</button>`:""}${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${!modoCliente&&!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
  ${modoCliente&&clientePautas.length>1?`<div class="months" role="group" aria-label="Escolher mês">${clientePautas.map((x,i)=>`<button type="button" data-mes="${i}" aria-pressed="${x===p}">${MESES[x.mes]} ${x.ano}</button>`).join("")}</div>`:""}<div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
  if(modoCliente)html+=respostaHTML(p);
  if(progress)html+=`<div class="panel progress"><div class="pl">${esc(progress.label)}<span>${esc(progress.detail||"")}</span></div><div class="track"><i style="width:${Math.round(progress.pct*100)}%"></i></div></div>`;
@@ -684,6 +684,8 @@ function renderResult(progress){
  const ca=$("#copyAll");if(ca)ca.onclick=()=>copy(toMarkdown(p));
  const dh=$("#dlHtml");if(dh)dh.onclick=()=>baixar(`${nomeArquivo(p)}.html`,()=>pautaHTML(p),dh);
  const dp=$("#dlPdf");if(dp)dp.onclick=()=>baixar(`${nomeArquivo(p)}.pdf`,()=>pautaPDF(p),dp);
+ /* The external client portal (portal/painel.html) imports this file */
+ const dpo=$("#dlPortal");if(dpo)dpo.onclick=()=>baixar(`portal-${nomeArquivo(p)}.json`,()=>JSON.stringify(limpar(p)),dpo);
  if(modoCliente)bindResposta(p);
  const del=$("#delBtn");if(del)del.onclick=()=>confirmDelete(del,p);
  const lib=$("#libBtn");if(lib)lib.onclick=()=>liberar(p,lib);

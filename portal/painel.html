@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Painel · isadsign</title>
+<link rel="stylesheet" href="estilo.css">
+<style>
+/* Panel: new answers first, then import, then one folder per client */
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16rem),1fr));gap:.75rem}
+.folder{border:0;text-align:left;padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.35rem;min-width:0}
+.folder h3{margin:.15rem 0 0;font-size:1.1875rem;letter-spacing:-.02em}
+.badge{display:inline-flex;align-items:center;justify-content:center;min-width:1.4rem;height:1.4rem;padding:0 .4rem;border-radius:999px;background:var(--accent);color:var(--on-accent);font-size:.75rem;font-weight:700}
+.list{display:flex;flex-direction:column}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.5rem 1rem;align-items:center;padding:.85rem 0;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.row .info{display:flex;flex-direction:column;gap:.3rem;min-width:0}
+.row .info b{font-size:1rem}
+.row .com{margin:0;font-size:.9375rem;color:var(--fg)}
+.row .act{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:flex-end}
+@media (max-width:560px){.row{grid-template-columns:minmax(0,1fr)}.row .act{justify-content:flex-start}}
+.linkbox{font-family:var(--mono);font-size:.8125rem;background:var(--surface-2);border-radius:var(--r-sm);padding:.7rem .8rem;margin:0 0 .75rem;word-break:break-all;user-select:all}
+.importa{display:flex;flex-direction:column;gap:.75rem;max-width:44rem}
+.resumo{background:var(--surface-2);border-radius:var(--r-sm);padding:.8rem .9rem;display:flex;flex-direction:column;gap:.5rem}
+.drop{display:flex;flex-direction:column;align-items:center;gap:.2rem;text-align:center;border:1.5px dashed var(--fg-2);border-radius:var(--r-md);padding:1rem .9rem;cursor:pointer}
+.drop b{color:var(--accent)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.drop.over,.drop:hover{border-color:var(--accent);background:var(--accent-soft)}
+.inline{display:flex;gap:.5rem;flex-wrap:wrap}
+.inline input{flex:1 1 12rem}
+details summary{cursor:pointer;color:var(--accent);font-size:.875rem}
+.vazio{color:var(--fg-2);margin:0}
+.kv2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.75rem;margin-bottom:.75rem}
+.kv2 div{background:var(--surface-2);border-radius:var(--r-sm);padding:.7rem .85rem}
+.kv2 b{display:block;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-2);margin-bottom:.2rem}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Painel <small>isadsign</small></div>
+    <button type="button" class="btn sm" id="atualizarBtn" hidden>Atualizar</button>
+    <button type="button" class="btn sm" id="sairBtn" hidden>Sair</button>
+  </div>
+</header>
+<main class="wrap" id="app" aria-live="polite">
+  <section class="panel gate"><h1>Carregando…</h1></section>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="comum.js"></script>
+<script>
+/* Owner panel: sign in, see answers as they arrive, publish pautas exported from the Claude app, manage each client's folder. */
+(function(){
+const {MESES,RESP,STATUS,$,esc,slug,cfg,sb,toast,copy,statusChip}=window.P;
+const ALFABETO="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+let clientes=[],pautas=[],respostas=[],pasta=null,importada=null,timer=null;
+const rand=n=>[...crypto.getRandomValues(new Uint8Array(n))];
+const novoCodigo=()=>{const s=rand(8).map(n=>ALFABETO[n%ALFABETO.length]).join("");return s.slice(0,4)+"-"+s.slice(4)};
+const novoToken=nome=>`${slug(nome).slice(0,60)||"cliente"}-${rand(6).map(n=>(n%36).toString(36)).join("")}`;
+const linkDe=c=>`${cfg.siteUrl||location.href.replace(/painel\.html.*$/,"")}#${c.token}`;
+const msgDe=c=>`Oi! Sua pauta de conteúdo está aqui: ${linkDe(c)}\nCódigo de acesso: ${c.codigo}`;
+const quando=d=>new Date(d).toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
+
+function tela(html){$("#app").innerHTML=html}
+function gateHTML(t,p,form){return `<section class="panel gate"><p class="eyebrow">Painel isadsign</p><h1>${t}</h1>${p?`<p>${p}</p>`:""}${form||""}</section>`}
+
+/* ---------- Sign in ---------- */
+async function iniciar(){
+  const db=sb();
+  if(!db)return tela(gateHTML("Falta configurar","Preencha o arquivo config.js com os dados do Supabase. O passo a passo está no README."));
+  db.auth.onAuthStateChange((ev)=>{if(ev==="PASSWORD_RECOVERY")novaSenha()});
+  const {data}=await db.auth.getSession();
+  if(location.hash.includes("type=recovery"))return;
+  data&&data.session?entrou():login()}
+function login(err,info){
+  $("#sairBtn").hidden=true;$("#atualizarBtn").hidden=true;clearInterval(timer);
+  tela(gateHTML("Entrar","Acesso só da isadsign.",`<form id="lg" autocomplete="on">
+   <div class="field"><label class="lbl" for="lgEmail">E-mail</label><input type="email" id="lgEmail" autocomplete="username" required></div>
+   <div class="field"><label class="lbl" for="lgSenha">Senha</label><input type="password" id="lgSenha" autocomplete="current-password" required></div>
+   ${err?`<p class="note err" role="alert">${esc(err)}</p>`:""}${info?`<p class="note ok">${esc(info)}</p>`:""}
+   <button type="submit" class="btn primary" id="lgBtn">Entrar</button><button type="button" class="btn link" id="lgEsqueci">Esqueci a senha</button></form>`));
+  $("#lg").onsubmit=async e=>{e.preventDefault();const b=$("#lgBtn");b.disabled=true;b.textContent="Entrando…";
+    const {error}=await sb().auth.signInWithPassword({email:$("#lgEmail").value.trim(),password:$("#lgSenha").value});
+    if(error)return login("E-mail ou senha incorretos.");entrou()};
+  $("#lgEsqueci").onclick=async()=>{const email=$("#lgEmail").value.trim();if(!email){$("#lgEmail").focus();toast("Digite seu e-mail primeiro");return}
+    await sb().auth.resetPasswordForEmail(email,{redirectTo:location.href.split("#")[0]});login(null,"Se o e-mail tiver acesso, chega um link para criar uma senha nova.")}}
+function novaSenha(){
+  tela(gateHTML("Nova senha","Escolha uma senha com pelo menos 8 caracteres.",`<form id="ns"><div class="field"><label class="lbl" for="nsSenha">Nova senha</label><input type="password" id="nsSenha" minlength="8" autocomplete="new-password" required></div><button type="submit" class="btn primary">Salvar senha</button></form>`));
+  $("#ns").onsubmit=async e=>{e.preventDefault();const {error}=await sb().auth.updateUser({password:$("#nsSenha").value});
+    if(error)return toast("Não foi possível salvar. Tente de novo.");history.replaceState(null,"",location.pathname);toast("Senha salva");entrou()}}
+async function entrou(){
+  const {data:ok}=await sb().rpc("eh_admin");
+  $("#sairBtn").hidden=false;
+  if(!ok)return tela(gateHTML("Sem acesso","Este e-mail não está liberado para o painel. Veja o passo “Seu acesso ao painel” no README."));
+  $("#atualizarBtn").hidden=false;await carregar();clearInterval(timer);timer=setInterval(()=>carregar({auto:true}),60000)}
+$("#sairBtn").onclick=async()=>{await sb().auth.signOut();pasta=null;login()};
+$("#atualizarBtn").onclick=()=>carregar({manual:true});
+window.addEventListener("focus",()=>{if(!$("#atualizarBtn").hidden)carregar({auto:true})});
+
+/* ---------- Data ---------- */
+/* auto: background refresh, which never redraws while you are typing in a field */
+async function carregar(o){o=o||{};
+  const db=sb();
+  const [c,p,r]=await Promise.all([db.from("clientes").select("*").order("nome"),db.from("pautas").select("id,token,mes,ano,status,atualizado_em").order("ano",{ascending:false}).order("mes",{ascending:false}),db.from("respostas").select("*").order("criado_em",{ascending:false}).limit(500)]);
+  if(c.error||p.error||r.error){toast("Não foi possível carregar. Verifique a conexão.");return}
+  clientes=c.data;pautas=p.data;respostas=r.data;
+  if(o.manual)toast("Atualizado");
+  const a=document.activeElement,digitando=a&&$("#app").contains(a)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
+  if(!(o.auto&&digitando))render()}
+const cliente=t=>clientes.find(c=>c.token===t);
+const pautaDe=id=>pautas.find(p=>p.id===id);
+
+/* ---------- Screens ---------- */
+function render(){
+  const novas=respostas.filter(r=>!r.lida);
+  document.title=(novas.length?`(${novas.length}) `:"")+"Painel · isadsign";
+  if(pasta&&cliente(pasta))return renderPasta(cliente(pasta));
+  pasta=null;
+  tela(`<section class="panel card"><h2>Respostas novas ${novas.length?`<span class="badge">${novas.length}</span>`:""}</h2>
+   ${novas.length?`<div class="list">${novas.map(respRow).join("")}</div>`:`<p class="vazio">Nenhuma resposta nova. Quando um cliente responder, ela aparece aqui e chega no seu e-mail.</p>`}</section>
+  ${importaHTML()}
+  <section class="panel card"><h2>Clientes</h2>${clientes.length?`<p class="lead">Toque em um cliente para ver o link, o código e o histórico.</p><div class="grid2">${clientes.map(c=>{const ps=pautas.filter(p=>p.token===c.token),n=respostas.filter(r=>r.token===c.token&&!r.lida).length,ap=ps.filter(p=>p.status==="aprovada").length;
+    return `<button type="button" class="panel folder" data-pasta="${esc(c.token)}" style="background:var(--surface-2);box-shadow:none"><span class="tags">${n?`<span class="badge">${n}</span>`:""}${ps[0]?statusChip(ps[0].status):""}</span><h3>${esc(c.nome)}</h3><span class="m">${ps.length} ${ps.length===1?"pauta":"pautas"} · ${ap} ${ap===1?"aprovada":"aprovadas"}</span></button>`}).join("")}</div>`
+   :`<p class="vazio">Nenhum cliente ainda. Importe a primeira pauta acima.</p>`}</section>`);
+  ligarResp();ligarImporta();
+  $("#app").querySelectorAll("[data-pasta]").forEach(b=>b.onclick=()=>{pasta=b.dataset.pasta;render();window.scrollTo({top:0})})}
+function respRow(r){const c=cliente(r.token)||{nome:"Cliente removido"},p=pautaDe(r.pauta_id);
+  return `<div class="row"><div class="info"><span class="tags">${r.lida?"":`<span class="chip-st st-nova">Nova</span>`}<span class="chip-st st-${esc(r.tipo)}">${esc(RESP[r.tipo][1])}</span>${p?`<span class="tag mes">${MESES[p.mes]} ${p.ano}</span>`:""}</span>
+   <b>${esc(c.nome)}</b>${r.comentario?`<p class="com">“${esc(r.comentario)}”</p>`:`<span class="m">Sem comentários</span>`}<span class="m">${quando(r.criado_em)}</span></div>
+   <div class="act">${r.lida?"":`<button type="button" class="btn sm" data-lida="${r.id}">Marcar como lida</button>`}</div></div>`}
+function ligarResp(){$("#app").querySelectorAll("[data-lida]").forEach(b=>b.onclick=async()=>{b.disabled=true;
+  const {error}=await sb().from("respostas").update({lida:true}).eq("id",+b.dataset.lida);if(error){toast("Não foi possível marcar");b.disabled=false;return}
+  const r=respostas.find(x=>x.id===+b.dataset.lida);if(r)r.lida=true;render()})}
+
+/* ---------- Import a pauta exported from the Claude app ---------- */
+function importaHTML(){
+  if(!importada)return `<section class="panel card"><h2>Publicar pauta</h2><p class="lead">No app do Claude, abra a pauta e toque em <b>Arquivo para o portal</b>. Depois envie o arquivo aqui.</p>
+   <div class="importa"><label class="drop" id="drop" for="arq"><input type="file" id="arq" accept=".json,application/json"><b>Escolher arquivo da pauta</b><span class="m">Arquivo .json. Toque ou arraste aqui.</span></label>
+   <details><summary>Ou cole o conteúdo do arquivo</summary><div class="importa" style="margin-top:.6rem"><textarea id="colar" rows="4" placeholder='{"cliente": "…", "mes": 10, …}'></textarea><button type="button" class="btn" id="colarBtn">Ler pauta</button></div></details></div></section>`;
+  const p=importada,id=slug(p.cliente),sug=clientes.find(c=>slug(c.nome)===id);
+  return `<section class="panel card"><h2>Publicar pauta</h2><div class="importa"><div class="resumo"><span class="tags"><span class="tag mes">${MESES[p.mes]} ${p.ano}</span></span><b>${esc(p.cliente)}</b><span class="m">${p.posts.length} posts · ${esc(p.objetivo||"")}</span></div>
+   <div class="field"><label class="lbl" for="impCli">Cliente no portal</label><select id="impCli">${clientes.map(c=>`<option value="${esc(c.token)}"${sug&&sug.token===c.token?" selected":""}>${esc(c.nome)}</option>`).join("")}<option value=""${sug?"":" selected"}>Novo cliente: ${esc(p.cliente)}</option></select></div>
+   ${pautas.some(x=>sug&&x.token===sug.token&&x.mes===p.mes&&x.ano===p.ano)?`<p class="note">Já existe uma pauta de ${MESES[p.mes]} ${p.ano} para este cliente. Ela será substituída e volta para “Aguardando resposta”.</p>`:""}
+   <div class="actions"><button type="button" class="btn primary" id="pubBtn">Publicar no portal</button><button type="button" class="btn" id="cancImp">Cancelar</button></div></div></section>`}
+function lerPauta(txt){let p;try{p=JSON.parse(txt)}catch(e){toast("Esse arquivo não é uma pauta.");return}
+  if(!p||!Array.isArray(p.posts)||!(p.mes>=0&&p.mes<=11)||!p.ano||!p.cliente){toast("Esse arquivo não é uma pauta do app.");return}
+  importada=p;render();$("#impCli")&&$("#impCli").focus()}
+function ligarImporta(){
+  const arq=$("#arq");if(arq){arq.onchange=async()=>{const f=arq.files[0];if(f)lerPauta(await f.text())};
+    const d=$("#drop");["dragenter","dragover"].forEach(ev=>d.addEventListener(ev,e=>{e.preventDefault();d.classList.add("over")}));
+    ["dragleave","drop"].forEach(ev=>d.addEventListener(ev,e=>{e.preventDefault();d.classList.remove("over")}));
+    d.addEventListener("drop",async e=>{const f=e.dataTransfer.files[0];if(f)lerPauta(await f.text())});
+    $("#colarBtn").onclick=()=>lerPauta($("#colar").value)}
+  const pub=$("#pubBtn");if(!pub)return;
+  $("#cancImp").onclick=()=>{importada=null;render()};
+  pub.onclick=async()=>{pub.disabled=true;pub.textContent="Publicando…";const db=sb(),p=importada;
+    let token=$("#impCli").value,novo=false;
+    if(!token){token=novoToken(p.cliente);novo=true;
+      const {error}=await db.from("clientes").insert({token,nome:p.cliente,codigo:novoCodigo()});
+      if(error){toast("Não foi possível criar o cliente.");pub.disabled=false;pub.textContent="Publicar no portal";return}}
+    const dados={...p};delete dados.status;delete dados.statusNota;delete dados.statusEm;
+    const {error}=await db.from("pautas").upsert({id:`${token}-${p.ano}-${p.mes}`,token,mes:p.mes,ano:p.ano,dados,status:"enviada",atualizado_em:new Date().toISOString()},{onConflict:"token,mes,ano"});
+    if(error){toast("Não foi possível publicar a pauta.");pub.disabled=false;pub.textContent="Publicar no portal";return}
+    importada=null;pasta=token;await carregar();toast(novo?"Cliente criado e pauta publicada":"Pauta publicada");window.scrollTo({top:0})}}
+
+/* ---------- Client folder ---------- */
+function renderPasta(c){
+  const ps=pautas.filter(p=>p.token===c.token),rs=respostas.filter(r=>r.token===c.token);
+  tela(`<div><button type="button" class="btn link" id="voltar">‹ Todos os clientes</button></div>
+  <section class="panel card"><p class="eyebrow">Pasta do cliente</p>
+   <form class="inline" id="nomeForm"><input type="text" id="nomeIn" value="${esc(c.nome)}" aria-label="Nome do cliente" maxlength="120"><button type="submit" class="btn">Salvar nome</button></form></section>
+  <section class="panel card"><h2>Link de visualização</h2><p class="lead">O cliente abre este link, digita o código e vê só as pautas dele.</p>
+   <p class="linkbox">${esc(linkDe(c))}</p>
+   <div class="kv2"><div><b>Código de acesso</b><span class="mono">${esc(c.codigo)}</span></div><div><b>Cliente desde</b><span>${new Date(c.criado_em).toLocaleDateString("pt-BR")}</span></div></div>
+   <div class="actions"><button type="button" class="btn" id="cpLink">Copiar link</button><button type="button" class="btn" id="cpMsg">Copiar mensagem</button><a class="btn" href="${esc(linkDe(c))}" target="_blank" rel="noopener">Abrir como cliente</a><button type="button" class="btn" id="novoCod">Gerar novo código</button></div></section>
+  <section class="panel card"><h2>Pautas</h2>${ps.length?`<div class="list">${ps.map(p=>`<div class="row"><div class="info"><span class="tags"><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${statusChip(p.status)}</span><span class="m">Publicada ou atualizada em ${quando(p.atualizado_em)}</span></div>
+     <div class="act"><button type="button" class="btn sm danger" data-tirar="${esc(p.id)}">Tirar do portal</button></div></div>`).join("")}</div>`:`<p class="vazio">Nenhuma pauta publicada para este cliente.</p>`}</section>
+  <section class="panel card"><h2>Respostas do cliente</h2>${rs.length?`<div class="list">${rs.map(respRow).join("")}</div>`:`<p class="vazio">O cliente ainda não respondeu.</p>`}</section>
+  <section class="panel card"><h2>Excluir cliente</h2><p class="lead">Apaga o cliente, ${ps.length===1?"a pauta":`as ${ps.length} pautas`} e as respostas dele. O link para de funcionar na hora. Não dá para desfazer.</p><button type="button" class="btn danger" id="excluir">Excluir ${esc(c.nome)}</button></section>`);
+  ligarResp();
+  $("#voltar").onclick=()=>{pasta=null;render();window.scrollTo({top:0})};
+  $("#cpLink").onclick=()=>copy(linkDe(c));$("#cpMsg").onclick=()=>copy(msgDe(c));
+  $("#nomeForm").onsubmit=async e=>{e.preventDefault();const nome=$("#nomeIn").value.trim();if(!nome)return;
+    const {error}=await sb().from("clientes").update({nome}).eq("token",c.token);if(error)return toast("Não foi possível salvar");c.nome=nome;toast("Nome salvo")};
+  confirmar($("#novoCod"),"Toque de novo: o código antigo para de valer",async()=>{const codigo=novoCodigo();
+    const {error}=await sb().from("clientes").update({codigo}).eq("token",c.token);if(error)return toast("Não foi possível trocar o código");c.codigo=codigo;toast("Código novo criado. Envie para o cliente.");render()});
+  $("#app").querySelectorAll("[data-tirar]").forEach(b=>confirmar(b,"Toque de novo para tirar",async()=>{
+    const {error}=await sb().from("pautas").delete().eq("id",b.dataset.tirar);if(error)return toast("Não foi possível tirar");await carregar();toast("Pauta retirada do portal")}));
+  confirmar($("#excluir"),"Toque de novo para excluir",async()=>{
+    const {error}=await sb().from("clientes").delete().eq("token",c.token);if(error)return toast("Não foi possível excluir");pasta=null;await carregar();toast(`${c.nome} excluído`)})}
+function confirmar(btn,txt,fn){const orig=btn.textContent;btn.onclick=()=>{if(!btn.dataset.armed){btn.dataset.armed="1";btn.textContent=txt;setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.textContent=orig}},4000);return}btn.disabled=true;fn()}}
+
+iniciar();
+})();
+</script>
+</body>
+</html>

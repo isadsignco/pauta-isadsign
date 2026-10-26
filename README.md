@@ -40,6 +40,27 @@ Por que a resposta vai pelo WhatsApp: no claude.ai, quem abre a página de fora 
 
 Para os clientes abrirem, o app precisa estar compartilhado como "qualquer pessoa com o link" (Compartilhar, no claude.ai).
 
+## Portal do cliente (site externo)
+
+Site comum, fora do Claude, onde o cliente vê a pauta e responde, e a resposta fica salva para a isadsign. Endereço: `https://isadsignco.github.io/pauta-isadsign/portal/`.
+
+- **Cliente** (`portal/#<token>`): digita o código, vê só as pautas dele (calendário, posts, estratégia), baixa PDF ou HTML, imprime, e responde cada pauta com **Aprovar**, **Pedir revisão** ou **Reprovar**, com comentários. Para pedir revisão ou reprovar, o comentário é obrigatório.
+- **Você** recebe um e-mail a cada resposta e vê tudo no **painel** (`portal/painel.html`, com login): respostas novas, publicar pauta, pasta de cada cliente com link, código, pautas e respostas, trocar código, tirar pauta do portal e excluir cliente.
+- As pautas continuam sendo geradas no app do Claude. No app, toque em **Arquivo para o portal** e envie o arquivo no painel, em **Publicar pauta**.
+
+Arquivos: `portal/index.html` (cliente), `portal/painel.html` (painel), `portal/comum.js` e `portal/estilo.css` (compartilhados), `portal/config.js` (chaves públicas), `supabase/setup.sql` (banco).
+
+Segurança: o código fica no repositório, que é público; os dados ficam no Supabase. O cliente só lê e responde pelas funções `portal_*`, sempre conferindo token e código no servidor. O painel só abre para e-mails da tabela `admins`.
+
+### Configurar (uma vez)
+
+1. **Supabase** (supabase.com, plano grátis): crie um projeto. Em **SQL Editor**, cole e rode `supabase/setup.sql`.
+2. Em **Authentication > Users > Add user**, crie o seu usuário com e-mail e senha (marque "Auto Confirm User"). Depois, no SQL Editor, rode `insert into public.admins (email) values ('seu@email.com');` com o mesmo e-mail.
+3. Em **Authentication > Sign In / Providers**, desligue "Allow new users to sign up". Em **Authentication > URL Configuration**, coloque `https://isadsignco.github.io/pauta-isadsign/portal/painel.html` como Site URL (é para onde vai o link de "Esqueci a senha").
+4. **Web3Forms** (web3forms.com): digite o e-mail que vai receber as respostas e copie a Access Key que chega.
+5. Preencha `portal/config.js` com a Project URL e a chave `anon public` (Supabase > Project Settings > API) e a Access Key do Web3Forms. Ou mande os três para o Claude preencher.
+6. **GitHub Pages**: no repositório, **Settings > Pages > Deploy from a branch**, escolha a branch com o portal e a pasta `/ (root)`.
+
 ## Como atualizar
 
 Peça ao Claude a mudança. Ele edita o `index.html`, faz o commit aqui e republica a página no mesmo link da Central.
