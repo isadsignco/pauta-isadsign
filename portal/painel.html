@@ -108,6 +108,7 @@ async function carregar(o){o=o||{};
   const [c,p,r]=await Promise.all([db.from("clientes").select("*").order("nome"),db.from("pautas").select("id,token,mes,ano,status,atualizado_em").order("ano",{ascending:false}).order("mes",{ascending:false}),db.from("respostas").select("*").order("criado_em",{ascending:false}).limit(500)]);
   if(c.error||p.error||r.error){toast("Não foi possível carregar. Verifique a conexão.");return}
   clientes=c.data;pautas=p.data;respostas=r.data;
+  const aj=await db.from("ajustes").select("*");if(!aj.error){const x=(aj.data||[]).find(y=>y.chave==="aviso_email");aviso=x?x.valor:""}
   if(o.manual)toast("Atualizado");
   const a=document.activeElement,digitando=a&&$("#app").contains(a)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
   if(!(o.auto&&digitando))render()}
@@ -125,8 +126,9 @@ function render(){
   ${importaHTML()}
   <section class="panel card"><h2>Clientes</h2>${clientes.length?`<p class="lead">Toque em um cliente para ver o link, o código e o histórico.</p><div class="grid2">${clientes.map(c=>{const ps=pautas.filter(p=>p.token===c.token),n=respostas.filter(r=>r.token===c.token&&!r.lida).length,ap=ps.filter(p=>p.status==="aprovada").length;
     return `<button type="button" class="panel folder" data-pasta="${esc(c.token)}" style="background:var(--surface-2);box-shadow:none"><span class="tags">${n?`<span class="badge">${n}</span>`:""}${ps[0]?statusChip(ps[0].status):""}</span><h3>${esc(c.nome)}</h3><span class="m">${ps.length} ${ps.length===1?"pauta":"pautas"} · ${ap} ${ap===1?"aprovada":"aprovadas"}</span></button>`}).join("")}</div>`
-   :`<p class="vazio">Nenhum cliente ainda. Importe a primeira pauta acima.</p>`}</section>`);
-  ligarResp();ligarImporta();
+   :`<p class="vazio">Nenhum cliente ainda. Importe a primeira pauta acima.</p>`}</section>
+  ${avisoHTML()}`);
+  ligarResp();ligarImporta();ligarAviso();
   $("#app").querySelectorAll("[data-pasta]").forEach(b=>b.onclick=()=>{pasta=b.dataset.pasta;render();window.scrollTo({top:0})})}
 function respRow(r){const c=cliente(r.token)||{nome:"Cliente removido"},p=pautaDe(r.pauta_id);
   return `<div class="row"><div class="info"><span class="tags">${r.lida?"":`<span class="chip-st st-nova">Nova</span>`}<span class="chip-st st-${esc(r.tipo)}">${esc(RESP[r.tipo][1])}</span>${p?`<span class="tag mes">${MESES[p.mes]} ${p.ano}</span>`:""}</span>
@@ -135,6 +137,24 @@ function respRow(r){const c=cliente(r.token)||{nome:"Cliente removido"},p=pautaD
 function ligarResp(){$("#app").querySelectorAll("[data-lida]").forEach(b=>b.onclick=async()=>{b.disabled=true;
   const {error}=await sb().from("respostas").update({lida:true}).eq("id",+b.dataset.lida);if(error){toast("Não foi possível marcar");b.disabled=false;return}
   const r=respostas.find(x=>x.id===+b.dataset.lida);if(r)r.lida=true;render()})}
+
+/* ---------- Where answer e-mails go (FormSubmit) ---------- */
+let aviso="";
+function avisoHTML(){return `<section class="panel card"><h2>Avisos por e-mail</h2>
+  <p class="lead">Cada resposta de cliente chega neste e-mail. Na primeira vez, o FormSubmit manda um e-mail de ativação: abra e clique em <b>Activate Form</b>. Depois disso, os avisos chegam sozinhos.</p>
+  <form class="importa" id="avForm"><div class="field"><label class="lbl" for="avEmail">E-mail que recebe as respostas</label><input type="email" id="avEmail" value="${esc(aviso)}" placeholder="voce@email.com" required></div>
+  <div class="actions"><button type="submit" class="btn primary" id="avSalvar">Salvar</button><button type="button" class="btn" id="avTeste"${aviso?"":" disabled"}>Enviar e-mail de teste</button></div>
+  ${aviso?"":`<p class="note err">Sem e-mail, as respostas ficam só aqui no painel.</p>`}</form></section>`}
+function ligarAviso(){
+  $("#avForm").onsubmit=async e=>{e.preventDefault();const v=$("#avEmail").value.trim();const b=$("#avSalvar");b.disabled=true;
+    const {error}=await sb().from("ajustes").upsert({chave:"aviso_email",valor:v});b.disabled=false;
+    if(error)return toast("Não foi possível salvar");aviso=v;toast("E-mail salvo. Agora envie um teste.");render()};
+  $("#avTeste").onclick=async()=>{const b=$("#avTeste");b.disabled=true;b.textContent="Enviando…";
+    try{const r=await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(aviso)}`,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
+      body:JSON.stringify({_subject:"Teste: avisos do Portal isadsign",_template:"table",_captcha:"false",mensagem:"Se este e-mail chegou, os avisos de resposta dos clientes estão funcionando."})});
+      const j=await r.json().catch(()=>({}));toast(String(j.success)==="true"?"Teste enviado. Confira sua caixa de entrada.":"Enviado. Se for a primeira vez, chega um e-mail de ativação: clique em Activate Form.")}
+    catch(e){toast("Não foi possível enviar o teste.")}
+    b.disabled=false;b.textContent="Enviar e-mail de teste"}}
 
 /* ---------- Import a pauta exported from the Claude app ---------- */
 function importaHTML(){

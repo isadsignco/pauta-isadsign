@@ -2,9 +2,9 @@
    só faz o que as regras do setup.sql permitem, e o FormSubmit/Web3Forms só envia e-mail para você. */
 window.PORTAL_CONFIG = {
   /* Supabase > Project Settings > API */
-  supabaseUrl: "",
-  supabaseAnonKey: "",
-  /* Para onde vão os e-mails das respostas (FormSubmit): o código que o FormSubmit manda depois da ativação */
+  supabaseUrl: "https://medtwwswykitfapxplrf.supabase.co",
+  supabaseAnonKey: "sb_publishable_Ubm6ZGvT556W_vfbPpAfbg_uneayMcL",
+  /* Opcional: destino fixo do FormSubmit. Vazio = usa o e-mail salvo no painel (Avisos por e-mail) */
   formsubmit: "",
   /* Alternativa: Access Key do web3forms.com */
   web3formsKey: "",

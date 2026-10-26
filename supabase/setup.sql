@@ -38,6 +38,12 @@ create table if not exists public.respostas (
 );
 create index if not exists respostas_pauta on public.respostas (pauta_id, criado_em desc);
 
+-- Ajustes do painel (por enquanto: para onde vão os e-mails das respostas)
+create table if not exists public.ajustes (
+  chave text primary key,
+  valor text not null default ''
+);
+
 -- ---------- Acesso do painel ----------
 create or replace function public.eh_admin() returns boolean
 language sql stable security definer set search_path = public as $$
@@ -48,10 +54,13 @@ alter table public.admins    enable row level security;
 alter table public.clientes  enable row level security;
 alter table public.pautas    enable row level security;
 alter table public.respostas enable row level security;
+alter table public.ajustes   enable row level security;
 
 drop policy if exists painel on public.clientes;
 drop policy if exists painel on public.pautas;
 drop policy if exists painel on public.respostas;
+drop policy if exists painel on public.ajustes;
+create policy painel on public.ajustes   for all to authenticated using (public.eh_admin()) with check (public.eh_admin());
 create policy painel on public.clientes  for all to authenticated using (public.eh_admin()) with check (public.eh_admin());
 create policy painel on public.pautas    for all to authenticated using (public.eh_admin()) with check (public.eh_admin());
 create policy painel on public.respostas for all to authenticated using (public.eh_admin()) with check (public.eh_admin());
@@ -87,6 +96,12 @@ begin
       from pautas p where p.token = p_token), '[]'::json));
 end $$;
 
+-- Destino do e-mail de aviso (endereço ou código do FormSubmit), lido pela página do cliente
+create or replace function public.portal_aviso() returns text
+language sql stable security definer set search_path = public as $$
+  select valor from ajustes where chave = 'aviso_email'
+$$;
+
 -- Resposta do cliente: grava e atualiza o status da pauta
 create or replace function public.portal_responder(p_token text, p_codigo text, p_pauta text, p_tipo text, p_comentario text)
 returns json language plpgsql volatile security definer set search_path = public as $$
@@ -108,6 +123,8 @@ grant execute on function public.portal_nome(text)                           to 
 grant execute on function public.portal_abrir(text, text)                    to anon, authenticated;
 grant execute on function public.portal_responder(text, text, text, text, text) to anon, authenticated;
 grant execute on function public.eh_admin() to authenticated;
+revoke all on function public.portal_aviso() from public;
+grant execute on function public.portal_aviso() to anon, authenticated;
 
 -- ---------- Seu acesso ao painel ----------
 -- Troque SEU_EMAIL pelo seu e-mail e rode esta linha:

@@ -31,7 +31,7 @@ const TOKEN=decodeURIComponent((location.hash||"").slice(1)||new URLSearchParams
 const LS="pauta-codigo-"+TOKEN;
 const lsGet=()=>{try{return localStorage.getItem(LS)}catch(e){return null}};
 const lsSet=v=>{try{v?localStorage.setItem(LS,v):localStorage.removeItem(LS)}catch(e){}};
-let dados=null, codigo="", atual=0, view=null, escolha=null, nome="";
+let dados=null, codigo="", atual=0, view=null, escolha=null, nome="", destinoAviso="";
 ligarSheet(()=>view);
 
 function aviso(t,msg){$("#sairBtn").hidden=true;$("#app").innerHTML=`<section class="panel gate"><p class="eyebrow">Pauta isadsign</p><h1>${esc(t)}</h1><p>${esc(msg)}</p></section>`}
@@ -44,6 +44,7 @@ async function iniciar(){
   if(error)return aviso("Não foi possível abrir","Verifique a sua conexão e recarregue a página.");
   if(!data)return aviso("Link não encontrado","Confira se você abriu o link inteiro que a isadsign enviou.");
   nome=data;document.title=`${nome} · Pauta isadsign`;
+  db.rpc("portal_aviso").then(r=>{if(r&&r.data)destinoAviso=r.data},()=>{});
   const salvo=lsGet();if(salvo&&await entrar(salvo,false))return;
   gate()}
 
@@ -106,7 +107,8 @@ function avisarPorEmail(it,tipo,txt){
   const v=RESP[tipo],mes=`${MESES[it.mes]} ${it.ano}`,assunto=`${v[2]} ${dados.cliente}: ${v[1].toLowerCase()} da pauta de ${mes}`;
   const campos={cliente:dados.cliente,pauta:mes,resposta:v[1],comentarios:txt||"(sem comentários)",painel:(cfg.siteUrl||"")+"painel.html"};
   const post=(url,body)=>fetch(url,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(body)}).catch(()=>{});
-  if(cfg.formsubmit)post(`https://formsubmit.co/ajax/${encodeURIComponent(cfg.formsubmit)}`,{_subject:assunto,_template:"table",_captcha:"false",...campos});
+  const fs=cfg.formsubmit||destinoAviso;
+  if(fs)post(`https://formsubmit.co/ajax/${encodeURIComponent(fs)}`,{_subject:assunto,_template:"table",_captcha:"false",...campos});
   else if(cfg.web3formsKey)post("https://api.web3forms.com/submit",{access_key:cfg.web3formsKey,subject:assunto,from_name:"Portal isadsign",...campos})}
 
 iniciar();
