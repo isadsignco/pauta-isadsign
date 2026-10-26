@@ -1190,7 +1190,7 @@ async function publishPortal(data){
 <template id="markup">${MARKUP.innerHTML}</template>
 <script type="application/json" id="portal">${json}<\/script>
 <script id="src">${document.getElementById("src").textContent}<\/script>
-</body></html>`;
+`+"</bo"+"dy></ht"+"ml>"; /* split so the closing tags never appear literally inside this script */
  await artifactCap.publish(html)}
 /* After Claude republishes the page from the repo the portal block can come back empty: put back what acessos holds. Only adds or updates, never removes. */
 function sincronizarPortal(){
