@@ -26,12 +26,14 @@ O cliente abre `site/?c=<arquivo>` e vê a pauta de `site/pautas/<arquivo>.json`
 
 Para publicar a pauta de um cliente:
 
-1. No app, abra a pauta e toque em **Arquivo do site**. Sai um `.json` com o nome do cliente e do mês (ex.: `ousion-dezembro-2026.json`).
+1. No app, abra a pauta e toque em **Arquivo do site**. Sai um `.json` criptografado (ex.: `ousion-dezembro-2026-k3x9q2.json`) e aparece o **Link do cliente**, com botão de copiar.
 2. Coloque o arquivo em `site/pautas/` e faça o commit.
-3. Envie ao cliente o link `.../site/?c=ousion-dezembro-2026`.
+3. Envie ao cliente o link completo.
 
-A pasta `site/` é estática: funciona no GitHub Pages ou em qualquer hospedagem simples. O link não é listado em lugar nenhum e a página pede para não ser indexada, mas quem tiver o link consegue abrir.
+### Privacidade
 
-## Como atualizar
+Cada pauta vai criptografada (AES-GCM, chave aleatória de 256 bits). A chave fica só no final do link, depois do `#`, e o navegador nunca envia essa parte ao servidor. Quem vir os arquivos do site ou do repositório não consegue ler a pauta; só quem tem o link completo. O nome do arquivo também leva um trecho aleatório, e a página pede para não ser indexada. Se o link vazar, gere o arquivo de novo (sai outra chave) e apague o antigo de `site/pautas/`.
 
-Peça ao Claude a mudança. Ele edita o `index.html`, faz o commit aqui e republica a página no mesmo link da Central.
+O arquivo exportado leva o perfil, a estratégia, os temas e os posts. As anotações internas do briefing (descrição, o que evitar, destaques) ficam de fora.
+
+A pasta `site/` é estática: funciona no GitHub Pages ou em qualquer hospedagem simples. O endereço do site está em `SITE_URL` no `index.html` do app.

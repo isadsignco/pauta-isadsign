@@ -213,11 +213,19 @@ const nome=param&&/^[a-z0-9-]+$/.test(param)?param:null;
 if(param&&!nome)renderState("Link inválido","Confira o link que a isadsign enviou para você.");
 else{
   renderState("Carregando sua pauta…","");
-  fetch(`pautas/${nome||"exemplo"}.json`,{cache:"no-cache"}).then(r=>{if(!r.ok)throw r.status;return r.json()}).then(data=>{
+  fetch(`pautas/${nome||"exemplo"}.json`,{cache:"no-cache"}).then(r=>{if(!r.ok)throw r.status;return r.json()}).then(abrir).then(data=>{
     if(!data||!Array.isArray(data.posts))throw "formato";
     p=data;p.exemplo=!nome;render()
-  }).catch(err=>renderState(err===404?"Pauta não encontrada":"Não foi possível abrir a pauta",err===404?"Esse link pode ter mudado. Peça o link atualizado para a isadsign.":"Verifique a conexão e tente de novo."))
+  }).catch(err=>renderState(...(err===404?["Pauta não encontrada","Esse link pode ter mudado. Peça o link atualizado para a isadsign."]:err==="chave"?["Link incompleto","Abra o link inteiro que a isadsign enviou, sem cortar o final."]:["Não foi possível abrir a pauta","Verifique a conexão e tente de novo."])))
 }
+/* Client pautas are encrypted (AES-GCM); the key is the link's #fragment, never sent to the server */
+async function abrir(f){
+  if(!f||!f.data)return f;
+  const k=location.hash.slice(1);if(!k)throw "chave";
+  const ub=s=>Uint8Array.from(atob(s.replace(/-/g,"+").replace(/_/g,"/")),c=>c.charCodeAt(0));
+  try{const key=await crypto.subtle.importKey("raw",ub(k),"AES-GCM",false,["decrypt"]);
+    return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub(f.iv)},key,ub(f.data))))}
+  catch(e){throw "chave"}}
 function renderState(t,msg){$("#app").innerHTML=`<div class="panel state"><h1>${esc(t)}</h1>${msg?`<p>${esc(msg)}</p>`:""}${msg?`<a class="btn" href="https://instagram.com/isadsign.co" rel="noopener">Falar com a isadsign</a>`:""}</div>`}
 
 /* ---------- Page ---------- */

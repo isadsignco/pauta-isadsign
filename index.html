@@ -231,6 +231,8 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .tags span{font-size:.8125rem;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:.2rem .6rem}
 .redo{display:flex;gap:.5rem;flex-wrap:wrap}
 .redo input{flex:1 1 12rem}
+.share{border:1.5px solid var(--accent)}
+.share input{font-family:var(--mono);font-size:.8125rem}
 .sh-nav{display:flex;justify-content:space-between;gap:.5rem;padding:.75rem 1.25rem 1.1rem;border-top:1px solid var(--line)}
 .toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:.6rem 1.1rem;border-radius:999px;font-size:.875rem;font-weight:500;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
@@ -387,6 +389,7 @@ const nextMonth=new Date(now.getFullYear(),now.getMonth()+1,1);
 const FEED=["Carrossel","Reels","Estático"];
 const form={mes:nextMonth.getMonth(),ano:nextMonth.getFullYear(),objetivo:"Vender",mix:{Carrossel:4,Reels:4,"Estático":4,Stories:0},semana:[2,4,6],datas:new Set(),temas:[]};
 let current=EXEMPLO, saved=[], clientes={}, filtroFormato="Todos", filtroPilar=null, busy=false, db=null, sample=null, downloads=null, openId=null, imgLimits=null;
+let shareLink=null; /* {id,arquivo,url}: last export to the client site */
 let anexos=[]; /* {id,name,kind:"img"|"pdf",blob,url,texto,paginas:[Blob]} */
 
 /* ---------- Form ---------- */
@@ -532,6 +535,7 @@ function renderResult(progress){
  let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow">${esc(p.arroba||p.nicho||"Pauta")}${p.exemplo?'<span class="tag">Exemplo</span>':""}</p><h2>${esc(p.cliente)} · ${mesNome} ${p.ano}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
  <div class="actions">${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${downloads&&p.posts.length?`<button class="btn ghost" id="dlMd" type="button">Baixar .md</button><button class="btn ghost" id="dlSite" type="button" title="Arquivo para a página do cliente (site/pautas)">Arquivo do site</button>`:""}${!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
  <div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
+ if(shareLink&&shareLink.id===p.id)html+=`<div class="panel card share"><h3>Link do cliente</h3><p class="lead">Coloque o arquivo <b>${esc(shareLink.arquivo)}</b> em site/pautas e envie este link. A pauta vai criptografada: sem o link completo ninguém consegue ler.</p><div class="redo"><input type="text" readonly value="${esc(shareLink.url)}" aria-label="Link do cliente" id="shareUrl"><button type="button" class="btn ghost" id="shareCopy">Copiar link</button></div></div>`;
  if(progress)html+=`<div class="panel progress"><div class="pl">${esc(progress.label)}<span>${esc(progress.detail||"")}</span></div><div class="track"><i style="width:${Math.round(progress.pct*100)}%"></i></div></div>`;
  const pf=p.perfil;
  if(pf&&(pf.resumo||(pf.produtos||[]).length)){const li=a=>`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
@@ -553,8 +557,10 @@ function renderResult(progress){
  r.querySelectorAll("[data-filtro]").forEach(b=>b.onclick=()=>{filtroFormato=b.dataset.filtro;renderResult(progress)});
  const ca=$("#copyAll");if(ca)ca.onclick=()=>copy(toMarkdown(p));
  const dl=$("#dlMd");if(dl)dl.onclick=async()=>{try{await downloads.save({filename:`pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}.md`,data:toMarkdown(p)})}catch(err){if(err&&err.code!=="cancelled")toast("Não foi possível baixar")}};
- const ds=$("#dlSite");if(ds)ds.onclick=async()=>{const d=JSON.parse(JSON.stringify(p));delete d.exemplo;try{await downloads.save({filename:`${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}.json`,data:JSON.stringify(d,null,1)});toast("Coloque o arquivo em site/pautas")}catch(err){if(err&&err.code!=="cancelled")toast("Não foi possível baixar")}};
+ const ds=$("#dlSite");if(ds)ds.onclick=()=>exportSite(p);
  const del=$("#delBtn");if(del)del.onclick=()=>confirmDelete(del,p);
+ const sc=$("#shareCopy");if(sc)sc.onclick=()=>copy(shareLink.url);
+ const su=$("#shareUrl");if(su)su.onclick=()=>su.select();
 }
 function confirmDelete(btn,p){if(btn.dataset.armed){deletePauta(p);return}btn.dataset.armed="1";btn.textContent="Toque para confirmar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.textContent="Excluir"}},3500)}
 function calendarHTML(p){
@@ -625,6 +631,20 @@ function toMarkdown(p){const e=p.estrategia||{};let s=`# Pauta ${p.cliente} · $
  if((e.datas||[]).length)s+=`\nDatas:\n${e.datas.map(d=>`- ${d.dia}/${p.mes+1} ${d.nome}: ${d.uso}`).join("\n")}\n`;
  s+=`\n## Calendário\n| Data | Dia | Formato | Pilar | Tema |\n|---|---|---|---|---|\n${sorted(p).map(x=>`| ${x.dia}/${p.mes+1} | ${DIAS[dow(x.dia,p.mes,p.ano)]} | ${x.formato} | ${x.pilar} | ${x.tema} |`).join("\n")}\n\n# Posts\n\n`;
  return s+sorted(p).map(x=>postMd(x,p)).join("\n---\n\n")}
+
+/* ---------- Client site export ---------- */
+/* The pauta goes to site/pautas encrypted with AES-GCM; the key travels only in the link's #fragment, which browsers never send to the server */
+const SITE_URL="https://isadsignco.github.io/pauta-isadsign/site/";
+const b64u=buf=>btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+async function exportSite(p){
+ try{const d=JSON.parse(JSON.stringify(p));delete d.exemplo;d.briefing={temas:(p.briefing&&p.briefing.temas)||[]};
+  const raw=crypto.getRandomValues(new Uint8Array(32)),iv=crypto.getRandomValues(new Uint8Array(12));
+  const key=await crypto.subtle.importKey("raw",raw,"AES-GCM",false,["encrypt"]);
+  const ct=await crypto.subtle.encrypt({name:"AES-GCM",iv},key,new TextEncoder().encode(JSON.stringify(d)));
+  const nome=`${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}-${b64u(crypto.getRandomValues(new Uint8Array(6))).toLowerCase().replace(/[^a-z0-9]/g,"")}`;
+  await downloads.save({filename:nome+".json",data:JSON.stringify({v:1,iv:b64u(iv),data:b64u(ct)})});
+  shareLink={id:p.id,arquivo:nome+".json",url:`${SITE_URL}?c=${nome}#${b64u(raw)}`};renderResult()}
+ catch(err){if(err&&err.code!=="cancelled")toast("Não foi possível gerar o arquivo")}}
 
 /* ---------- Generation ---------- */
 function perfilTexto(pf){if(!pf)return"";const L=(k,v)=>v&&(Array.isArray(v)?v.length:true)?`${k}: ${Array.isArray(v)?v.join("; "):v}\n`:"";
