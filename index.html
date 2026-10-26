@@ -120,7 +120,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .tchip i{font-style:normal;width:1.1rem;height:1.1rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;background:var(--accent);color:var(--on-accent)}
 
 /* Client profile + post description */
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.9rem 1.5rem;margin-top:.2rem}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.9rem 1.5rem;margin-top:.2rem}
 .fact h4{margin:0 0 .25rem;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-2)}
 .fact p{margin:0;font-size:.9375rem;line-height:1.45}
 .fact ul{margin:0;padding-left:1.1rem;font-size:.9375rem;line-height:1.45}
@@ -128,7 +128,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .check{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.4rem}
 .check li{display:grid;grid-template-columns:1.1rem minmax(0,1fr);gap:.55rem;font-size:.9375rem;line-height:1.4}
 .check li::before{content:"";width:.95rem;height:.95rem;margin-top:.15rem;border-radius:.3rem;border:1.5px solid var(--fg-2)}
-.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:.75rem}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.75rem}
 .kv div{background:var(--surface-2);border-radius:var(--r-sm);padding:.7rem .85rem}
 .kv b{display:block;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-2);margin-bottom:.2rem}
 .kv span{font-size:.9375rem;line-height:1.4}
@@ -150,7 +150,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .card{padding:1.4rem 1.5rem}
 .card h3{font-size:1.25rem;letter-spacing:-.02em;margin:0 0 .25rem;font-weight:600}
 .card .lead{color:var(--fg-2);margin:0 0 1.1rem;max-width:44rem}
-.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.75rem}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.75rem}
 .pillar{border:1px solid var(--line);border-radius:var(--r-md);padding:.9rem 1rem;text-align:left;background:transparent;display:flex;flex-direction:column;gap:.35rem}
 .pillar[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
 .pillar .pt{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;font-weight:600}
@@ -178,7 +178,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 
 /* Posts */
 .toolbar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;margin-bottom:1rem}
-.posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(17rem,1fr));gap:.75rem}
+.posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr));gap:.75rem}
 .post{border:1px solid var(--line);border-radius:var(--r-md);padding:1rem;text-align:left;background:transparent;display:flex;flex-direction:column;gap:.45rem;min-width:0;transition:border-color .15s,transform .15s}
 .post:hover{border-color:var(--fg-2)}
 .post .pm{display:flex;align-items:center;gap:.45rem;font-size:.8125rem;color:var(--fg-2);font-variant-numeric:tabular-nums}
@@ -196,7 +196,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .track i{display:block;height:100%;width:0;background:var(--accent);border-radius:3px;transition:width .4s ease}
 
 /* Saved list */
-.saved{display:grid;grid-template-columns:repeat(auto-fill,minmax(18rem,1fr));gap:.75rem;padding-bottom:4rem}
+.saved{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,18rem),1fr));gap:.75rem;padding-bottom:4rem}
 .sv{padding:1.2rem;text-align:left;border:0;display:flex;flex-direction:column;gap:.3rem}
 .sv .m{font-size:.8125rem;color:var(--fg-2)}
 .sv h3{margin:0;font-size:1.1875rem;letter-spacing:-.02em}
@@ -243,6 +243,77 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .redo{display:flex;gap:.5rem;flex-wrap:wrap}
 .redo input{flex:1 1 12rem}
 .sh-nav{display:flex;justify-content:space-between;gap:.5rem;padding:.75rem 1.25rem 1.1rem;border-top:1px solid var(--line)}
+/* Client folders, status, answers */
+.tags{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
+.tag.mes{background:var(--accent-soft);color:var(--accent)}
+.eyebrow{flex-wrap:wrap;row-gap:.35rem}
+.eyebrow .eb{min-width:0;overflow-wrap:anywhere}
+.chip-st{font-size:.6875rem;font-weight:600;letter-spacing:.02em;border-radius:999px;padding:.15rem .55rem;white-space:nowrap}
+.st-neutro{background:var(--surface-2);color:var(--fg-2)}
+.st-info{background:color-mix(in srgb,var(--c-reel) 15%,transparent);color:var(--c-reel)}
+.st-ok{background:color-mix(in srgb,var(--c-sto) 16%,transparent);color:var(--c-sto)}
+.st-warn{background:color-mix(in srgb,var(--c-est) 16%,transparent);color:var(--c-est)}
+.st-bad{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
+.clientes{display:flex;flex-direction:column;gap:1.25rem;padding-block:2rem 4rem}
+.cl-head h2{font-size:clamp(1.75rem,4vw,2.5rem);letter-spacing:-.03em;margin:0;line-height:1.1}
+.cl-head .lead{color:var(--fg-2);margin:.35rem 0 0}
+.folders{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16rem),1fr));gap:.75rem}
+.folder{border:0;text-align:left;padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.35rem;min-width:0}
+.folder h3{margin:.2rem 0 0;font-size:1.1875rem;letter-spacing:-.02em;overflow-wrap:anywhere}
+.folder .m,.hrow .m{font-size:.8125rem;color:var(--fg-2);overflow-wrap:anywhere}
+.fo-top{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.fo-ic{width:1.6rem;height:1.25rem;border-radius:.3rem;background:var(--accent-soft);position:relative}
+.fo-ic::before{content:"";position:absolute;left:0;top:-.25rem;width:.8rem;height:.35rem;border-radius:.25rem .25rem 0 0;background:var(--accent-soft)}
+.sw{display:flex;gap:.25rem;flex-wrap:wrap}
+.sw i{width:1rem;height:1rem;border-radius:50%;box-shadow:inset 0 0 0 1px var(--line)}
+.pasta{display:flex;flex-direction:column;gap:1.25rem}
+.pasta .card h3{margin-bottom:.35rem}
+.pt-nome{font-size:clamp(1.6rem,4vw,2.25rem);letter-spacing:-.03em;margin:0 0 1rem;line-height:1.1;overflow-wrap:anywhere}
+.pasta-form{max-width:44rem}
+@media (max-width:560px){.pasta-form .row2{grid-template-columns:minmax(0,1fr)}}
+.cores{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem}
+.cor{display:inline-flex;align-items:center;gap:.4rem;background:var(--surface-2);border-radius:999px;padding:.25rem .35rem .25rem .3rem;font-size:.8125rem}
+.cor i{width:1.1rem;height:1.1rem;border-radius:50%;box-shadow:inset 0 0 0 1px var(--line)}
+.cor code{font-family:var(--mono);font-size:.75rem}
+.cor button{border:0;background:var(--surface);border-radius:50%;width:1.3rem;height:1.3rem;font-size:.65rem}
+.cor-add{flex-wrap:wrap}
+.cor-add input[type=color]{width:2.6rem;height:2.4rem;border:0;padding:0;background:none;flex:none}
+.cor-add input[type=text]{flex:1 1 7rem;min-width:0;font-family:var(--mono)}
+.linkbox{font-family:var(--mono);font-size:.8125rem;background:var(--surface-2);border-radius:var(--r-sm);padding:.7rem .8rem;margin:0 0 .75rem;word-break:break-all;user-select:all}
+.mono{font-family:var(--mono);letter-spacing:.06em}
+.hist{display:flex;flex-direction:column}
+.hrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.6rem 1rem;align-items:center;padding:.85rem 0;border-top:1px solid var(--line)}
+.hrow:first-child{border-top:0}
+.h-info{display:flex;flex-direction:column;gap:.3rem;min-width:0}
+.h-nota{margin:0;font-size:.875rem;color:var(--fg-2);overflow-wrap:anywhere}
+.h-act{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:flex-end}
+.h-act select{width:auto;max-width:100%}
+.h-act .btn,.h-nota-in .btn{padding:.5rem .9rem;font-size:.875rem}
+.h-nota-in{grid-column:1/-1;display:flex;gap:.4rem;flex-wrap:wrap}
+.h-nota-in input{flex:1 1 12rem;min-width:0}
+@media (max-width:560px){.hrow{grid-template-columns:minmax(0,1fr)}.h-act{justify-content:flex-start}}
+.btn.danger{background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger)}
+.note.warn{color:var(--c-est);text-align:left}
+.cfg .tagin input{min-width:0}
+.resp .lead{margin-bottom:.9rem}
+.resp-bt{display:flex;flex-wrap:wrap;gap:.5rem}
+.resp-bt .btn{flex:1 1 9rem;border:1px solid var(--line);background:transparent;white-space:normal}
+.resp-bt .btn[aria-pressed="true"].resp-aprovada{background:var(--c-sto);color:var(--on-accent);border-color:var(--c-sto)}
+.resp-bt .btn[aria-pressed="true"].resp-revisao{background:var(--c-est);color:var(--on-accent);border-color:var(--c-est)}
+.resp-bt .btn[aria-pressed="true"].resp-reprovada{background:var(--danger);color:var(--on-accent);border-color:var(--danger)}
+.resp-env{display:flex;flex-direction:column;gap:.5rem;margin-top:1rem}
+.resp-env .btn{align-self:flex-start;text-decoration:none}
+.resp-env .note{text-align:left;margin:0}
+/* Long words and links never push a card wider than the screen */
+.panel,.post,.sv,.fact,.kv span,.caption,.hook,.slide,.beat,.pillar,.head h2,.sh-top h3{overflow-wrap:anywhere}
+.head .t{flex:1 1 16rem}
+.btn{max-width:100%}
+.actions .btn{white-space:normal;text-align:center}
+@media (max-width:430px){.brand small{display:none}.top .seg button{padding:.3rem .6rem}.top .wrap{gap:.5rem}}
+.sv .tags{margin-bottom:.15rem}
+.toolbar .seg{display:flex;flex-wrap:wrap;max-width:100%}
+.toolbar .seg button{flex:1 1 auto}
+
 /* Client view and release */
 .btn.sm{padding:.35rem .8rem;font-size:.8125rem}
 .btn.lib{background:var(--accent);color:var(--on-accent)}
@@ -273,6 +344,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
     <div class="brand">Pauta <small>isadsign</small></div>
     <div class="seg" role="group" aria-label="Seções">
       <button type="button" id="tabNova" aria-pressed="true">Nova pauta</button>
+      <button type="button" id="tabClientes" aria-pressed="false">Clientes</button>
       <button type="button" id="tabSalvas" aria-pressed="false">Salvas</button>
     </div>
     <button type="button" class="btn ghost sm" id="sairBtn" hidden>Sair</button>
@@ -369,8 +441,9 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 
   <section id="viewSalvas" hidden>
     <div class="saved" id="savedList"></div>
-    <div class="panel card acessos" id="acessosBox" hidden></div>
   </section>
+
+  <section id="viewClientes" class="clientes" hidden></section>
 </main>
 
 <div class="scrim" id="scrim" hidden>
@@ -566,8 +639,10 @@ $("#miniCal").addEventListener("click",()=>{preencherCliente.tocou=true});
 datasPelaSemana();fitMixToDatas();paintFreq();updateTotal();
 
 /* ---------- Tabs ---------- */
-function showView(v){$("#viewNova").hidden=v!=="nova";$("#hero").hidden=v!=="nova";$("#viewSalvas").hidden=v!=="salvas";$("#tabNova").setAttribute("aria-pressed",v==="nova");$("#tabSalvas").setAttribute("aria-pressed",v==="salvas");if(v==="salvas"){renderSaved();renderAcessos()}window.scrollTo({top:0})}
-$("#tabNova").onclick=()=>showView("nova");$("#tabSalvas").onclick=()=>showView("salvas");
+function showView(v){$("#viewNova").hidden=v!=="nova";$("#hero").hidden=v!=="nova";$("#viewSalvas").hidden=v!=="salvas";$("#viewClientes").hidden=v!=="clientes";
+ ["nova","clientes","salvas"].forEach(k=>$("#tab"+k[0].toUpperCase()+k.slice(1)).setAttribute("aria-pressed",v===k));
+ if(v==="salvas")renderSaved();if(v==="clientes")renderClientes();window.scrollTo({top:0})}
+$("#tabNova").onclick=()=>showView("nova");$("#tabSalvas").onclick=()=>showView("salvas");$("#tabClientes").onclick=()=>{pastaAberta=null;showView("clientes")};
 
 /* ---------- Helpers ---------- */
 function daysIn(m,y){return new Date(y,m+1,0).getDate()}
@@ -583,9 +658,10 @@ function renderResult(progress){
  if(!p){r.innerHTML=`<div class="panel empty-state"><h3>Nenhuma pauta aberta</h3><p>Preencha o briefing ao lado e toque em Gerar pauta.</p></div>`;return}
  const mesNome=MESES[p.mes];
  const counts=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(c=>c[1]);
- let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow">${esc(p.arroba||p.nicho||"Pauta")}${p.exemplo?'<span class="tag">Exemplo</span>':""}</p><h2>${esc(p.cliente)} · ${mesNome} ${p.ano}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
- <div class="actions"${modoCliente?" hidden":""}>${dono&&artifactCap&&db&&!p.exemplo&&!busy&&p.posts.length?`<button class="btn lib" id="libBtn" type="button">Liberar para o cliente</button>`:""}${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${downloads&&p.posts.length?`<button class="btn ghost" id="dlMd" type="button">Baixar .md</button>`:""}${!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
+ let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow"><span class="eb">${esc(p.arroba||p.nicho||"Pauta")}</span><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${p.exemplo?'<span class="tag">Exemplo</span>':""}${!modoCliente&&!p.exemplo?statusChip(p):""}</p><h2>${esc(p.cliente)} · ${mesNome} ${p.ano}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
+ <div class="actions">${!modoCliente&&dono&&artifactCap&&db&&!p.exemplo&&!busy&&p.posts.length?`<button class="btn lib" id="libBtn" type="button">Liberar para o cliente</button>`:""}${downloads&&p.posts.length&&!busy?`<button class="btn ghost" id="dlPdf" type="button">Baixar PDF</button><button class="btn ghost" id="dlHtml" type="button">Baixar HTML</button>`:""}${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${!modoCliente&&!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
  ${modoCliente&&clientePautas.length>1?`<div class="months" role="group" aria-label="Escolher mês">${clientePautas.map((x,i)=>`<button type="button" data-mes="${i}" aria-pressed="${x===p}">${MESES[x.mes]} ${x.ano}</button>`).join("")}</div>`:""}<div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
+ if(modoCliente)html+=respostaHTML(p);
  if(progress)html+=`<div class="panel progress"><div class="pl">${esc(progress.label)}<span>${esc(progress.detail||"")}</span></div><div class="track"><i style="width:${Math.round(progress.pct*100)}%"></i></div></div>`;
  const pf=p.perfil;
  if(pf&&(pf.resumo||(pf.produtos||[]).length)){const li=a=>`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
@@ -606,7 +682,9 @@ function renderResult(progress){
  r.querySelectorAll("[data-post]").forEach(b=>b.onclick=()=>openPost(b.dataset.post));
  r.querySelectorAll("[data-filtro]").forEach(b=>b.onclick=()=>{filtroFormato=b.dataset.filtro;renderResult(progress)});
  const ca=$("#copyAll");if(ca)ca.onclick=()=>copy(toMarkdown(p));
- const dl=$("#dlMd");if(dl)dl.onclick=async()=>{try{await downloads.save({filename:`pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}.md`,data:toMarkdown(p)})}catch(err){if(err&&err.code!=="cancelled")toast("Não foi possível baixar")}};
+ const dh=$("#dlHtml");if(dh)dh.onclick=()=>baixar(`${nomeArquivo(p)}.html`,()=>pautaHTML(p),dh);
+ const dp=$("#dlPdf");if(dp)dp.onclick=()=>baixar(`${nomeArquivo(p)}.pdf`,()=>pautaPDF(p),dp);
+ if(modoCliente)bindResposta(p);
  const del=$("#delBtn");if(del)del.onclick=()=>confirmDelete(del,p);
  const lib=$("#libBtn");if(lib)lib.onclick=()=>liberar(p,lib);
  r.querySelectorAll("[data-mes]").forEach(b=>b.onclick=()=>{current=clientePautas[+b.dataset.mes];filtroFormato="Todos";filtroPilar=null;renderResult();window.scrollTo({top:0})});
@@ -693,7 +771,7 @@ Produtos/promoções/eventos: ${b.destaques||"nenhum informado"}
 Tom de voz: ${b.tom||"adequado ao nicho"}
 Público: ${b.publico||"não informado"}
 Evitar: ${b.evitar||"nada específico"}
-${b.perfil?"\n"+perfilTexto(b.perfil):b.sobre?"\nSobre o cliente: "+b.sobre+"\n":""}`}
+${b.perfil?"\n"+perfilTexto(b.perfil):b.sobre?"\nSobre o cliente: "+b.sobre+"\n":""}${pastaTexto(b.cliente)}`}
 function calendarioTexto(m,y){const n=daysIn(m,y);let a=[];for(let d=1;d<=n;d++)a.push(`${d} ${DIAS[dow(d,m,y)]}`);return a.join(", ")}
 const REGRAS=`Você é estrategista de conteúdo de Instagram da agência @isadsign.co. Escreva em português do Brasil, na linguagem do público do cliente. Use o que você sabe do cliente (produtos, diferenciais, público, visual) em cada ideia: nada genérico que serviria a qualquer perfil. Ganchos variados (pergunta, erro comum, número, polêmica leve, antes/depois). No máximo 1 em cada 4 posts é venda direta. Responda SOMENTE com JSON válido, sem texto antes ou depois.`;
 
@@ -836,23 +914,226 @@ async function redoPost(x,extra,btn){
 /* ---------- Storage ---------- */
 async function savePauta(p){if(!db||p.exemplo)return;try{const data=JSON.parse(JSON.stringify(p));data.atualizadoEm=new Date().toISOString();await db.collection("pautas").doc(p.id).set(data)}catch(e){toast("Não foi possível salvar a pauta")}}
 async function saveCliente(b){if(!db||!b.perfil)return;const id=slugC(b.cliente);const data={nome:b.cliente,arroba:b.arroba||"",nicho:b.nicho||"",sobre:b.sobre||"",perfil:b.perfil,briefing:{tom:b.tom||"",publico:b.publico||"",evitar:b.evitar||"",temas:b.temas||[],semana:b.semana||[],freq:b.freq||"semana",intervalo:b.intervalo||2},atualizadoEm:new Date().toISOString()};
- clientes[id]=data;try{await db.collection("clientes").doc(id).set(data)}catch(e){}}
+ const prev=clientes[id]||{};const full={...prev,...data,nome:prev.nome||data.nome};
+ clientes[id]=full;try{await db.collection("clientes").doc(id).set(full)}catch(e){}}
 async function deletePauta(p){if(!db)return;try{await db.collection("pautas").doc(p.id).delete();toast("Pauta excluída");current=null;renderResult()}catch(e){toast("Não foi possível excluir")}}
 function renderSaved(){
  const box=$("#savedList");
  if(!db){box.innerHTML=`<div class="panel empty-state" style="grid-column:1/-1"><h3>Pautas salvas aparecem aqui</h3><p>Abra esta página no Claude, com sua conta, para salvar e ver o histórico.</p></div>`;return}
  if(!saved.length){box.innerHTML=`<div class="panel empty-state" style="grid-column:1/-1"><h3>Nenhuma pauta salva ainda</h3><p>Gere a primeira em Nova pauta. Ela fica guardada aqui por cliente e mês.</p></div>`;return}
  box.innerHTML=saved.map(p=>{const c=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(x=>x[1]);
-  return `<button type="button" class="panel sv" data-open="${esc(p.id)}"><span class="m">${MESES[p.mes]} ${p.ano}</span><h3>${esc(p.cliente)}</h3><span class="m">${p.posts.length} posts · ${esc(p.objetivo)}</span><span class="mini">${c.map(([f,n])=>Array.from({length:n},()=>`<i class="dot" style="background:${FCOLOR[f]}" title="${f}"></i>`).join("")).join("")}</span></button>`}).join("");
+  return `<button type="button" class="panel sv" data-open="${esc(p.id)}"><span class="tags"><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${statusChip(p)}</span><h3>${esc(p.cliente)}</h3><span class="m">${p.posts.length} posts · ${esc(p.objetivo)}</span><span class="mini">${c.map(([f,n])=>Array.from({length:n},()=>`<i class="dot" style="background:${FCOLOR[f]}" title="${f}"></i>`).join("")).join("")}</span></button>`}).join("");
  box.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{const p=saved.find(s=>s.id===b.dataset.open);if(p){current=JSON.parse(JSON.stringify(p));filtroFormato="Todos";filtroPilar=null;renderResult();showView("nova")}})}
-function renderAcessos(){
- const box=$("#acessosBox");if(!acessos.length){box.hidden=true;return}
- box.hidden=false;
- box.innerHTML=`<h3>Acesso dos clientes</h3><p class="lead">Cada cliente tem o próprio link e o próprio código. A página só abre com o código e mostra só as pautas daquele cliente. Para liberar ou atualizar, abra a pauta e toque em Liberar para o cliente: o link e o código continuam os mesmos todo mês.</p>
- ${acessos.map((a,i)=>`<div class="ac"><div class="nm"><b>${esc(a.cliente)}</b><span>${esc((a.meses||[]).join(" · ")||"Sem pauta")}</span></div><code>${esc(a.codigo)}</code><div class="bt"><button type="button" class="btn ghost" data-ac="link" data-i="${i}">Copiar link</button><button type="button" class="btn ghost" data-ac="tudo" data-i="${i}">Copiar mensagem</button></div></div>`).join("")}`;
- box.querySelectorAll("[data-ac]").forEach(b=>b.onclick=()=>{const a=acessos[+b.dataset.i];
-  copy(b.dataset.ac==="link"?a.url:`Oi! Sua pauta de conteúdo está aqui: ${a.url}\nCódigo de acesso: ${a.codigo}`)})}
 function updateClientes(){const names=[...new Set([...saved.map(s=>s.cliente),...Object.values(clientes).map(c=>c.nome)])].sort((a,b)=>a.localeCompare(b,"pt"));$("#clientesList").innerHTML=names.map(n=>`<option value="${esc(n)}"></option>`).join("")}
+
+/* ---------- Status ---------- */
+const STATUS={rascunho:["Rascunho","st-neutro"],liberada:["Enviada ao cliente","st-info"],aprovada:["Aprovada","st-ok"],revisao:["Pediu revisão","st-warn"],reprovada:["Reprovada","st-bad"]};
+function statusChip(p){const s=STATUS[p.status||"rascunho"]||STATUS.rascunho;return `<span class="chip-st ${s[1]}">${s[0]}</span>`}
+async function setStatus(p,st,nota){const x=saved.find(y=>y.id===p.id)||p;x.status=st;x.statusNota=nota||"";x.statusEm=new Date().toISOString();await savePauta(x);if(current&&current.id===x.id){current.status=st;current.statusNota=x.statusNota}}
+
+/* ---------- Client folders ---------- */
+let pastaAberta=null, cfg={}, cfgOk=false, acessosOk=false, editCores=null;
+function pastas(){
+ const m={};const add=(id,nome)=>{if(!m[id])m[id]={id,nome}};
+ Object.entries(clientes).forEach(([id,c])=>add(id,c.nome));
+ saved.forEach(p=>add(slugC(p.cliente),p.cliente));
+ acessos.forEach(a=>add(a.id,a.cliente));
+ return Object.values(m).map(f=>{const c=clientes[f.id]||{};const ps=saved.filter(p=>slugC(p.cliente)===f.id).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes));
+  return {...f,nome:c.nome||f.nome,dados:c,pautas:ps,acesso:acessos.find(a=>a.id===f.id)||null}}).sort((a,b)=>a.nome.localeCompare(b.nome,"pt"))}
+function pastaTexto(nome){const c=clientes[slugC(nome)];if(!c)return "";let t="";
+ if(c.descricao)t+=`\nDescrição da marca: ${c.descricao}`;if((c.cores||[]).length)t+=`\nCores da marca: ${c.cores.join(", ")}`;return t?t+"\n":""}
+function swatches(cores){return (cores||[]).length?`<span class="sw">${cores.map(h=>`<i style="background:${esc(h)}" title="${esc(h)}"></i>`).join("")}</span>`:""}
+function renderClientes(){
+ const box=$("#viewClientes");
+ if(!db){box.innerHTML=`<div class="panel empty-state"><h3>As pastas dos clientes aparecem aqui</h3><p>Abra esta página no Claude, com sua conta.</p></div>`;return}
+ const lista=pastas();
+ if(pastaAberta&&lista.some(f=>f.id===pastaAberta))return renderPasta(lista.find(f=>f.id===pastaAberta));
+ pastaAberta=null;editCores=null;
+ box.innerHTML=`<div class="cl-head"><div><h2>Clientes</h2><p class="lead">Uma pasta por marca: dados, cores, link de visualização e histórico de pautas.</p></div></div>
+ <div class="panel card cfg"><h3>Respostas dos clientes</h3><p class="lead">Quando o cliente aprova, pede revisão ou reprova uma pauta, o WhatsApp dele abre com a resposta pronta para este número.</p>
+ <form class="row-in" id="cfgForm"><label class="lbl" for="cfgWa">Seu WhatsApp, com DDD</label><div class="tagin"><input type="text" id="cfgWa" inputmode="tel" placeholder="Ex.: 11 91234-5678" value="${esc(fmtFone(cfg.whatsapp||""))}"><button type="submit" class="btn ghost" id="cfgSave">Salvar</button></div>
+ ${cfg.whatsapp?"":`<p class="note warn">Sem número, os botões de resposta não aparecem para o cliente.</p>`}</form></div>
+ ${lista.length?`<div class="folders">${lista.map(f=>{const ap=f.pautas.filter(p=>p.status==="aprovada").length;
+  return `<button type="button" class="panel folder" data-pasta="${esc(f.id)}"><span class="fo-top"><span class="fo-ic" aria-hidden="true"></span>${f.acesso?`<span class="chip-st st-info">Link ativo</span>`:`<span class="chip-st st-neutro">Sem link</span>`}</span><h3>${esc(f.nome)}</h3>${f.dados.nicho?`<span class="m">${esc(f.dados.nicho)}</span>`:""}${swatches(f.dados.cores)}<span class="m">${f.pautas.length} ${f.pautas.length===1?"pauta":"pautas"} · ${ap} ${ap===1?"aprovada":"aprovadas"}</span></button>`}).join("")}</div>`
+ :`<div class="panel empty-state"><h3>Nenhum cliente ainda</h3><p>Gere a primeira pauta em Nova pauta. A pasta do cliente é criada sozinha.</p></div>`}`;
+ box.querySelectorAll("[data-pasta]").forEach(b=>b.onclick=()=>{pastaAberta=b.dataset.pasta;renderClientes();window.scrollTo({top:0})});
+ $("#cfgForm").onsubmit=async e=>{e.preventDefault();const n=String($("#cfgWa").value).replace(/\D/g,"");
+  if(n&&n.length<10){toast("Confira o número: DDD e telefone");return}
+  const num=n?(n.length<=11?"55"+n:n):"";if(num)portalSync=true;const b=$("#cfgSave");b.disabled=true;b.textContent="Salvando…";
+  try{await db.collection("config").doc("geral").set({whatsapp:num,atualizadoEm:new Date().toISOString()});cfg={whatsapp:num};
+   if(artifactCap&&num){voltarDepois({view:"clientes",msg:"WhatsApp salvo"});await publishPortal({...PORTAL,_cfg:{whatsapp:num}})}else{toast("WhatsApp salvo");renderClientes()}}
+  catch(err){if(err&&err.code==="conflict")return;toast(erroPublicar(err&&err.code));b.disabled=false;b.textContent="Salvar"}}}
+function fmtFone(n){n=String(n||"").replace(/^55/,"");return n.length===11?`${n.slice(0,2)} ${n.slice(2,7)}-${n.slice(7)}`:n.length===10?`${n.slice(0,2)} ${n.slice(2,6)}-${n.slice(6)}`:n}
+function renderPasta(f){
+ const box=$("#viewClientes"),c=f.dados,a=f.acesso;
+ if(!editCores)editCores=[...(c.cores||[])];
+ box.innerHTML=`<div class="cl-head"><button type="button" class="btn link" id="pastaVoltar">‹ Clientes</button></div>
+ <div class="pasta">
+ <div class="panel card"><p class="eyebrow">Pasta do cliente</p><h2 class="pt-nome">${esc(f.nome)}</h2>
+  <form id="pastaForm" class="pasta-form" autocomplete="off">
+   <div class="row2"><div class="field"><label for="pfNome">Nome da marca</label><input type="text" id="pfNome" value="${esc(f.nome)}"></div>
+   <div class="field"><label for="pfNicho">Nicho</label><input type="text" id="pfNicho" value="${esc(c.nicho||"")}" placeholder="Ex.: cafeteria"></div></div>
+   <div class="field"><label for="pfDesc">Descrição breve</label><textarea id="pfDesc" rows="3" placeholder="O que a marca faz, para quem e o que a diferencia">${esc(c.descricao||(c.perfil&&c.perfil.resumo)||"")}</textarea></div>
+   <div class="field"><span class="lbl">Cores da marca</span><div class="cores" id="pfCores">${editCores.map((h,i)=>`<span class="cor"><i style="background:${esc(h)}"></i><code>${esc(h)}</code><button type="button" data-rmcor="${i}" aria-label="Remover ${esc(h)}">✕</button></span>`).join("")||`<span class="m">Nenhuma cor ainda</span>`}</div>
+    <div class="tagin cor-add"><input type="color" id="pfCorPick" value="#d6237f" aria-label="Escolher cor"><input type="text" id="pfCorHex" placeholder="#d6237f" maxlength="7" aria-label="Código da cor"><button type="button" class="btn ghost" id="pfCorAdd">Adicionar cor</button></div></div>
+   <button type="submit" class="btn lib" id="pfSalvar">Salvar dados</button>
+  </form></div>
+ <div class="panel card"><h3>Link de visualização</h3>${a?`<p class="lead">O cliente abre este link e digita o código. Vê só as pautas que você liberou.</p>
+  <p class="linkbox">${esc(a.url)}</p><div class="kv"><div><b>Código de acesso</b><span class="mono">${esc(a.codigo)}</span></div><div><b>Meses liberados</b><span>${esc((a.meses||[]).join(" · ")||"Nenhum")}</span></div></div>
+  <div class="actions" style="margin-top:.9rem"><button type="button" class="btn ghost" id="cpLink">Copiar link</button><button type="button" class="btn ghost" id="cpMsg">Copiar mensagem</button></div>`
+  :`<p class="lead">Ainda sem link. Abra uma pauta deste cliente e toque em Liberar para o cliente: o link e o código são criados na hora.</p>`}</div>
+ <div class="panel card"><h3>Histórico de pautas</h3>${f.pautas.length?`<div class="hist">${f.pautas.map(p=>`<div class="hrow" data-hid="${esc(p.id)}">
+   <div class="h-info"><span class="tags"><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${statusChip(p)}</span><span class="m">${p.posts.length} posts · ${esc(p.objetivo||"")}</span>${p.statusNota?`<p class="h-nota">“${esc(p.statusNota)}”</p>`:""}</div>
+   <div class="h-act"><button type="button" class="btn ghost" data-abrir="${esc(p.id)}">Abrir</button>
+   <select data-st="${esc(p.id)}" aria-label="Resposta do cliente">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}"${(p.status||"rascunho")===k?" selected":""}>${v[0]}</option>`).join("")}</select></div>
+   <div class="h-nota-in" hidden><input type="text" placeholder="Comentário do cliente (opcional)" value="${esc(p.statusNota||"")}" aria-label="Comentário do cliente"><button type="button" class="btn ghost" data-stsave="${esc(p.id)}">Salvar resposta</button></div></div>`).join("")}</div>`
+  :`<p class="lead">Nenhuma pauta deste cliente ainda.</p>`}</div>
+ <div class="panel card perigo"><h3>Excluir cliente</h3><p class="lead">Apaga a pasta, ${f.pautas.length===1?"a pauta":`as ${f.pautas.length} pautas`} deste cliente e o link de visualização. O link para de abrir na hora. Não dá para desfazer.</p>
+  <button type="button" class="btn danger" id="pastaExcluir">Excluir ${esc(f.nome)}</button></div>
+ </div>`;
+ $("#pastaVoltar").onclick=()=>{pastaAberta=null;editCores=null;rascunho=null;renderClientes();window.scrollTo({top:0})};
+ const addCor=()=>{let h=$("#pfCorHex").value.trim()||$("#pfCorPick").value;if(!h.startsWith("#"))h="#"+h;
+  if(!/^#[0-9a-fA-F]{6}$/.test(h)){toast("Use o formato #RRGGBB");return}if(!editCores.includes(h.toLowerCase()))editCores.push(h.toLowerCase());guardarRascunho();renderPasta(f)};
+ $("#pfCorAdd").onclick=addCor;$("#pfCorHex").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addCor()}});
+ $("#pfCorPick").oninput=e=>{$("#pfCorHex").value=e.target.value};
+ box.querySelectorAll("[data-rmcor]").forEach(b=>b.onclick=()=>{editCores.splice(+b.dataset.rmcor,1);guardarRascunho();renderPasta(f)});
+ restaurarRascunho();
+ $("#pastaForm").onsubmit=async e=>{e.preventDefault();const nome=$("#pfNome").value.trim()||f.nome;const b=$("#pfSalvar");b.disabled=true;b.textContent="Salvando…";
+  const data={...c,nome,nicho:$("#pfNicho").value.trim(),descricao:$("#pfDesc").value.trim(),cores:[...editCores],atualizadoEm:new Date().toISOString()};
+  try{await db.collection("clientes").doc(f.id).set(data);clientes[f.id]=data;rascunho=null;toast("Dados salvos");editCores=null;renderClientes()}catch(err){toast("Não foi possível salvar");b.disabled=false;b.textContent="Salvar dados"}};
+ if(a){$("#cpLink").onclick=()=>copy(a.url);$("#cpMsg").onclick=()=>copy(`Oi! Sua pauta de conteúdo está aqui: ${a.url}\nCódigo de acesso: ${a.codigo}`)}
+ box.querySelectorAll("[data-abrir]").forEach(b=>b.onclick=()=>{const p=saved.find(s=>s.id===b.dataset.abrir);if(p){current=JSON.parse(JSON.stringify(p));filtroFormato="Todos";filtroPilar=null;renderResult();showView("nova")}});
+ box.querySelectorAll("[data-st]").forEach(sel=>sel.onchange=()=>{const row=sel.closest(".hrow");row.querySelector(".h-nota-in").hidden=false;row.querySelector(".h-nota-in input").focus()});
+ box.querySelectorAll("[data-stsave]").forEach(b=>b.onclick=async()=>{const row=b.closest(".hrow"),p=saved.find(s=>s.id===b.dataset.stsave);if(!p)return;
+  b.disabled=true;await setStatus(p,row.querySelector("select").value,row.querySelector(".h-nota-in input").value.trim());toast("Resposta registrada");renderClientes()});
+ const del=$("#pastaExcluir");del.onclick=()=>{if(!del.dataset.armed){del.dataset.armed="1";del.textContent="Toque de novo para excluir";setTimeout(()=>{if(del.isConnected){delete del.dataset.armed;del.textContent=`Excluir ${f.nome}`}},4000);return}excluirCliente(f,del)}}
+/* Unsaved folder edits survive a re-render caused by live data */
+let rascunho=null;
+function guardarRascunho(){const n=$("#pfNome");if(n)rascunho={id:pastaAberta,nome:n.value,nicho:$("#pfNicho").value,desc:$("#pfDesc").value}}
+function restaurarRascunho(){if(rascunho&&rascunho.id===pastaAberta){$("#pfNome").value=rascunho.nome;$("#pfNicho").value=rascunho.nicho;$("#pfDesc").value=rascunho.desc}
+ ["#pfNome","#pfNicho","#pfDesc"].forEach(sel=>$(sel).addEventListener("input",guardarRascunho))}
+async function excluirCliente(f,btn){
+ portalSync=true;btn.disabled=true;btn.textContent="Excluindo…";
+ try{for(const p of f.pautas)await db.collection("pautas").doc(p.id).delete();
+  await db.collection("clientes").doc(f.id).delete().catch(()=>{});
+  if(f.acesso)await db.collection("acessos").doc(f.acesso.id).delete();
+  if(current&&slugC(current.cliente)===f.id)current=null;
+  pastaAberta=null;editCores=null;
+  if(f.acesso&&f.acesso.token&&PORTAL[f.acesso.token]&&artifactCap){const novo={...PORTAL};delete novo[f.acesso.token];voltarDepois({view:"clientes",msg:`${f.nome} excluído`});await publishPortal(novo)}
+  else{toast(`${f.nome} excluído`);renderClientes()}}
+ catch(err){if(err&&err.code==="conflict")return;toast("Não foi possível excluir. Tente de novo.");btn.disabled=false;btn.textContent=`Excluir ${f.nome}`}}
+function voltarDepois(v){try{sessionStorage.setItem("pauta-volta",JSON.stringify(v))}catch(e){}}
+function erroPublicar(c){return c==="rate_limited"?"Muitas publicações seguidas. Espere um minuto.":c==="not_writer"||c==="not_granted"||c==="capability_disabled"?"Esta tela não pode publicar. Abra o app pela sua conta no Claude.":"Não foi possível publicar. Tente de novo."}
+
+/* ---------- Client answer: approve, ask for changes or reject, sent to isadsign's WhatsApp ---------- */
+const RESP={aprovada:["Aprovar","Aprovada","✅"],revisao:["Pedir revisão","Pedido de revisão","✏️"],reprovada:["Reprovar","Reprovada","❌"]};
+let respEscolha=null;
+function respChave(p){return `pauta-resp-${TOKEN}-${p.ano}-${p.mes}`}
+function respSalva(p){try{return JSON.parse(localStorage.getItem(respChave(p))||"null")}catch(e){return null}}
+function respostaHTML(p){
+ const wa=PORTAL._cfg&&PORTAL._cfg.whatsapp;if(!wa)return "";
+ const feita=respSalva(p);
+ return `<div class="panel card resp" id="respCard"><h3>O que você achou desta pauta?</h3>
+ ${feita?`<p class="lead">Você enviou <b>${esc(RESP[feita.tipo][1].toLowerCase())}</b> em ${new Date(feita.em).toLocaleDateString("pt-BR")}. Se mudou de ideia, é só enviar de novo.</p>`:`<p class="lead">Sua resposta vai direto para o WhatsApp da isadsign.</p>`}
+ <div class="resp-bt" role="group" aria-label="Sua resposta">${Object.entries(RESP).map(([k,v])=>`<button type="button" class="btn resp-${k}" data-resp="${k}" aria-pressed="${respEscolha===k}">${v[0]}</button>`).join("")}</div>
+ <div class="resp-env" ${respEscolha?"":"hidden"}><label class="lbl" for="respTxt">${respEscolha==="aprovada"?"Comentários (opcional)":"Comentários: o que você quer mudar?"}</label>
+ <textarea id="respTxt" rows="3" placeholder="${respEscolha==="aprovada"?"Ex.: amei o post do dia 10!":"Ex.: trocar o tema do dia 20 por lançamento do produto novo"}"></textarea>
+ <a class="btn lib" id="respEnviar" target="_blank" rel="noopener" href="#">Enviar pelo WhatsApp</a>
+ <p class="note">O WhatsApp abre com a mensagem pronta. Toque em enviar por lá.</p></div></div>`}
+function bindResposta(p){
+ const card=$("#respCard");if(!card)return;
+ card.querySelectorAll("[data-resp]").forEach(b=>b.onclick=()=>{const keep=$("#respTxt")?$("#respTxt").value:"";respEscolha=b.dataset.resp;
+  card.outerHTML=respostaHTML(p);bindResposta(p);$("#respTxt").value=keep;$("#respTxt").focus()});
+ const env=$("#respEnviar");if(!env||!respEscolha)return;
+ const link=()=>{const t=($("#respTxt").value||"").trim();const v=RESP[respEscolha];
+  const msg=`${v[2]} ${v[1]}: pauta de ${MESES[p.mes]} ${p.ano}\nCliente: ${p.cliente}${t?`\nComentários: ${t}`:""}\n\n(enviado pela página da pauta)`;
+  return `https://wa.me/${PORTAL._cfg.whatsapp}?text=${encodeURIComponent(msg)}`};
+ env.href=link();$("#respTxt").addEventListener("input",()=>{env.href=link()});
+ env.addEventListener("click",()=>{env.href=link();try{localStorage.setItem(respChave(p),JSON.stringify({tipo:respEscolha,em:new Date().toISOString()}))}catch(e){}
+  setTimeout(()=>{respEscolha=null;const c=$("#respCard");if(c){c.outerHTML=respostaHTML(p);bindResposta(p)}},400)})}
+
+/* ---------- Export: clickable HTML and PDF ---------- */
+function nomeArquivo(p){return `pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}`}
+async function baixar(nome,gerar,btn){
+ const txt=btn.textContent;btn.disabled=true;btn.textContent="Gerando…";
+ try{await downloads.save({filename:nome,data:await gerar()})}
+ catch(err){const c=err&&err.code;if(c!=="declined"&&c!=="cancelled")toast(c==="unavailable"||c==="not_granted"?"Baixar não está disponível nesta tela":"Não foi possível gerar o arquivo")}
+ btn.disabled=false;btn.textContent=txt}
+/* Standalone page: calendar days and the index link to each post; works offline in any browser */
+function pautaHTML(p){
+ const ps=sorted(p),n=daysIn(p.mes,p.ano),first=dow(1,p.mes,p.ano),mes=MESES[p.mes],e=p.estrategia||{},pf=p.perfil||{};
+ const hol={};(e.datas||[]).forEach(d=>hol[d.dia]=d.nome);const byDay={};ps.forEach(x=>{(byDay[x.dia]=byDay[x.dia]||[]).push(x)});
+ let cal=DIAS_C.map(d=>`<div class="dw">${d}</div>`).join("");for(let i=0;i<first;i++)cal+=`<div></div>`;
+ for(let d=1;d<=n;d++)cal+=`<div class="d"><b>${d}</b>${hol[d]?`<small>${esc(hol[d])}</small>`:""}${(byDay[d]||[]).map(x=>`<a class="pl f-${slug(x.formato)}" href="#${esc(x.id)}">${esc(x.formato)}</a>`).join("")}</div>`;
+ const li=a=>(a||[]).map(x=>`<li>${esc(x)}</li>`).join("");
+ const post=x=>`<article class="post" id="${esc(x.id)}"><p class="ey"><span class="dot f-${slug(x.formato)}"></span>${esc(x.formato)} · ${DIAS[dow(x.dia,p.mes,p.ano)]}, ${x.dia} de ${mes.toLowerCase()}${x.pilar?" · "+esc(x.pilar):""}</p><h3>${esc(x.titulo||x.tema)}</h3>
+ ${x.descricao?`<p>${esc(x.descricao)}</p>`:""}<dl>${x.objetivo?`<dt>Objetivo</dt><dd>${esc(x.objetivo)}</dd>`:""}${x.horario?`<dt>Quando vai ao ar</dt><dd>${esc(x.horario)}</dd>`:""}${x.metrica?`<dt>Como medir</dt><dd>${esc(x.metrica)}</dd>`:""}</dl>
+ ${(x.producao||[]).length?`<h4>O que produzir</h4><ul class="ck">${li(x.producao)}</ul>`:""}${x.visual?`<h4>Visual</h4><p>${esc(x.visual)}</p>`:""}${(x.ganchos||[]).length?`<h4>Frases de abertura</h4><ul>${li(x.ganchos)}</ul>`:""}
+ ${(x.slides||[]).length?`<h4>Slides</h4><ol>${x.slides.map(s=>`<li><b>${esc(s.titulo)}</b> ${esc(s.texto)}</li>`).join("")}</ol>`:""}
+ ${(x.roteiro||[]).length?`<h4>Roteiro</h4><ol class="rt">${x.roteiro.map(r=>`<li><span>${esc(r.tempo)}</span> ${esc(r.fala)}<br><small>Cena: ${esc(r.cena)}${r.texto_tela?` · Na tela: ${esc(r.texto_tela)}`:""}</small></li>`).join("")}</ol>`:""}
+ ${x.arte?`<h4>Arte</h4><p><b>${esc(x.arte.frase)}</b><br>${esc(x.arte.direcao)}</p>`:""}${(x.telas||[]).length?`<h4>Telas dos Stories</h4><ol>${x.telas.map(t=>`<li>${esc(t.texto)}${t.recurso?` <small>(${esc(t.recurso)})</small>`:""}</li>`).join("")}</ol>`:""}
+ ${x.legenda?`<h4>Legenda</h4><pre>${esc(x.legenda)}${(x.hashtags||[]).length?"\n\n"+esc(x.hashtags.join(" ")):""}</pre>`:""}${x.cta?`<h4>Chamada para ação</h4><p>${esc(x.cta)}</p>`:""}<p class="top"><a href="#topo">↑ Voltar ao calendário</a></p></article>`;
+ return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pauta ${esc(p.cliente)} · ${mes} ${p.ano}</title><style>
+:root{--bg:#f5f5f7;--sf:#fff;--sf2:#f0f0f3;--fg:#1d1d1f;--fg2:#6e6e73;--ln:rgba(0,0,0,.1);--ac:#d6237f;--car:#d6237f;--reel:#5856d6;--est:#c76a00;--sto:#248a3d}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--sf:#1c1c1e;--sf2:#2c2c2e;--fg:#f5f5f7;--fg2:#98989d;--ln:rgba(255,255,255,.12);--ac:#ff4fa3;--car:#ff4fa3;--reel:#7d7aff;--est:#ffb340;--sto:#4cd964;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;overflow-wrap:anywhere}
+main{max-width:58rem;margin:0 auto;padding:2rem max(16px,env(safe-area-inset-left)) 3rem}h1{font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.1;margin:.2rem 0 .5rem;letter-spacing:-.03em}
+.ey{color:var(--ac);font-weight:600;font-size:.85rem;margin:0;display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}.sub{color:var(--fg2);margin:0}
+section,.post{background:var(--sf);border-radius:1.2rem;padding:1.3rem 1.4rem;margin-top:1.1rem}h2{font-size:1.25rem;margin:0 0 .6rem}h3{font-size:1.2rem;margin:.3rem 0 .6rem;line-height:1.3}h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--fg2);margin:1rem 0 .3rem}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.3rem}.dw{font-size:.7rem;color:var(--fg2);text-align:center;font-weight:600;text-transform:uppercase}.d{background:var(--sf2);border-radius:.55rem;min-height:4.6rem;padding:.3rem;display:flex;flex-direction:column;gap:.2rem;min-width:0}.d b{font-size:.8rem}.d small{font-size:.65rem;color:var(--ac);line-height:1.2}
+.pl{display:block;border-radius:.35rem;padding:.15rem .3rem;font-size:.68rem;font-weight:600;color:#fff;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.f-carrossel{background:var(--car)}.f-reels{background:var(--reel)}.f-estatico{background:var(--est)}.f-stories{background:var(--sto)}.dot{width:.5rem;height:.5rem;border-radius:50%;display:inline-block}
+.idx{list-style:none;padding:0;margin:0}.idx li{border-top:1px solid var(--ln)}.idx a{display:flex;gap:.6rem;padding:.55rem 0;color:inherit;text-decoration:none}.idx a span{color:var(--fg2);min-width:4.5rem;font-variant-numeric:tabular-nums}.idx a:hover b{color:var(--ac)}
+dl{display:grid;grid-template-columns:minmax(0,9rem) minmax(0,1fr);gap:.3rem .8rem;margin:.6rem 0}dt{color:var(--fg2);font-size:.85rem}dd{margin:0}
+pre{white-space:pre-wrap;font:inherit;background:var(--sf2);border-radius:.6rem;padding:.8rem;margin:0}.rt span{color:var(--ac);font-weight:600}small{color:var(--fg2)}.top a{color:var(--ac);font-size:.9rem}
+@media (max-width:560px){.pl{font-size:0;height:.5rem;padding:0}.d small{display:none}.d{min-height:3.2rem}dl{grid-template-columns:minmax(0,1fr)}}
+@media print{body{background:#fff}section,.post{break-inside:avoid-page;border:1px solid #ddd}}
+</style></head><body><main id="topo"><p class="ey">${esc(p.arroba||p.nicho||"")} · ${mes} ${p.ano}</p><h1>${esc(p.cliente)}: pauta de ${mes.toLowerCase()}</h1><p class="sub">${e.resumo?esc(e.resumo):""}</p>
+<section><h2>Calendário</h2><div class="cal">${cal}</div></section>
+<section><h2>Posts do mês</h2><ol class="idx">${ps.map(x=>`<li><a href="#${esc(x.id)}"><span>${x.dia}/${p.mes+1} ${DIAS_C[dow(x.dia,p.mes,p.ano)]}</span><b>${esc(x.titulo||x.tema)}</b></a></li>`).join("")}</ol></section>
+${(e.pilares||[]).length?`<section><h2>Estratégia</h2><ul>${e.pilares.map(pl=>`<li><b>${esc(pl.nome)} (${+pl.pct||0}%)</b>: ${esc(pl.descricao)}</li>`).join("")}</ul>${e.frequencia?`<p><b>Frequência:</b> ${esc(e.frequencia)}</p>`:""}</section>`:""}
+${ps.map(post).join("")}
+<p class="sub" style="margin-top:2rem;text-align:center">Pauta feita pela isadsign · @isadsign.co</p></main></body></html>`}
+/* PDF with a clickable index: each line jumps to its post, each post links back */
+let jspdfLib=null;
+function loadJsPdf(){if(jspdfLib)return jspdfLib;jspdfLib=new Promise((res,rej)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";s.onload=()=>window.jspdf?res(window.jspdf.jsPDF):rej(new Error("jspdf"));s.onerror=()=>{jspdfLib=null;rej(new Error("jspdf"))};document.head.appendChild(s)});return jspdfLib}
+const latin=t=>String(t==null?"":t).replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/[–—]/g,"-").replace(/…/g,"...").replace(/[•·]/g,"·").replace(/[^\x09\x0A\x0D\x20-\xFF]/g,"").replace(/[ \t]+\n/g,"\n");
+async function pautaPDF(p){
+ const jsPDF=await loadJsPdf();const doc=new jsPDF({unit:"pt",format:"a4"});
+ const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),M=48,CW=W-2*M,ROSA=[214,35,127],CINZA=[110,110,115];
+ const ps=sorted(p),mes=MESES[p.mes];let y=M;
+ const linhas=(t,size,cor,bold,gap)=>{doc.setFont("helvetica",bold?"bold":"normal");doc.setFontSize(size);doc.setTextColor(...(cor||[29,29,31]));
+  doc.splitTextToSize(latin(t),CW).forEach(l=>{if(y+size>H-M){doc.addPage();y=M}doc.text(l,M,y+size);y+=size*1.35});y+=gap||0};
+ const rotulo=t=>{if(y+40>H-M){doc.addPage();y=M}y+=6;linhas(t.toUpperCase(),8.5,CINZA,true,2)};
+ /* Reserve the index pages first, fill them once every post's page is known */
+ const porPag=Math.floor((H-2*M-150)/20),nIdx=Math.max(1,Math.ceil(ps.length/porPag));
+ for(let i=1;i<nIdx;i++)doc.addPage();
+ const inicio={};
+ ps.forEach(x=>{doc.addPage();y=M;inicio[x.id]=doc.internal.getNumberOfPages();
+  doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(...ROSA);doc.textWithLink(latin("< Voltar ao índice"),M,y+9,{pageNumber:1});y+=26;
+  linhas(`${x.formato} · ${DIAS[dow(x.dia,p.mes,p.ano)]}, ${x.dia} de ${mes.toLowerCase()}${x.pilar?" · "+x.pilar:""}`,10,ROSA,true,2);
+  linhas(x.titulo||x.tema,17,null,true,6);
+  if(x.descricao)linhas(x.descricao,10.5,null,false,4);
+  if(x.objetivo){rotulo("Objetivo");linhas(x.objetivo,10.5)}if(x.horario){rotulo("Quando vai ao ar");linhas(x.horario,10.5)}if(x.metrica){rotulo("Como medir");linhas(x.metrica,10.5)}
+  if((x.producao||[]).length){rotulo("O que produzir");x.producao.forEach(t=>linhas("[ ] "+t,10.5))}
+  if(x.visual){rotulo("Visual");linhas(x.visual,10.5)}
+  if((x.ganchos||[]).length){rotulo("Frases de abertura");x.ganchos.forEach(g=>linhas("- "+g,10.5))}
+  if((x.slides||[]).length){rotulo("Slides");x.slides.forEach((s,k)=>{linhas(/^\d/.test(s.titulo)?s.titulo:`${k+1}. ${s.titulo}`,10.5,null,true);linhas(s.texto,10.5,null,false,2)})}
+  if((x.roteiro||[]).length){rotulo("Roteiro");x.roteiro.forEach(r=>{linhas(`${r.tempo}  ${r.fala}`,10.5,null,true);linhas(`Cena: ${r.cena}${r.texto_tela?" · Na tela: "+r.texto_tela:""}`,9.5,CINZA,false,2)})}
+  if(x.arte){rotulo("Arte");linhas(x.arte.frase,10.5,null,true);linhas(x.arte.direcao,10.5)}
+  if((x.telas||[]).length){rotulo("Telas dos Stories");x.telas.forEach((t,k)=>linhas(`${k+1}. ${t.texto}${t.recurso?" ("+t.recurso+")":""}`,10.5))}
+  if(x.legenda){rotulo("Legenda");linhas(x.legenda+((x.hashtags||[]).length?"\n\n"+x.hashtags.join(" "):""),10.5)}
+  if(x.cta){rotulo("Chamada para ação");linhas(x.cta,10.5)}});
+ doc.setPage(1);y=M;
+ linhas(`${p.arroba||p.nicho||""}  ·  ${mes} ${p.ano}`,10,ROSA,true,4);linhas(`${p.cliente}: pauta de ${mes.toLowerCase()}`,22,null,true,6);
+ if(p.estrategia&&p.estrategia.resumo)linhas(p.estrategia.resumo,11,CINZA,false,10);
+ linhas("Posts do mês  (toque para abrir)",12,null,true,6);
+ ps.forEach((x,i)=>{const pg=1+Math.floor(i/porPag);if(i&&i%porPag===0){doc.setPage(pg);y=M}
+  doc.setFont("helvetica","normal");doc.setFontSize(10.5);doc.setTextColor(...CINZA);doc.text(latin(`${String(x.dia).padStart(2,"0")}/${String(p.mes+1).padStart(2,"0")}  ${DIAS_C[dow(x.dia,p.mes,p.ano)]}`),M,y+11);
+  doc.setTextColor(...ROSA);const t=doc.splitTextToSize(latin(`${x.formato}: ${x.titulo||x.tema}`),CW-90)[0];doc.textWithLink(t,M+90,y+11,{pageNumber:inicio[x.id]});
+  doc.setTextColor(...CINZA);doc.text(String(inicio[x.id]),W-M,y+11,{align:"right"});y+=20});
+ const total=doc.internal.getNumberOfPages();for(let i=1;i<=total;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(...CINZA);doc.text(latin(`Pauta ${p.cliente} · ${mes} ${p.ano} · isadsign`),M,H-24);doc.text(`${i}/${total}`,W-M,H-24,{align:"right"})}
+ return doc.output("blob")}
 
 /* ---------- Client access ----------
    Each client opens this same page at APP_URL#<token> and types their own code. Their pautas sit in the
@@ -881,7 +1162,7 @@ async function abrir(a,codigo){const salt=ub(a.salt);const base=await crypto.sub
 function limpar(p){const {exemplo,briefing,criadoEm,atualizadoEm,...resto}=JSON.parse(JSON.stringify(p));return {...resto,briefing:{temas:(briefing&&briefing.temas)||[]}}}
 
 async function liberar(p,btn){
- btn.disabled=true;btn.textContent="Liberando…";
+ portalSync=true;btn.disabled=true;btn.textContent="Liberando…";
  try{
   const id=slugC(p.cliente),prev=acessos.find(a=>a.id===id);
   const a=prev?{cliente:prev.cliente,token:prev.token,codigo:prev.codigo}:{cliente:p.cliente,token:novoToken(id),codigo:novoCodigo()};
@@ -889,13 +1170,16 @@ async function liberar(p,btn){
   lista=lista.filter(x=>!(x.mes===p.mes&&x.ano===p.ano));lista.push(limpar(p));lista.sort((x,y)=>(y.ano-x.ano)||(y.mes-x.mes));
   a.payload=await trancar(a.cliente,a.codigo,lista);a.meses=lista.map(x=>`${MESES[x.mes]} ${x.ano}`);a.url=`${APP_URL}#${a.token}`;a.atualizadoEm=new Date().toISOString();
   await db.collection("acessos").doc(id).set(a);
-  try{sessionStorage.setItem("pauta-liberada",JSON.stringify({cliente:a.cliente}))}catch(e){}
+  if(p.status!=="aprovada"){p.status="liberada";p.statusEm=new Date().toISOString();await savePauta(p)}
+  voltarDepois({view:"clientes",pasta:id,msg:`Pauta liberada para ${a.cliente}`});
   await publishPortal({...PORTAL,[a.token]:a.payload});
  }catch(err){const c=err&&err.code;if(c==="conflict")return;
-  toast(c==="rate_limited"?"Muitas publicações seguidas. Espere um minuto.":c==="not_writer"||c==="not_granted"||c==="capability_disabled"?"Esta tela não pode publicar. Abra o app pela sua conta no Claude.":"Não foi possível liberar. Tente de novo.");
+  toast(erroPublicar(c));
   btn.disabled=false;btn.textContent="Liberar para o cliente"}}
 /* Rebuild this page from its own source with the new portal block and publish it as the next version */
 async function publishPortal(data){
+ portalSync=true;
+ if(cfg.whatsapp)data={...data,_cfg:{whatsapp:cfg.whatsapp}};
  const json=JSON.stringify(data).replace(/</g,"\\u003c");
  const html=`<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>${RESET}</style></head><body><title>Pauta isadsign</title>
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -908,9 +1192,11 @@ async function publishPortal(data){
  await artifactCap.publish(html)}
 /* After Claude republishes the page from the repo the portal block can come back empty: put back what acessos holds. Only adds or updates, never removes. */
 function sincronizarPortal(){
- if(portalSync||!dono||!artifactCap||busy)return;
+ if(portalSync||!dono||!artifactCap||busy||!acessosOk||!cfgOk)return;
  const novo={...PORTAL};let muda=false;
- acessos.forEach(a=>{if(a.token&&a.payload&&JSON.stringify(PORTAL[a.token])!==JSON.stringify(a.payload)){novo[a.token]=a.payload;muda=true}});
+ if(cfg.whatsapp&&(!PORTAL._cfg||PORTAL._cfg.whatsapp!==cfg.whatsapp)){novo._cfg={whatsapp:cfg.whatsapp};muda=true}
+ /* Compare the ciphertext itself: the database may return the payload's keys in another order */
+ acessos.forEach(a=>{const cur=PORTAL[a.token];if(a.token&&a.payload&&a.payload.data&&(!cur||cur.data!==a.payload.data||cur.iv!==a.payload.iv)){novo[a.token]=a.payload;muda=true}});
  if(!muda)return;portalSync=true;publishPortal(novo).catch(()=>{})}
 
 /* Client view */
@@ -921,7 +1207,8 @@ function startCliente(){
  document.body.classList.add("cliente");
  const a=PORTAL[TOKEN];
  if(!a){$("#result").innerHTML=`<section class="panel gate"><p class="eyebrow">Pauta isadsign</p><h2>Link não encontrado</h2><p>Confira se você abriu o link inteiro que a isadsign enviou.</p></section>`;return}
- const salvo=lsGet();if(salvo)abrir(a,salvo).then(entrarCliente).catch(()=>{lsSet(null);gateCliente()});else gateCliente()}
+ const salvo=lsGet();if(!salvo)return gateCliente();
+ abrir(a,salvo).then(d=>entrarCliente(d),()=>{lsSet(null);gateCliente()})}
 function gateCliente(err){
  $("#sairBtn").hidden=true;
  $("#result").innerHTML=`<section class="panel gate"><p class="eyebrow">Sua pauta de conteúdo</p><h2>${esc(PORTAL[TOKEN].cliente)}</h2><p>Digite o código de acesso que a isadsign enviou para você.</p>
@@ -931,15 +1218,17 @@ function gateCliente(err){
  const inp=$("#codigo");
  inp.addEventListener("input",()=>{const v=normCod(inp.value).slice(0,8);inp.value=v.length>4?v.slice(0,4)+"-"+v.slice(4):v});
  $("#gateForm").addEventListener("submit",async e=>{e.preventDefault();const b=$("#entrarBtn");b.disabled=true;b.textContent="Abrindo…";
-  try{const d=await abrir(PORTAL[TOKEN],inp.value);if($("#lembrar").checked)lsSet(normCod(inp.value));entrarCliente(d)}
-  catch(_){gateCliente("Código incorreto. Confira as letras e os números e tente de novo.");$("#codigo").focus()}});
+  let d;try{d=await abrir(PORTAL[TOKEN],inp.value)}
+  catch(_){gateCliente("Código incorreto. Confira as letras e os números e tente de novo.");$("#codigo").focus();return}
+  if($("#lembrar").checked)lsSet(normCod(inp.value));entrarCliente(d)});
  setTimeout(()=>inp.focus(),50)}
 function entrarCliente(d){
  clientePautas=(d.pautas||[]).filter(x=>x&&Array.isArray(x.posts)).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes));
  $("#sairBtn").hidden=false;
  if(!clientePautas.length){$("#result").innerHTML=`<section class="panel gate"><h2>Nenhuma pauta ainda</h2><p>A pauta do mês aparece aqui assim que estiver pronta.</p></section>`;return}
  const n=new Date();current=clientePautas.find(x=>x.ano===n.getFullYear()&&x.mes===n.getMonth())||clientePautas[0];
- filtroFormato="Todos";filtroPilar=null;renderResult()}
+ filtroFormato="Todos";filtroPilar=null;renderResult();
+ if(!downloads&&window.claude&&window.claude.use)window.claude.use("downloads").then(d=>{if(d){downloads=d;if(current)renderResult()}}).catch(()=>{})}
 $("#sairBtn").onclick=()=>{lsSet(null);clientePautas=[];gateCliente()};
 
 /* ---------- Boot ---------- */
@@ -953,7 +1242,7 @@ else (async()=>{
  dono=us?await us.canEdit().catch(()=>false):!!d;
  if(!dono){document.body.classList.add("cliente");$("#result").innerHTML=`<section class="panel gate"><p class="eyebrow">Pauta isadsign</p><h2>Use o seu link</h2><p>Para ver a sua pauta, abra o link completo que a isadsign enviou para você e digite o seu código de acesso.</p></section>`;return}
  sample=s;db=d;downloads=dl;artifactCap=ar;
- try{const lib=JSON.parse(sessionStorage.getItem("pauta-liberada")||"null");if(lib){sessionStorage.removeItem("pauta-liberada");showView("salvas");toast(`Pauta liberada para ${lib.cliente}`)}}catch(e){}
+ try{const v=JSON.parse(sessionStorage.getItem("pauta-volta")||"null");if(v){sessionStorage.removeItem("pauta-volta");pastaAberta=v.pasta||null;showView(v.view||"clientes");if(v.msg)toast(v.msg)}}catch(e){}
  if(!sample)setNote("Gerar pauta funciona quando a página está aberta no Claude.",true);
  else{try{const lim=await sample.limits();imgLimits=lim&&lim.images||null}catch(e){imgLimits=null}}
  if(!imgLimits){$("#fFiles").accept="application/pdf";$("#dropHint").textContent="PDF do cliente (catálogo, apresentação, cardápio). Para prints, abra a página no Claude."}
@@ -962,9 +1251,10 @@ else (async()=>{
  if(db){db.collection("pautas").orderBy("criadoEm","desc").limit(200).onSnapshot(snap=>{
    saved=snap.docs.map(x=>x.data()).filter(Boolean);updateClientes();
    if(current&&current.exemplo&&saved.length&&!busy){current=JSON.parse(JSON.stringify(saved[0]));renderResult()}
-   if(!$("#viewSalvas").hidden)renderSaved()},()=>{});
-  db.collection("acessos").onSnapshot(snap=>{acessos=snap.docs.map(x=>({...x.data(),id:x.id})).filter(a=>a&&a.cliente&&a.url).sort((a,b)=>a.cliente.localeCompare(b.cliente,"pt"));renderAcessos();sincronizarPortal()},()=>{});
-  db.collection("clientes").onSnapshot(snap=>{clientes={};snap.docs.forEach(x=>{const c=x.data();if(c&&c.nome)clientes[x.id]=c});updateClientes();paintPerfilHint()},()=>{})}
+   if(!$("#viewSalvas").hidden)renderSaved();if(!$("#viewClientes").hidden)renderClientes()},()=>{});
+  db.collection("config").onSnapshot(snap=>{const g=snap.docs.find(x=>x.id==="geral");cfg=(g&&g.data())||{};cfgOk=true;if(!$("#viewClientes").hidden)renderClientes();sincronizarPortal()},()=>{cfgOk=true});
+  db.collection("acessos").onSnapshot(snap=>{acessos=snap.docs.map(x=>({...x.data(),id:x.id})).filter(a=>a&&a.cliente&&a.url).sort((a,b)=>a.cliente.localeCompare(b.cliente,"pt"));acessosOk=true;if(!$("#viewClientes").hidden)renderClientes();sincronizarPortal()},()=>{});
+  db.collection("clientes").onSnapshot(snap=>{clientes={};snap.docs.forEach(x=>{const c=x.data();if(c&&c.nome)clientes[x.id]=c});updateClientes();paintPerfilHint();if(!$("#viewClientes").hidden)renderClientes()},()=>{})}
 })();
 })();
 </script>
