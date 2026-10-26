@@ -1,6 +1,6 @@
 <title>Pauta isadsign</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<style>
+<style id="css">
 /* Layout: frosted top bar, briefing panel at left (sticky on wide screens), result canvas at right; stacks to one column on phones. Scales type up on TVs. */
 :root{
   --bg:#f5f5f7; --surface:#ffffff; --surface-2:#f0f0f3; --fg:#1d1d1f; --fg-2:#6e6e73; --line:rgba(0,0,0,.09);
@@ -243,10 +243,31 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .redo{display:flex;gap:.5rem;flex-wrap:wrap}
 .redo input{flex:1 1 12rem}
 .sh-nav{display:flex;justify-content:space-between;gap:.5rem;padding:.75rem 1.25rem 1.1rem;border-top:1px solid var(--line)}
+/* Client view and release */
+.btn.sm{padding:.35rem .8rem;font-size:.8125rem}
+.btn.lib{background:var(--accent);color:var(--on-accent)}
+.btn.lib:disabled{opacity:.55;cursor:default}
+.seg.modo{display:flex;width:100%}
+.seg.modo button{flex:1}
+#intervaloBox{grid-template-columns:minmax(0,1fr)}
+.cliente .top .seg,.cliente #hero,.cliente #form{display:none}
+.cliente .grid{grid-template-columns:minmax(0,1fr);max-width:64rem;margin:0 auto;padding-top:2rem}
+.gate{max-width:26rem;width:100%;margin:2rem auto;padding:2rem 1.5rem;text-align:center}
+.gate .eyebrow{justify-content:center}
+.gate h2{font-size:clamp(1.75rem,6vw,2.25rem);letter-spacing:-.03em;line-height:1.1;margin:0 0 .5rem;text-wrap:balance}
+.gate p{color:var(--fg-2);margin:0 0 1.5rem;text-wrap:pretty}
+.gate form{display:flex;flex-direction:column;gap:.75rem}
+.gate input[type=text]{font-family:var(--mono);font-size:1.25rem;letter-spacing:.12em;text-align:center;text-transform:uppercase;padding:.8rem .9rem}
+.gate .remember{display:flex;align-items:center;justify-content:center;gap:.45rem;font-size:.875rem;color:var(--fg-2)}
+.gate .note{margin:0}
+.months{display:flex;flex-wrap:wrap;gap:.4rem;padding:0 1.5rem 1.1rem}
+.months button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:.35rem .85rem;font-size:.8125rem}
+.months button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:.6rem 1.1rem;border-radius:999px;font-size:.875rem;font-weight:500;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
+<template id="markup">
 <header class="top">
   <div class="wrap">
     <div class="brand">Pauta <small>isadsign</small></div>
@@ -254,6 +275,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
       <button type="button" id="tabNova" aria-pressed="true">Nova pauta</button>
       <button type="button" id="tabSalvas" aria-pressed="false">Salvas</button>
     </div>
+    <button type="button" class="btn ghost sm" id="sairBtn" hidden>Sair</button>
   </div>
 </header>
 
@@ -299,7 +321,12 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
       </div>
       <div class="field">
         <span class="lbl" id="freqLbl">Frequência do feed</span>
-        <div class="chips wk" id="semana" role="group" aria-labelledby="freqLbl"></div>
+        <div class="seg modo" id="freqModo" role="group" aria-labelledby="freqLbl"><button type="button" data-modo="semana">Dias da semana</button><button type="button" data-modo="intervalo">A cada X dias</button></div>
+        <div class="chips wk" id="semana" role="group" aria-label="Dias da semana"></div>
+        <div class="mix" id="intervaloBox" hidden>
+          <div class="step"><span>Posta a cada</span><div class="ctl"><button type="button" id="intMenos" aria-label="Menos dias">−</button><output id="intN">2</output><button type="button" id="intMais" aria-label="Mais dias">+</button></div></div>
+          <div class="step"><span>Começa no dia</span><div class="ctl"><button type="button" id="iniMenos" aria-label="Dia anterior">−</button><output id="iniN">1</output><button type="button" id="iniMais" aria-label="Dia seguinte">+</button></div></div>
+        </div>
         <p class="total" id="freqTxt"></p>
       </div>
       <div class="field">
@@ -350,9 +377,12 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" id="sheet"></div>
 </div>
 <div class="toast" id="toast" hidden></div>
-
-<script>
+</template>
+<script type="application/json" id="portal">{}</script>
+<script id="src">
 (function(){
+/* The markup lives in a <template> so the page can republish itself from its own source (see publishPortal) */
+const MARKUP=document.getElementById("markup");document.body.insertBefore(MARKUP.content.cloneNode(true),MARKUP);
 const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const DIAS=["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
 const DIAS_C=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
@@ -397,7 +427,7 @@ const EXEMPLO={id:"exemplo",exemplo:true,cliente:"Café Aurora",arroba:"@cafeaur
 const now=new Date();
 const nextMonth=new Date(now.getFullYear(),now.getMonth()+1,1);
 const FEED=["Carrossel","Reels","Estático"];
-const form={mes:nextMonth.getMonth(),ano:nextMonth.getFullYear(),objetivo:"Vender",mix:{Carrossel:4,Reels:4,"Estático":4,Stories:0},semana:[2,4,6],datas:new Set(),temas:[]};
+const form={mes:nextMonth.getMonth(),ano:nextMonth.getFullYear(),objetivo:"Vender",mix:{Carrossel:4,Reels:4,"Estático":4,Stories:0},semana:[2,4,6],freq:"semana",intervalo:2,inicio:1,datas:new Set(),temas:[]};
 let current=EXEMPLO, saved=[], clientes={}, filtroFormato="Todos", filtroPilar=null, busy=false, db=null, sample=null, downloads=null, openId=null, imgLimits=null;
 let acessos=[]; /* client pages: {cliente,url,codigo,meses,atualizadoEm}, written by Claude when it publishes a client's page */
 let anexos=[]; /* {id,name,kind:"img"|"pdf",blob,url,texto,paginas:[Blob]} */
@@ -435,10 +465,15 @@ function updateTotal(){
 /* Frequência e datas */
 const semBox=$("#semana");
 DIAS_C.forEach((d,i)=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=d;b.dataset.d=i;b.setAttribute("aria-label",DIAS[i]);b.onclick=()=>{const k=form.semana.indexOf(i);k>=0?form.semana.splice(k,1):form.semana.push(i);form.semana.sort();datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()};semBox.appendChild(b)});
-function datasPelaSemana(){form.datas=new Set();const n=daysIn(form.mes,form.ano);for(let d=1;d<=n;d++)if(form.semana.includes(dow(d,form.mes,form.ano)))form.datas.add(d)}
+function datasPelaSemana(){form.datas=new Set();const n=daysIn(form.mes,form.ano);
+ if(form.freq==="intervalo"){form.inicio=Math.min(form.inicio,n);for(let d=form.inicio;d<=n;d+=form.intervalo)form.datas.add(d);return}
+ for(let d=1;d<=n;d++)if(form.semana.includes(dow(d,form.mes,form.ano)))form.datas.add(d)}
 function paintFreq(){
+ const iv=form.freq==="intervalo";semBox.hidden=iv;$("#intervaloBox").hidden=!iv;
+ $("#freqModo").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.modo===form.freq));
+ $("#intN").textContent=form.intervalo;$("#iniN").textContent=form.inicio;
  semBox.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",form.semana.includes(+c.dataset.d)));
- const k=form.semana.length;$("#freqTxt").textContent=k?`${k}x por semana: ${form.semana.map(i=>DIAS[i]).join(", ")}`:"Escolha os dias da semana ou toque nas datas abaixo";
+ const k=form.semana.length;$("#freqTxt").textContent=iv?freqIntervaloTxt(form):k?`${k}x por semana: ${form.semana.map(i=>DIAS[i]).join(", ")}`:"Escolha os dias da semana ou toque nas datas abaixo";
  const n=daysIn(form.mes,form.ano),first=dow(1,form.mes,form.ano),hol=feriados(form.mes,form.ano);
  let h=DIAS_C.map(d=>`<span class="dw">${d[0]}</span>`).join("");
  for(let i=0;i<first;i++)h+=`<span></span>`;
@@ -448,6 +483,12 @@ function paintFreq(){
  paintDatasTxt()}
 function paintDatasTxt(){const n=form.datas.size;$("#datasTxt").textContent=n?`${n} ${n===1?"data escolhida":"datas escolhidas"}`:"Nenhuma data: a pauta distribui sozinha"}
 $("#datasReset").onclick=()=>{datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()};
+function freqIntervaloTxt(b){return `${b.intervalo===1?"Todo dia":`A cada ${b.intervalo} dias`}, a partir do dia ${b.inicio}`}
+$("#freqModo").querySelectorAll("button").forEach(b=>b.onclick=()=>{form.freq=b.dataset.modo;preencherCliente.tocou=true;datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()});
+function setIntervalo(campo,delta){if(campo==="intervalo")form.intervalo=Math.max(1,Math.min(15,form.intervalo+delta));else form.inicio=Math.max(1,Math.min(daysIn(form.mes,form.ano),form.inicio+delta));
+ preencherCliente.tocou=true;datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()}
+$("#intMenos").onclick=()=>setIntervalo("intervalo",-1);$("#intMais").onclick=()=>setIntervalo("intervalo",1);
+$("#iniMenos").onclick=()=>setIntervalo("inicio",-1);$("#iniMais").onclick=()=>setIntervalo("inicio",1);
 function onMesAno(){form.mes=+fMes.value;form.ano=+fAno.value;datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()}
 fMes.onchange=onMesAno;fAno.onchange=onMesAno;
 /* Fixed-date Brazilian holidays and marketing dates, shown as dots on the date picker */
@@ -516,7 +557,7 @@ function preencherCliente(){const nome=$("#fCliente").value.trim();const n=nome.
  if(!$("#fSobre").value&&c&&c.sobre)$("#fSobre").value=c.sobre;
  if(!$("#fTom").value&&b.tom)$("#fTom").value=b.tom;if(!$("#fPublico").value&&b.publico)$("#fPublico").value=b.publico;if(!$("#fEvitar").value&&b.evitar)$("#fEvitar").value=b.evitar;
  if(!form.temas.length&&Array.isArray(b.temas)&&b.temas.length){form.temas=[...b.temas];paintTemas()}
- if(Array.isArray(b.semana)&&b.semana.length&&!preencherCliente.tocou){form.semana=[...b.semana];datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()}
+ if(!preencherCliente.tocou&&(b.freq==="intervalo"||Array.isArray(b.semana)&&b.semana.length)){if(Array.isArray(b.semana)&&b.semana.length)form.semana=[...b.semana];form.freq=b.freq==="intervalo"?"intervalo":"semana";form.intervalo=+b.intervalo||2;datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()}
  paintPerfilHint()}
 $("#fCliente").addEventListener("change",preencherCliente);
 semBox.addEventListener("click",()=>{preencherCliente.tocou=true});
@@ -543,18 +584,18 @@ function renderResult(progress){
  const mesNome=MESES[p.mes];
  const counts=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(c=>c[1]);
  let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow">${esc(p.arroba||p.nicho||"Pauta")}${p.exemplo?'<span class="tag">Exemplo</span>':""}</p><h2>${esc(p.cliente)} · ${mesNome} ${p.ano}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
- <div class="actions">${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${downloads&&p.posts.length?`<button class="btn ghost" id="dlMd" type="button">Baixar .md</button>`:""}${!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
- <div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
+ <div class="actions"${modoCliente?" hidden":""}>${dono&&artifactCap&&db&&!p.exemplo&&!busy&&p.posts.length?`<button class="btn lib" id="libBtn" type="button">Liberar para o cliente</button>`:""}${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${downloads&&p.posts.length?`<button class="btn ghost" id="dlMd" type="button">Baixar .md</button>`:""}${!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
+ ${modoCliente&&clientePautas.length>1?`<div class="months" role="group" aria-label="Escolher mês">${clientePautas.map((x,i)=>`<button type="button" data-mes="${i}" aria-pressed="${x===p}">${MESES[x.mes]} ${x.ano}</button>`).join("")}</div>`:""}<div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
  if(progress)html+=`<div class="panel progress"><div class="pl">${esc(progress.label)}<span>${esc(progress.detail||"")}</span></div><div class="track"><i style="width:${Math.round(progress.pct*100)}%"></i></div></div>`;
  const pf=p.perfil;
  if(pf&&(pf.resumo||(pf.produtos||[]).length)){const li=a=>`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
-  html+=`<div class="panel card"><h3>Sobre o cliente</h3><p class="lead">${esc(pf.resumo)}</p><div class="facts">
+  html+=`<div class="panel card"><h3>${modoCliente?"Como entendemos a sua marca":"Sobre o cliente"}</h3><p class="lead">${esc(pf.resumo)}</p><div class="facts">
   ${(pf.produtos||[]).length?`<div class="fact"><h4>Produtos e serviços</h4>${li(pf.produtos.slice(0,6))}</div>`:""}
   ${pf.publico?`<div class="fact"><h4>Público</h4><p>${esc(pf.publico)}</p></div>`:""}
   ${pf.tom?`<div class="fact"><h4>Tom de voz</h4><p>${esc(pf.tom)}</p></div>`:""}
   ${(pf.diferenciais||[]).length?`<div class="fact"><h4>Diferenciais</h4>${li(pf.diferenciais.slice(0,5))}</div>`:""}
   ${pf.visual?`<div class="fact"><h4>Identidade visual</h4><p>${esc(pf.visual)}</p></div>`:""}
-  ${pf.cuidados?`<div class="fact"><h4>Cuidados</h4><p>${esc(pf.cuidados)}</p></div>`:""}</div></div>`}
+  ${pf.cuidados&&!modoCliente?`<div class="fact"><h4>Cuidados</h4><p>${esc(pf.cuidados)}</p></div>`:""}</div></div>`}
  const e=p.estrategia;
  if(e){const tm=(p.briefing&&p.briefing.temas)||[];html+=`<div class="panel card"><h3>Estratégia</h3><p class="lead">${esc(e.resumo)}</p><div class="pillars">${(e.pilares||[]).map(pl=>`<button type="button" class="pillar" data-pilar="${esc(pl.nome)}" aria-pressed="${filtroPilar===pl.nome}"><span class="pt">${esc(pl.nome)}<span class="pct">${pl.pct}%</span></span><span class="bar"><i style="width:${Math.min(100,pl.pct)}%"></i></span><p>${esc(pl.descricao)}</p></button>`).join("")}</div>
  <div class="meta">${e.frequencia?`<span><b>Frequência</b> ${esc(e.frequencia)}</span>`:""}${(e.datas||[]).length?`<span><b>Datas</b> ${(e.datas||[]).map(d=>`${d.dia}/${p.mes+1} ${esc(d.nome)}`).join(" · ")}</span>`:""}</div>${tm.length?`<div class="temas-meta">${tm.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>`:""}</div>`;
@@ -567,6 +608,8 @@ function renderResult(progress){
  const ca=$("#copyAll");if(ca)ca.onclick=()=>copy(toMarkdown(p));
  const dl=$("#dlMd");if(dl)dl.onclick=async()=>{try{await downloads.save({filename:`pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}.md`,data:toMarkdown(p)})}catch(err){if(err&&err.code!=="cancelled")toast("Não foi possível baixar")}};
  const del=$("#delBtn");if(del)del.onclick=()=>confirmDelete(del,p);
+ const lib=$("#libBtn");if(lib)lib.onclick=()=>liberar(p,lib);
+ r.querySelectorAll("[data-mes]").forEach(b=>b.onclick=()=>{current=clientePautas[+b.dataset.mes];filtroFormato="Todos";filtroPilar=null;renderResult();window.scrollTo({top:0})});
 }
 function confirmDelete(btn,p){if(btn.dataset.armed){deletePauta(p);return}btn.dataset.armed="1";btn.textContent="Toque para confirmar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.textContent="Excluir"}},3500)}
 function calendarHTML(p){
@@ -608,7 +651,7 @@ function renderSheet(){
   body+=`<div class="sec"><h5>CTA</h5><p style="margin:0">${esc(x.cta)}</p></div>`;
   if(x.hashtags&&x.hashtags.length)body+=`<div class="sec"><h5>Hashtags</h5><div class="tags">${x.hashtags.map(h=>`<span>${esc(h)}</span>`).join("")}</div></div>`;
  }
- if(!p.exemplo&&!busy)body+=`<div class="sec"><h5>Refazer post</h5><div class="redo"><input type="text" id="redoTxt" placeholder="Opcional: o que mudar (ex.: mais divertido)"><button type="button" class="btn ghost" id="redoBtn">Refazer</button></div><p class="note err" id="redoErr" hidden></p></div>`;
+ if(!p.exemplo&&!busy&&!modoCliente)body+=`<div class="sec"><h5>Refazer post</h5><div class="redo"><input type="text" id="redoTxt" placeholder="Opcional: o que mudar (ex.: mais divertido)"><button type="button" class="btn ghost" id="redoBtn">Refazer</button></div><p class="note err" id="redoErr" hidden></p></div>`;
  $("#sheet").innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow"><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${x.formato} · ${esc(x.pilar)}</p><h3 id="shTitle">${esc(x.titulo||x.tema)}</h3><p class="sub" style="margin:.25rem 0 0;color:var(--fg-2);font-size:.875rem">${date}</p></div><button type="button" class="x" aria-label="Fechar">✕</button></div>
  <div class="sh-body">${body}</div>
  <div class="sh-nav"><button type="button" class="btn link" id="prevP" ${i===0?"disabled":""}>‹ Anterior</button><button type="button" class="btn ghost" id="copyPost" ${detailed(x)?"":"disabled"}>Copiar post</button><button type="button" class="btn link" id="nextP" ${i===list.length-1?"disabled":""}>Próximo ›</button></div>`;
@@ -683,7 +726,7 @@ ${calendarioTexto(b.mes,b.ano)}
 
 TAREFA: planeje a pauta do mês com EXATAMENTE estes posts: ${mixTxt}.
 ${regraDatas}
-- Frequência combinada: ${b.semana&&b.semana.length?`${b.semana.length}x por semana no feed (${b.semana.map(i=>DIAS[i]).join(", ")})`:"definida pelas datas acima"}.
+- Frequência combinada: ${b.freq==="intervalo"?`feed ${freqIntervaloTxt(b).toLowerCase()}`:b.semana&&b.semana.length?`${b.semana.length}x por semana no feed (${b.semana.map(i=>DIAS[i]).join(", ")})`:"definida pelas datas acima"}.
 ${b.temas&&b.temas.length?`- Cada tema pedido precisa aparecer em pelo menos um post: ${b.temas.join("; ")}. Complete com outros temas coerentes com o cliente.`:"- Escolha temas a partir do perfil e das oportunidades do cliente."}
 - Escolha de 3 a 4 pilares de conteúdo com porcentagens que somam 100.
 - Liste só datas comemorativas realmente relevantes para este nicho neste mês, com o dia correto, e aproveite as que caírem em dias de post.
@@ -745,7 +788,7 @@ function sanitizePlan(plan,b){
  const datasC=(plan.datas||[]).map(d=>({dia:parseInt(d.dia,10),nome:String(d.nome||""),uso:String(d.uso||"")})).filter(d=>d.dia>=1&&d.dia<=n&&d.nome);
  return {estrategia:{resumo:String(plan.resumo||""),frequencia:String(plan.frequencia||""),pilares:pil,datas:datasC},posts:out}}
 
-function readForm(){return {cliente:$("#fCliente").value.trim(),arroba:$("#fArroba").value.trim(),nicho:$("#fNicho").value.trim(),mes:form.mes,ano:form.ano,objetivo:form.objetivo,mix:{...form.mix},semana:[...form.semana],datas:[...form.datas].sort((a,b)=>a-b),temas:[...form.temas],sobre:$("#fSobre").value.trim(),destaques:$("#fDestaques").value.trim(),tom:$("#fTom").value.trim(),publico:$("#fPublico").value.trim(),evitar:$("#fEvitar").value.trim()}}
+function readForm(){return {cliente:$("#fCliente").value.trim(),arroba:$("#fArroba").value.trim(),nicho:$("#fNicho").value.trim(),mes:form.mes,ano:form.ano,objetivo:form.objetivo,mix:{...form.mix},semana:[...form.semana],freq:form.freq,intervalo:form.intervalo,inicio:form.inicio,datas:[...form.datas].sort((a,b)=>a-b),temas:[...form.temas],sobre:$("#fSobre").value.trim(),destaques:$("#fDestaques").value.trim(),tom:$("#fTom").value.trim(),publico:$("#fPublico").value.trim(),evitar:$("#fEvitar").value.trim()}}
 function setNote(t,err){const n=$("#formNote");n.textContent=t;n.classList.toggle("err",!!err)}
 function errMsg(e){const c=e&&e.code;if(c==="not_granted")return"Permita que a página use o Claude para gerar a pauta.";if(c==="rate_limited")return"Muitos pedidos seguidos. Espere um minuto e tente de novo.";if(c==="invalid_json")return"A resposta veio incompleta. Tente gerar de novo.";if(c==="image_rejected")return"Uma das imagens não pôde ser lida. Troque o arquivo e tente de novo.";if(c==="prompt_too_large")return"O material ficou grande demais. Envie menos páginas de PDF.";return"Não foi possível gerar agora. Tente de novo em instantes."}
 
@@ -792,7 +835,7 @@ async function redoPost(x,extra,btn){
 
 /* ---------- Storage ---------- */
 async function savePauta(p){if(!db||p.exemplo)return;try{const data=JSON.parse(JSON.stringify(p));data.atualizadoEm=new Date().toISOString();await db.collection("pautas").doc(p.id).set(data)}catch(e){toast("Não foi possível salvar a pauta")}}
-async function saveCliente(b){if(!db||!b.perfil)return;const id=slugC(b.cliente);const data={nome:b.cliente,arroba:b.arroba||"",nicho:b.nicho||"",sobre:b.sobre||"",perfil:b.perfil,briefing:{tom:b.tom||"",publico:b.publico||"",evitar:b.evitar||"",temas:b.temas||[],semana:b.semana||[]},atualizadoEm:new Date().toISOString()};
+async function saveCliente(b){if(!db||!b.perfil)return;const id=slugC(b.cliente);const data={nome:b.cliente,arroba:b.arroba||"",nicho:b.nicho||"",sobre:b.sobre||"",perfil:b.perfil,briefing:{tom:b.tom||"",publico:b.publico||"",evitar:b.evitar||"",temas:b.temas||[],semana:b.semana||[],freq:b.freq||"semana",intervalo:b.intervalo||2},atualizadoEm:new Date().toISOString()};
  clientes[id]=data;try{await db.collection("clientes").doc(id).set(data)}catch(e){}}
 async function deletePauta(p){if(!db)return;try{await db.collection("pautas").doc(p.id).delete();toast("Pauta excluída");current=null;renderResult()}catch(e){toast("Não foi possível excluir")}}
 function renderSaved(){
@@ -805,19 +848,112 @@ function renderSaved(){
 function renderAcessos(){
  const box=$("#acessosBox");if(!acessos.length){box.hidden=true;return}
  box.hidden=false;
- box.innerHTML=`<h3>Acesso dos clientes</h3><p class="lead">Cada cliente tem o próprio link e o próprio código. A página só abre com o código e mostra só as pautas daquele cliente. Para publicar ou atualizar, peça ao Claude: “publica a pauta da [cliente]”.</p>
+ box.innerHTML=`<h3>Acesso dos clientes</h3><p class="lead">Cada cliente tem o próprio link e o próprio código. A página só abre com o código e mostra só as pautas daquele cliente. Para liberar ou atualizar, abra a pauta e toque em Liberar para o cliente: o link e o código continuam os mesmos todo mês.</p>
  ${acessos.map((a,i)=>`<div class="ac"><div class="nm"><b>${esc(a.cliente)}</b><span>${esc((a.meses||[]).join(" · ")||"Sem pauta")}</span></div><code>${esc(a.codigo)}</code><div class="bt"><button type="button" class="btn ghost" data-ac="link" data-i="${i}">Copiar link</button><button type="button" class="btn ghost" data-ac="tudo" data-i="${i}">Copiar mensagem</button></div></div>`).join("")}`;
  box.querySelectorAll("[data-ac]").forEach(b=>b.onclick=()=>{const a=acessos[+b.dataset.i];
   copy(b.dataset.ac==="link"?a.url:`Oi! Sua pauta de conteúdo está aqui: ${a.url}\nCódigo de acesso: ${a.codigo}`)})}
 function updateClientes(){const names=[...new Set([...saved.map(s=>s.cliente),...Object.values(clientes).map(c=>c.nome)])].sort((a,b)=>a.localeCompare(b,"pt"));$("#clientesList").innerHTML=names.map(n=>`<option value="${esc(n)}"></option>`).join("")}
 
+/* ---------- Client access ----------
+   Each client opens this same page at APP_URL#<token> and types their own code. Their pautas sit in the
+   #portal block encrypted with that code (PBKDF2-SHA256 + AES-GCM), so a client can read only their own.
+   The acessos collection (owner only) keeps token, code and the same payload; the portal is rebuilt from it. */
+const APP_URL="https://claude.ai/artifact/WFtLQrFVMhE7mU7Wr1K7Ut";
+const RESET=':root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}';
+const ITER=310000, ALFABETO="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+let PORTAL={};try{PORTAL=JSON.parse($("#portal").textContent)||{}}catch(e){}
+const TOKEN=decodeURIComponent((location.hash||"").slice(1));
+let modoCliente=!!TOKEN, clientePautas=[], dono=false, artifactCap=null, portalSync=false;
+const b64=buf=>btoa(String.fromCharCode(...new Uint8Array(buf)));
+const ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const normCod=c=>String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+function novoCodigo(){const s=[...crypto.getRandomValues(new Uint8Array(8))].map(n=>ALFABETO[n%ALFABETO.length]).join("");return s.slice(0,4)+"-"+s.slice(4)}
+function novoToken(id){return `${id}-${[...crypto.getRandomValues(new Uint8Array(6))].map(n=>(n%36).toString(36)).join("")}`}
+async function chave(codigo,salt,uso){const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(normCod(codigo)),"PBKDF2",false,["deriveKey"]);
+ return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:ITER,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,[uso])}
+async function trancar(cliente,codigo,pautas){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+ const data=await crypto.subtle.encrypt({name:"AES-GCM",iv},await chave(codigo,salt,"encrypt"),new TextEncoder().encode(JSON.stringify({pautas})));
+ return {v:1,cliente,iter:ITER,salt:b64(salt),iv:b64(iv),data:b64(data)}}
+async function abrir(a,codigo){const salt=ub(a.salt);const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(normCod(codigo)),"PBKDF2",false,["deriveKey"]);
+ const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:a.iter||ITER,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"]);
+ return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub(a.iv)},key,ub(a.data))))}
+/* What the client sees: internal briefing notes stay out */
+function limpar(p){const {exemplo,briefing,criadoEm,atualizadoEm,...resto}=JSON.parse(JSON.stringify(p));return {...resto,briefing:{temas:(briefing&&briefing.temas)||[]}}}
+
+async function liberar(p,btn){
+ btn.disabled=true;btn.textContent="Liberando…";
+ try{
+  const id=slugC(p.cliente),prev=acessos.find(a=>a.id===id);
+  const a=prev?{cliente:prev.cliente,token:prev.token,codigo:prev.codigo}:{cliente:p.cliente,token:novoToken(id),codigo:novoCodigo()};
+  let lista=[];if(prev&&prev.payload){try{lista=(await abrir(prev.payload,prev.codigo)).pautas||[]}catch(e){lista=[]}}
+  lista=lista.filter(x=>!(x.mes===p.mes&&x.ano===p.ano));lista.push(limpar(p));lista.sort((x,y)=>(y.ano-x.ano)||(y.mes-x.mes));
+  a.payload=await trancar(a.cliente,a.codigo,lista);a.meses=lista.map(x=>`${MESES[x.mes]} ${x.ano}`);a.url=`${APP_URL}#${a.token}`;a.atualizadoEm=new Date().toISOString();
+  await db.collection("acessos").doc(id).set(a);
+  try{sessionStorage.setItem("pauta-liberada",JSON.stringify({cliente:a.cliente}))}catch(e){}
+  await publishPortal({...PORTAL,[a.token]:a.payload});
+ }catch(err){const c=err&&err.code;if(c==="conflict")return;
+  toast(c==="rate_limited"?"Muitas publicações seguidas. Espere um minuto.":c==="not_writer"||c==="not_granted"||c==="capability_disabled"?"Esta tela não pode publicar. Abra o app pela sua conta no Claude.":"Não foi possível liberar. Tente de novo.");
+  btn.disabled=false;btn.textContent="Liberar para o cliente"}}
+/* Rebuild this page from its own source with the new portal block and publish it as the next version */
+async function publishPortal(data){
+ const json=JSON.stringify(data).replace(/</g,"\\u003c");
+ const html=`<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>${RESET}</style></head><body><title>Pauta isadsign</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style id="css">${$("#css").textContent}</style>
+
+<template id="markup">${MARKUP.innerHTML}</template>
+<script type="application/json" id="portal">${json}<\/script>
+<script id="src">${document.getElementById("src").textContent}<\/script>
+</body></html>`;
+ await artifactCap.publish(html)}
+/* After Claude republishes the page from the repo the portal block can come back empty: put back what acessos holds. Only adds or updates, never removes. */
+function sincronizarPortal(){
+ if(portalSync||!dono||!artifactCap||busy)return;
+ const novo={...PORTAL};let muda=false;
+ acessos.forEach(a=>{if(a.token&&a.payload&&JSON.stringify(PORTAL[a.token])!==JSON.stringify(a.payload)){novo[a.token]=a.payload;muda=true}});
+ if(!muda)return;portalSync=true;publishPortal(novo).catch(()=>{})}
+
+/* Client view */
+const LSC="pauta-codigo-"+TOKEN;
+const lsGet=()=>{try{return localStorage.getItem(LSC)}catch(e){return null}};
+const lsSet=v=>{try{v?localStorage.setItem(LSC,v):localStorage.removeItem(LSC)}catch(e){}};
+function startCliente(){
+ document.body.classList.add("cliente");
+ const a=PORTAL[TOKEN];
+ if(!a){$("#result").innerHTML=`<section class="panel gate"><p class="eyebrow">Pauta isadsign</p><h2>Link não encontrado</h2><p>Confira se você abriu o link inteiro que a isadsign enviou.</p></section>`;return}
+ const salvo=lsGet();if(salvo)abrir(a,salvo).then(entrarCliente).catch(()=>{lsSet(null);gateCliente()});else gateCliente()}
+function gateCliente(err){
+ $("#sairBtn").hidden=true;
+ $("#result").innerHTML=`<section class="panel gate"><p class="eyebrow">Sua pauta de conteúdo</p><h2>${esc(PORTAL[TOKEN].cliente)}</h2><p>Digite o código de acesso que a isadsign enviou para você.</p>
+ <form id="gateForm" autocomplete="off"><label for="codigo" class="lbl">Código de acesso</label><input type="text" id="codigo" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX" maxlength="12" required>
+ <label class="remember"><input type="checkbox" id="lembrar" checked> Lembrar neste aparelho</label>
+ ${err?`<p class="note err" role="alert">${esc(err)}</p>`:""}<button type="submit" class="btn primary" id="entrarBtn">Ver minha pauta</button></form></section>`;
+ const inp=$("#codigo");
+ inp.addEventListener("input",()=>{const v=normCod(inp.value).slice(0,8);inp.value=v.length>4?v.slice(0,4)+"-"+v.slice(4):v});
+ $("#gateForm").addEventListener("submit",async e=>{e.preventDefault();const b=$("#entrarBtn");b.disabled=true;b.textContent="Abrindo…";
+  try{const d=await abrir(PORTAL[TOKEN],inp.value);if($("#lembrar").checked)lsSet(normCod(inp.value));entrarCliente(d)}
+  catch(_){gateCliente("Código incorreto. Confira as letras e os números e tente de novo.");$("#codigo").focus()}});
+ setTimeout(()=>inp.focus(),50)}
+function entrarCliente(d){
+ clientePautas=(d.pautas||[]).filter(x=>x&&Array.isArray(x.posts)).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes));
+ $("#sairBtn").hidden=false;
+ if(!clientePautas.length){$("#result").innerHTML=`<section class="panel gate"><h2>Nenhuma pauta ainda</h2><p>A pauta do mês aparece aqui assim que estiver pronta.</p></section>`;return}
+ const n=new Date();current=clientePautas.find(x=>x.ano===n.getFullYear()&&x.mes===n.getMonth())||clientePautas[0];
+ filtroFormato="Todos";filtroPilar=null;renderResult()}
+$("#sairBtn").onclick=()=>{lsSet(null);clientePautas=[];gateCliente()};
+
 /* ---------- Boot ---------- */
-renderResult();
-(async()=>{
+if(modoCliente)startCliente();
+else (async()=>{
+ renderResult();
  const c=window.claude;
  if(!c||!c.use){setNote("Abra esta página no Claude para gerar pautas.",true);return}
- const [s,d,dl]=await Promise.all([c.use("sample"),c.use("db"),c.use("downloads")]);
- sample=s;db=d;downloads=dl;
+ const [s,d,dl,us,ar]=await Promise.all([c.use("sample"),c.use("db"),c.use("downloads"),c.use("user"),c.use("artifact")]);
+ /* Only the isadsign account sees the generator; anyone else who opens the bare link gets a pointer to their own link */
+ dono=us?await us.canEdit().catch(()=>false):!!d;
+ if(!dono){document.body.classList.add("cliente");$("#result").innerHTML=`<section class="panel gate"><p class="eyebrow">Pauta isadsign</p><h2>Use o seu link</h2><p>Para ver a sua pauta, abra o link completo que a isadsign enviou para você e digite o seu código de acesso.</p></section>`;return}
+ sample=s;db=d;downloads=dl;artifactCap=ar;
+ try{const lib=JSON.parse(sessionStorage.getItem("pauta-liberada")||"null");if(lib){sessionStorage.removeItem("pauta-liberada");showView("salvas");toast(`Pauta liberada para ${lib.cliente}`)}}catch(e){}
  if(!sample)setNote("Gerar pauta funciona quando a página está aberta no Claude.",true);
  else{try{const lim=await sample.limits();imgLimits=lim&&lim.images||null}catch(e){imgLimits=null}}
  if(!imgLimits){$("#fFiles").accept="application/pdf";$("#dropHint").textContent="PDF do cliente (catálogo, apresentação, cardápio). Para prints, abra a página no Claude."}
@@ -827,7 +963,7 @@ renderResult();
    saved=snap.docs.map(x=>x.data()).filter(Boolean);updateClientes();
    if(current&&current.exemplo&&saved.length&&!busy){current=JSON.parse(JSON.stringify(saved[0]));renderResult()}
    if(!$("#viewSalvas").hidden)renderSaved()},()=>{});
-  db.collection("acessos").onSnapshot(snap=>{acessos=snap.docs.map(x=>x.data()).filter(a=>a&&a.cliente&&a.url).sort((a,b)=>a.cliente.localeCompare(b.cliente,"pt"));renderAcessos()},()=>{});
+  db.collection("acessos").onSnapshot(snap=>{acessos=snap.docs.map(x=>({...x.data(),id:x.id})).filter(a=>a&&a.cliente&&a.url).sort((a,b)=>a.cliente.localeCompare(b.cliente,"pt"));renderAcessos();sincronizarPortal()},()=>{});
   db.collection("clientes").onSnapshot(snap=>{clientes={};snap.docs.forEach(x=>{const c=x.data();if(c&&c.nome)clientes[x.id]=c});updateClientes();paintPerfilHint()},()=>{})}
 })();
 })();
