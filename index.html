@@ -1,0 +1,813 @@
+<title>Pauta isadsign</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: frosted top bar, briefing panel at left (sticky on wide screens), result canvas at right; stacks to one column on phones. Scales type up on TVs. */
+:root{
+  --bg:#f5f5f7; --surface:#ffffff; --surface-2:#f0f0f3; --fg:#1d1d1f; --fg-2:#6e6e73; --line:rgba(0,0,0,.09);
+  --accent:#d6237f; --accent-soft:rgba(214,35,127,.1); --on-accent:#ffffff;
+  --c-car:#d6237f; --c-reel:#5856d6; --c-est:#c76a00; --c-sto:#248a3d;
+  --bar:rgba(245,245,247,.78); --shadow:0 1px 2px rgba(0,0,0,.04),0 8px 28px rgba(0,0,0,.06);
+  --danger:#d70015; --scrim-ink:rgba(0,0,0,.62);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r-lg:1.375rem; --r-md:0.875rem; --r-sm:0.625rem;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --fg:#f5f5f7; --fg-2:#98989d; --line:rgba(255,255,255,.1);
+  --accent:#ff4fa3; --accent-soft:rgba(255,79,163,.16); --on-accent:#1a0010;
+  --c-car:#ff4fa3; --c-reel:#7d7aff; --c-est:#ffb340; --c-sto:#4cd964;
+  --bar:rgba(22,22,24,.72); --shadow:0 1px 2px rgba(0,0,0,.4); --danger:#ff6961; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --fg:#f5f5f7; --fg-2:#98989d; --line:rgba(255,255,255,.1);
+  --accent:#ff4fa3; --accent-soft:rgba(255,79,163,.16); --on-accent:#1a0010;
+  --c-car:#ff4fa3; --c-reel:#7d7aff; --c-est:#ffb340; --c-sto:#4cd964;
+  --bar:rgba(22,22,24,.72); --shadow:0 1px 2px rgba(0,0,0,.4); --danger:#ff6961; color-scheme:dark}
+
+html{font-size:16px;-webkit-text-size-adjust:100%}
+@media (min-width:1800px){html{font-size:19px}}
+@media (min-width:2400px){html{font-size:24px}}
+@media (min-width:3200px){html{font-size:30px}}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:1rem;line-height:1.47;letter-spacing:-.011em;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit;letter-spacing:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bar)}
+
+.wrap{max-width:82rem;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Top bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bar);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:1rem;height:3.25rem}
+.brand{font-weight:600;font-size:1.0625rem;letter-spacing:-.02em;margin-right:auto;white-space:nowrap}
+.brand small{font-weight:400;color:var(--fg-2);margin-left:.35rem}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:.6rem;padding:2px;gap:2px}
+.seg button{border:0;background:transparent;padding:.3rem .85rem;border-radius:.5rem;font-size:.8125rem;font-weight:500;color:var(--fg);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+
+/* Hero */
+.hero{padding-block:3rem 1.75rem}
+.hero h1{font-size:clamp(2.25rem,5vw,3.5rem);line-height:1.05;letter-spacing:-.035em;font-weight:700;margin:0;text-wrap:balance}
+.hero p{color:var(--fg-2);font-size:clamp(1.0625rem,1.6vw,1.3125rem);margin:.75rem 0 0;max-width:40rem;text-wrap:pretty}
+
+.grid{display:grid;grid-template-columns:minmax(0,25rem) minmax(0,1fr);gap:1.5rem;align-items:start;padding-bottom:4rem}
+@media (max-width:980px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+.panel{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow)}
+.brief{padding:1.25rem;position:sticky;top:calc(env(safe-area-inset-top,0px) + 4.25rem);max-height:calc(100vh - 5.5rem);overflow:auto}
+@media (max-width:980px){.brief{position:static;max-height:none}}
+.brief h2{font-size:1.25rem;letter-spacing:-.02em;margin:0 0 1rem;font-weight:600}
+.field{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.9rem}
+.field label,.lbl{font-size:.8125rem;font-weight:500;color:var(--fg-2)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+input[type=text],select,textarea{width:100%;background:var(--surface-2);border:1px solid transparent;border-radius:var(--r-sm);padding:.6rem .75rem;font-size:.9375rem;outline:none;transition:border-color .15s,background .15s}
+input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent);background:var(--surface)}
+textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:.35rem .8rem;font-size:.8125rem}
+.chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.mix{display:grid;grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr));gap:.5rem}
+.step span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.step{display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border-radius:var(--r-sm);padding:.35rem .4rem .35rem .7rem}
+.step span{font-size:.875rem;display:flex;align-items:center;gap:.4rem}
+.dot{width:.5rem;height:.5rem;border-radius:50%;display:inline-block;flex:none}
+.step .ctl{display:flex;align-items:center;gap:.15rem}
+.step button{width:1.75rem;height:1.75rem;border-radius:50%;border:0;background:var(--surface);font-size:1rem;line-height:1;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.step output{min-width:1.4rem;text-align:center;font-variant-numeric:tabular-nums;font-weight:600}
+.total{font-size:.8125rem;color:var(--fg-2);margin:.5rem 0 0}
+.more{margin:.25rem 0 .9rem;border:0;background:none;color:var(--accent);font-size:.875rem;padding:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;border:0;border-radius:999px;padding:.7rem 1.3rem;font-size:.9375rem;font-weight:500;white-space:nowrap}
+.btn.primary{background:var(--accent);color:var(--on-accent);width:100%;padding:.85rem 1rem;font-size:1rem}
+.btn.primary:disabled{opacity:.45;cursor:default}
+.btn.ghost{background:var(--surface-2);color:var(--fg)}
+.btn.link{background:none;color:var(--accent);padding:.4rem .2rem}
+.note{font-size:.8125rem;color:var(--fg-2);margin:.7rem 0 0;text-align:center}
+.note.err{color:var(--danger)}
+
+/* Briefing sections */
+.sec-t{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-2);margin:1.25rem 0 .75rem;padding-top:1rem;border-top:1px solid var(--line)}
+.hint{font-size:.8125rem;color:var(--fg-2);margin:-.35rem 0 .9rem;line-height:1.4;display:flex;gap:.5rem;align-items:flex-start;justify-content:space-between}
+.hint b{color:var(--fg);font-weight:500}
+.hint button{flex:none;border:0;background:none;color:var(--accent);font-size:.8125rem;padding:0}
+.drop{display:flex;flex-direction:column;align-items:center;gap:.2rem;text-align:center;border:1.5px dashed var(--fg-2);border-radius:var(--r-md);padding:1rem .9rem;cursor:pointer;transition:border-color .15s,background .15s;opacity:.95}
+.drop b{font-size:.9375rem;font-weight:600;color:var(--accent)}
+.drop span{font-size:.8125rem;color:var(--fg-2);line-height:1.35}
+.drop.over,.drop:hover{border-color:var(--accent);background:var(--accent-soft)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.drop:focus-within{outline:3px solid var(--accent);outline-offset:2px}
+.files{display:grid;grid-template-columns:repeat(auto-fill,minmax(4.6rem,1fr));gap:.45rem;margin-top:.5rem}
+.file{position:relative;aspect-ratio:1;max-width:100%;border-radius:var(--r-sm);background:var(--surface-2);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.15rem;padding:.3rem;text-align:center}
+.file img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.file .ext{font-size:.75rem;font-weight:700;color:var(--accent);letter-spacing:.04em}
+.file .fn{font-size:.625rem;color:var(--fg-2);line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-all}
+.file .rm{position:absolute;top:.2rem;right:.2rem;width:1.4rem;height:1.4rem;border-radius:50%;border:0;background:var(--scrim-ink);color:#fff;font-size:.7rem;line-height:1;z-index:1}
+.chips.wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.3rem}
+.chips.wk .chip{padding:.4rem 0;text-align:center}
+.mini-cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.2rem;background:var(--surface-2);border-radius:var(--r-md);padding:.5rem}
+.mini-cal .dw{font-size:.625rem;text-align:center;color:var(--fg-2);font-weight:600;text-transform:uppercase;letter-spacing:.04em;padding-bottom:.15rem}
+.md{position:relative;aspect-ratio:1;max-width:100%;border:0;border-radius:50%;background:transparent;font-size:.8125rem;font-variant-numeric:tabular-nums;padding:0}
+.md[aria-pressed="true"]{background:var(--accent);color:var(--on-accent);font-weight:600}
+.md.hol::after{content:"";position:absolute;left:50%;bottom:12%;width:.25rem;height:.25rem;margin-left:-.125rem;border-radius:50%;background:var(--c-est)}
+.cal-act{display:flex;justify-content:space-between;align-items:center;gap:.5rem;margin-top:.35rem}
+.cal-act .total{margin:0}
+.total.warn{color:var(--c-est)}
+.total .fix{border:0;background:none;color:var(--accent);padding:0;font-size:.8125rem;margin-left:.3rem}
+.tagin{display:flex;gap:.4rem}
+.tagin input{flex:1;min-width:0}
+.tagin .btn{padding:.55rem .9rem;font-size:.875rem}
+#temas:not(:empty){margin-top:.5rem}
+.tchip{display:inline-flex;align-items:center;gap:.35rem;background:var(--accent-soft);color:var(--accent);border:0;border-radius:999px;padding:.3rem .45rem .3rem .75rem;font-size:.8125rem;font-weight:500}
+.tchip i{font-style:normal;width:1.1rem;height:1.1rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;background:var(--accent);color:var(--on-accent)}
+
+/* Client profile + post description */
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.9rem 1.5rem;margin-top:.2rem}
+.fact h4{margin:0 0 .25rem;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-2)}
+.fact p{margin:0;font-size:.9375rem;line-height:1.45}
+.fact ul{margin:0;padding-left:1.1rem;font-size:.9375rem;line-height:1.45}
+.desc{font-size:1rem;line-height:1.55;margin:0;max-width:40rem;text-wrap:pretty}
+.check{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.4rem}
+.check li{display:grid;grid-template-columns:1.1rem minmax(0,1fr);gap:.55rem;font-size:.9375rem;line-height:1.4}
+.check li::before{content:"";width:.95rem;height:.95rem;margin-top:.15rem;border-radius:.3rem;border:1.5px solid var(--fg-2)}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:.75rem}
+.kv div{background:var(--surface-2);border-radius:var(--r-sm);padding:.7rem .85rem}
+.kv b{display:block;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-2);margin-bottom:.2rem}
+.kv span{font-size:.9375rem;line-height:1.4}
+.temas-meta{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.9rem}
+
+/* Result */
+.result{display:flex;flex-direction:column;gap:1.25rem;min-width:0}
+.head{padding:1.5rem 1.5rem 1.25rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;justify-content:space-between}
+.head .t{min-width:0}
+.eyebrow{font-size:.8125rem;font-weight:600;color:var(--accent);margin:0 0 .3rem;display:flex;gap:.5rem;align-items:center}
+.tag{font-size:.6875rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;background:var(--surface-2);color:var(--fg-2);border-radius:999px;padding:.15rem .5rem}
+.head h2{font-size:clamp(1.75rem,3.2vw,2.5rem);letter-spacing:-.03em;line-height:1.08;margin:0;font-weight:700;text-wrap:balance}
+.head .sub{color:var(--fg-2);margin:.35rem 0 0}
+.actions{display:flex;gap:.5rem;flex-wrap:wrap}
+.counts{display:flex;flex-wrap:wrap;gap:1.5rem;padding:0 1.5rem 1.4rem}
+.count b{display:block;font-size:1.75rem;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.1}
+.count span{font-size:.8125rem;color:var(--fg-2);display:flex;align-items:center;gap:.35rem}
+
+.card{padding:1.4rem 1.5rem}
+.card h3{font-size:1.25rem;letter-spacing:-.02em;margin:0 0 .25rem;font-weight:600}
+.card .lead{color:var(--fg-2);margin:0 0 1.1rem;max-width:44rem}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.75rem}
+.pillar{border:1px solid var(--line);border-radius:var(--r-md);padding:.9rem 1rem;text-align:left;background:transparent;display:flex;flex-direction:column;gap:.35rem}
+.pillar[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.pillar .pt{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;font-weight:600}
+.pillar .pct{font-variant-numeric:tabular-nums;color:var(--fg-2);font-weight:500;font-size:.875rem}
+.bar{height:4px;border-radius:2px;background:var(--surface-2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:2px}
+.pillar p{margin:0;font-size:.875rem;color:var(--fg-2);line-height:1.4}
+.meta{display:flex;flex-wrap:wrap;gap:.5rem 1.5rem;margin-top:1rem;font-size:.875rem;color:var(--fg-2)}
+.meta b{color:var(--fg);font-weight:500}
+
+/* Calendar */
+.cal-legend{display:flex;flex-wrap:wrap;gap:.9rem;font-size:.8125rem;color:var(--fg-2);margin-bottom:.9rem}
+.cal-legend span{display:flex;align-items:center;gap:.35rem}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.35rem}
+.dow{font-size:.75rem;font-weight:600;color:var(--fg-2);text-align:center;padding-bottom:.25rem;text-transform:uppercase;letter-spacing:.04em}
+.day{min-height:5.5rem;border-radius:var(--r-sm);background:var(--surface-2);padding:.4rem;display:flex;flex-direction:column;gap:.25rem;min-width:0;border:0;text-align:left}
+.day.empty{background:transparent}
+.day .n{font-size:.8125rem;font-weight:600;font-variant-numeric:tabular-nums}
+.day .hol{font-size:.6875rem;color:var(--accent);line-height:1.2;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.pill{border:0;border-radius:.4rem;padding:.2rem .35rem;font-size:.6875rem;font-weight:600;text-align:left;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}
+.pill.Carrossel{background:var(--c-car)} .pill.Reels{background:var(--c-reel)} .pill.Estático{background:var(--c-est)} .pill.Stories{background:var(--c-sto)}
+:root[data-theme="dark"] .pill{color:#000}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pill{color:#000}}
+@media (max-width:640px){.day{min-height:3.6rem;padding:.3rem}.pill{font-size:0;height:.45rem;padding:0;border-radius:3px}.day .hol{display:none}.cal{gap:.25rem}}
+
+/* Posts */
+.toolbar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(17rem,1fr));gap:.75rem}
+.post{border:1px solid var(--line);border-radius:var(--r-md);padding:1rem;text-align:left;background:transparent;display:flex;flex-direction:column;gap:.45rem;min-width:0;transition:border-color .15s,transform .15s}
+.post:hover{border-color:var(--fg-2)}
+.post .pm{display:flex;align-items:center;gap:.45rem;font-size:.8125rem;color:var(--fg-2);font-variant-numeric:tabular-nums}
+.post h4{margin:0;font-size:1.0625rem;letter-spacing:-.015em;font-weight:600;line-height:1.3}
+.post p{margin:0;font-size:.875rem;color:var(--fg-2);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.post .pending{font-style:italic}
+.empty-state{padding:3rem 1.5rem;text-align:center;color:var(--fg-2)}
+.empty-state h3{color:var(--fg);font-size:1.25rem;margin:0 0 .4rem}
+
+/* Progress */
+.progress{padding:1.25rem 1.5rem;display:flex;flex-direction:column;gap:.6rem}
+.progress .pl{display:flex;justify-content:space-between;font-size:.9375rem;font-weight:500}
+.progress .pl span{color:var(--fg-2);font-weight:400;font-variant-numeric:tabular-nums}
+.track{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.track i{display:block;height:100%;width:0;background:var(--accent);border-radius:3px;transition:width .4s ease}
+
+/* Saved list */
+.saved{display:grid;grid-template-columns:repeat(auto-fill,minmax(18rem,1fr));gap:.75rem;padding-bottom:4rem}
+.sv{padding:1.2rem;text-align:left;border:0;display:flex;flex-direction:column;gap:.3rem}
+.sv .m{font-size:.8125rem;color:var(--fg-2)}
+.sv h3{margin:0;font-size:1.1875rem;letter-spacing:-.02em}
+.sv .mini{display:flex;gap:.3rem;margin-top:.4rem;flex-wrap:wrap}
+.sv .mini .dot{width:.55rem;height:.55rem}
+
+/* Sheet */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:40;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheet{background:var(--surface);border-radius:var(--r-lg);width:min(46rem,100%);max-height:100%;overflow:auto;box-shadow:0 20px 60px rgba(0,0,0,.25);display:flex;flex-direction:column}
+@media (max-width:640px){.scrim{align-items:flex-end;padding:0}.sheet{border-radius:var(--r-lg) var(--r-lg) 0 0;max-height:92%;padding-bottom:env(safe-area-inset-bottom,0px)}}
+.sh-top{position:sticky;top:0;background:var(--surface);padding:1rem 1.25rem .75rem;border-bottom:1px solid var(--line);display:flex;gap:.75rem;align-items:flex-start;z-index:1}
+.sh-top .t{flex:1;min-width:0}
+.sh-top h3{margin:.15rem 0 0;font-size:1.375rem;letter-spacing:-.025em;line-height:1.2}
+.x{border:0;background:var(--surface-2);width:2rem;height:2rem;border-radius:50%;font-size:1rem;flex:none}
+.sh-body{padding:1.1rem 1.25rem 1.5rem;display:flex;flex-direction:column;gap:1.25rem}
+.sec h5{margin:0 0 .5rem;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-2);display:flex;justify-content:space-between;align-items:center}
+.sec h5 button{text-transform:none;letter-spacing:0;font-size:.8125rem;font-weight:500;border:0;background:none;color:var(--accent);padding:0}
+.hook{background:var(--surface-2);border-radius:var(--r-sm);padding:.7rem .85rem;margin-bottom:.4rem;font-weight:500}
+.slides{display:flex;gap:.6rem;overflow-x:auto;padding-bottom:.35rem;scroll-snap-type:x mandatory}
+.slide{flex:0 0 min(15rem,78%);aspect-ratio:4/5;max-width:100%;background:var(--surface-2);border-radius:var(--r-md);padding:1rem;scroll-snap-align:start;display:flex;flex-direction:column;gap:.5rem;overflow:auto}
+.slide .sn{font-size:.75rem;color:var(--fg-2);font-variant-numeric:tabular-nums}
+.slide b{font-size:1.0625rem;letter-spacing:-.015em;line-height:1.25}
+.slide p{margin:0;font-size:.875rem;line-height:1.4}
+.script{display:flex;flex-direction:column;gap:.5rem}
+.beat{display:grid;grid-template-columns:4.2rem minmax(0,1fr);gap:.75rem;border-top:1px solid var(--line);padding-top:.55rem}
+.beat:first-child{border-top:0;padding-top:0}
+.beat .tm{font-family:var(--mono);font-size:.8125rem;color:var(--accent);padding-top:.1rem}
+.beat p{margin:0 0 .2rem}
+.beat .sm{font-size:.8125rem;color:var(--fg-2)}
+.caption{white-space:pre-wrap;background:var(--surface-2);border-radius:var(--r-sm);padding:.85rem .95rem;font-size:.9375rem;line-height:1.5}
+.tags{display:flex;flex-wrap:wrap;gap:.35rem}
+.tags span{font-size:.8125rem;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:.2rem .6rem}
+.redo{display:flex;gap:.5rem;flex-wrap:wrap}
+.redo input{flex:1 1 12rem}
+.sh-nav{display:flex;justify-content:space-between;gap:.5rem;padding:.75rem 1.25rem 1.1rem;border-top:1px solid var(--line)}
+.toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:.6rem 1.1rem;border-radius:999px;font-size:.875rem;font-weight:500;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Pauta <small>isadsign</small></div>
+    <div class="seg" role="group" aria-label="Seções">
+      <button type="button" id="tabNova" aria-pressed="true">Nova pauta</button>
+      <button type="button" id="tabSalvas" aria-pressed="false">Salvas</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero" id="hero">
+    <h1>O mês inteiro de conteúdo, pronto.</h1>
+    <p>Mostre quem é o cliente, escolha os dias e os temas. A pauta sai com estratégia, calendário e cada post descrito por completo: o que é, como produzir, roteiro, legenda e CTA.</p>
+  </section>
+
+  <section id="viewNova" class="grid">
+    <form class="panel brief" id="form" autocomplete="off">
+      <h2>Briefing</h2>
+      <div class="field">
+        <label for="fCliente">Cliente</label>
+        <input type="text" id="fCliente" list="clientesList" placeholder="Ex.: Ousion" required>
+        <datalist id="clientesList"></datalist>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="fArroba">@ do perfil</label><input type="text" id="fArroba" placeholder="@perfil"></div>
+        <div class="field"><label for="fNicho">Nicho</label><input type="text" id="fNicho" placeholder="Ex.: skincare"></div>
+      </div>
+
+      <h3 class="sec-t">Sobre o cliente</h3>
+      <div class="field">
+        <span class="lbl">Prints do perfil, fotos ou PDF</span>
+        <label class="drop" id="drop" for="fFiles">
+          <input type="file" id="fFiles" multiple accept="image/jpeg,image/png,image/webp,image/gif,application/pdf">
+          <b>Adicionar arquivos</b>
+          <span id="dropHint">Prints do Instagram, catálogo, apresentação ou cardápio. Toque ou arraste aqui.</span>
+        </label>
+        <div class="files" id="files" hidden></div>
+      </div>
+      <div class="field">
+        <label for="fSobre">O que o cliente faz, por escrito</label>
+        <textarea id="fSobre" rows="4" placeholder="Ex.: clínica de estética em Campinas, carro-chefe é limpeza de pele; atende mulheres 25–45; quer vender mais pacotes."></textarea>
+      </div>
+      <p class="hint" id="perfilHint" hidden></p>
+
+      <h3 class="sec-t">Quando postar</h3>
+      <div class="row2">
+        <div class="field"><label for="fMes">Mês</label><select id="fMes"></select></div>
+        <div class="field"><label for="fAno">Ano</label><select id="fAno"></select></div>
+      </div>
+      <div class="field">
+        <span class="lbl" id="freqLbl">Frequência do feed</span>
+        <div class="chips wk" id="semana" role="group" aria-labelledby="freqLbl"></div>
+        <p class="total" id="freqTxt"></p>
+      </div>
+      <div class="field">
+        <span class="lbl">Datas para postar</span>
+        <div class="mini-cal" id="miniCal" role="group" aria-label="Datas para postar"></div>
+        <div class="cal-act"><span class="total" id="datasTxt"></span><button type="button" class="btn link" id="datasReset">Refazer pelos dias</button></div>
+      </div>
+      <div class="field">
+        <span class="lbl">Formatos</span>
+        <div class="mix" id="mix"></div>
+        <p class="total" id="total"></p>
+      </div>
+
+      <h3 class="sec-t">O que falar</h3>
+      <div class="field">
+        <span class="lbl" id="objLbl">Objetivo do mês</span>
+        <div class="chips" id="objetivos" role="group" aria-labelledby="objLbl"></div>
+      </div>
+      <div class="field">
+        <label for="fTema">Temas que você quer</label>
+        <div class="tagin"><input type="text" id="fTema" placeholder="Ex.: rotina de skincare"><button type="button" class="btn ghost" id="temaAdd">Adicionar</button></div>
+        <div class="chips" id="temas"></div>
+      </div>
+      <div class="field">
+        <label for="fDestaques">Produtos, promoções ou eventos do mês</label>
+        <textarea id="fDestaques" placeholder="Ex.: lançamento do sérum dia 12; frete grátis na Black Friday"></textarea>
+      </div>
+      <button type="button" class="more" id="moreBtn" aria-expanded="false">Mais detalhes</button>
+      <div id="moreBox" hidden>
+        <div class="field"><label for="fTom">Tom de voz</label><textarea id="fTom" placeholder="Ex.: próximo, divertido, sem gírias pesadas"></textarea></div>
+        <div class="field"><label for="fPublico">Público</label><input type="text" id="fPublico" placeholder="Ex.: mulheres 25–40, pele sensível"></div>
+        <div class="field"><label for="fEvitar">Evitar</label><input type="text" id="fEvitar" placeholder="Temas, palavras ou concorrentes"></div>
+      </div>
+      <button type="submit" class="btn primary" id="genBtn">Gerar pauta</button>
+      <p class="note" id="formNote">Leva de 1 a 3 minutos. A pauta fica salva automaticamente.</p>
+    </form>
+
+    <div class="result" id="result" aria-live="polite"></div>
+  </section>
+
+  <section id="viewSalvas" hidden>
+    <div class="saved" id="savedList"></div>
+  </section>
+</main>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" id="sheet"></div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const DIAS=["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
+const DIAS_C=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+const FORMATOS=["Carrossel","Reels","Estático","Stories"];
+const FCOLOR={Carrossel:"var(--c-car)",Reels:"var(--c-reel)","Estático":"var(--c-est)",Stories:"var(--c-sto)"};
+const OBJETIVOS=["Vender","Atrair seguidores","Autoridade","Engajamento","Lançamento"];
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+/* ---------- Example shown before the first real pauta ---------- */
+const EXEMPLO={id:"exemplo",exemplo:true,cliente:"Café Aurora",arroba:"@cafeaurora",nicho:"cafeteria artesanal",mes:10,ano:2026,objetivo:"Vender",
+ briefing:{temas:["Métodos de preparo","Origem dos grãos","Kit presente"]},
+ perfil:{resumo:"Cafeteria de bairro com torra própria, que vende café especial no balcão e em pacotes. Atende moradores e quem trabalha por perto.",produtos:["Café coado e espresso de grãos próprios","Pacotes de 250 g moídos na hora","Kit presente com caneca e filtro de pano"],publico:"Adultos de 25 a 45 anos que gostam de café bom e querem aprender a fazer em casa.",tom:"Acolhedor e didático, frases curtas, poucos emojis (☕ 🤎).",diferenciais:["Torra na própria loja","Relação direta com produtores"],visual:"Marrom, creme e preto; fotos com luz natural e mãos em cena; tipografia serifada nos títulos.",cuidados:""},
+ estrategia:{resumo:"Novembro aquece as vendas para o fim de ano: educar sobre o café especial durante o mês e concentrar as ofertas na Black Friday.",
+  pilares:[{nome:"Educativo",pct:40,descricao:"Origem dos grãos, métodos de preparo e mitos do café."},{nome:"Bastidores",pct:25,descricao:"Torra, equipe e rotina da loja."},{nome:"Prova social",pct:15,descricao:"Clientes, avaliações e reposts."},{nome:"Venda",pct:20,descricao:"Kits de presente e a Black Friday."}],
+  frequencia:"Feed às terças e sextas, Stories todos os dias.",
+  datas:[{dia:20,nome:"Dia da Consciência Negra",uso:"Homenagem aos produtores de café."},{dia:27,nome:"Black Friday",uso:"Oferta do kit presente."}]},
+ posts:[
+  {id:"p1",dia:3,formato:"Carrossel",pilar:"Educativo",tema:"5 erros que deixam o café amargo",objetivo:"Gerar salvamentos e mostrar autoridade.",
+   descricao:"Carrossel educativo que mostra os cinco erros de preparo mais comuns e como corrigir cada um. A ideia é tirar a culpa do grão e mostrar que um café bom depende de detalhes simples, o que posiciona a Aurora como quem entende do assunto. É um post para salvar e mandar para alguém, por isso cada slide traz uma correção prática. No fim, abre caminho para vender os pacotes moídos na hora.",producao:["Foto de capa: xícara de café escuro sobre a bancada, luz da manhã", "Fotos de apoio: chaleira, moedor, balança e pó em close", "Conferir com a barista as temperaturas e proporções", "Arte final no Canva com a paleta marrom e creme"],visual:"Fundo creme, números grandes em marrom, uma foto por slide com as mãos em cena; títulos na serifada da marca.",horario:"Terça às 8h, quando o público passa o primeiro café do dia.",metrica:"Salvamentos e compartilhamentos.",
+   ganchos:["Seu café fica amargo? A culpa provavelmente não é do grão.","5 erros que você comete todo dia ao passar café."],
+   slides:[{titulo:"5 erros que deixam seu café amargo",texto:"E como resolver cada um hoje mesmo."},{titulo:"1. Água fervendo",texto:"O ideal é entre 90 °C e 96 °C. Espere 30 segundos depois de ferver."},{titulo:"2. Moagem fina demais",texto:"Para coado, use moagem média, parecida com açúcar refinado."},{titulo:"3. Pó velho",texto:"Café moído perde aroma em poucos dias. Moa na hora sempre que puder."},{titulo:"4. Proporção errada",texto:"Comece com 10 g de café para 150 ml de água."},{titulo:"5. Café requentado",texto:"Prepare só o que vai beber agora."},{titulo:"Salve para não esquecer",texto:"E marque quem precisa ver isso."}],
+   legenda:"Quase todo café amargo tem a ver com o preparo, não com o grão ☕\n\nArrasta para o lado e vê qual desses erros você comete. O nº 2 é o mais comum aqui na loja.\n\nSalva este post para consultar na próxima passada.",cta:"Salvar o post e marcar um amigo",hashtags:["#cafeespecial","#metodosdepreparo","#cafecoado","#baristaemcasa","#cafeteria"]},
+  {id:"p2",dia:10,formato:"Reels",pilar:"Bastidores",tema:"Da saca à xícara em 30 segundos",objetivo:"Alcance e conexão com a marca.",
+   descricao:"Reels de bastidor que acompanha o grão desde a saca até a xícara em 30 segundos. Mostra a torra artesanal, que é o maior diferencial da loja, e cria vínculo ao revelar um processo que o cliente nunca vê. O ritmo rápido e o som do primeiro crack seguram a atenção. Termina convidando para provar o café no balcão.",producao:["Gravar a abertura da saca com grãos verdes em close", "Captar o torrador girando e o som do primeiro crack", "Extração no V60 em câmera lenta", "Cliente sorrindo com a xícara no balcão (pedir autorização)"],visual:"Luz natural quente, cortes rápidos no ritmo da música, texto na tela em creme com sombra suave.",horario:"Sexta às 18h, quando o alcance de Reels costuma subir.",metrica:"Alcance para não seguidores e visitas ao perfil.",
+   ganchos:["Esse grão verde vira o seu café em 30 segundos.","Você nunca viu o seu café antes de ele ficar marrom."],
+   roteiro:[{tempo:"0–3s",cena:"Close das mãos abrindo a saca de grãos verdes.",fala:"Esse grão verde vira o seu café.",texto_tela:"Da saca à xícara ☕"},{tempo:"3–15s",cena:"Torrador girando, grãos mudando de cor, som do primeiro crack.",fala:"Aqui ele ganha cor, aroma e doçura. Cada lote leva uns 12 minutos.",texto_tela:"Torra artesanal • 12 min"},{tempo:"15–25s",cena:"Moagem e extração no V60 em câmera lenta.",fala:"Depois é moer na hora e passar com calma.",texto_tela:"Moído na hora"},{tempo:"25–30s",cena:"Cliente sorrindo com a xícara no balcão.",fala:"Vem provar o resultado.",texto_tela:"Rua das Flores, 120"}],
+   legenda:"Todo café que sai do nosso balcão passa por aqui primeiro 🤎\n\nQual parte você não conhecia?",cta:"Comentar e vir provar na loja",hashtags:["#torraartesanal","#cafeespecial","#bastidores","#cafeteria"]},
+  {id:"p3",dia:20,formato:"Estático",pilar:"Educativo",tema:"Quem planta o seu café",objetivo:"Valorizar os produtores na data.",
+   descricao:"Post estático em homenagem aos produtores no Dia da Consciência Negra, com o retrato de um parceiro real da lavoura. Valoriza quem está por trás do café e reforça a relação direta da marca com os produtores. O texto curto deixa a imagem falar e leva para a história completa nos Stories.",producao:["Retrato do produtor parceiro com autorização de uso", "Confirmar nome e cidade do produtor", "Logo pequena da Aurora em PNG"],visual:"Foto em preto e branco ocupando toda a arte, frase em branco no rodapé, logo discreta no canto.",horario:"Quinta, dia 20, às 9h.",metrica:"Comentários e respostas nos Stories.",
+   ganchos:["Antes da xícara, tem gente.","Conheça quem planta o café que você bebe."],
+   arte:{frase:"Antes da xícara, tem gente.",direcao:"Retrato em preto e branco de um produtor parceiro na lavoura, frase em branco no rodapé, logo pequena no canto."},
+   legenda:"Neste 20 de novembro, nossa homenagem a quem planta, colhe e cuida do café que chega até você.\n\nConheça a história do Seu Antônio nos Stories.",cta:"Ver a história completa nos Stories",hashtags:["#consciencianegra","#produtoresdecafe","#cafeespecial"]},
+  {id:"p4",dia:27,formato:"Reels",pilar:"Venda",tema:"Kit presente com 20% na Black Friday",objetivo:"Converter em vendas do kit.",
+   descricao:"Reels de venda do kit presente com desconto na Black Friday. Mostra o que vem no kit de forma rápida e resolve o problema de quem procura presente de Natal. A urgência do prazo e o link na bio levam direto para a compra.",producao:["Kit montado e embrulhado para gravar", "Fundo neutro e laço na cor da marca", "Link da loja atualizado na bio antes de publicar", "Confirmar estoque e prazo da promoção"],visual:"Mesa clara, mãos abrindo o kit, selo \"20% OFF\" em preto e creme, cortes no ritmo da música.",horario:"Sexta, dia 27, às 7h, para pegar o começo da Black Friday.",metrica:"Cliques no link da bio e vendas do kit.",
+   ganchos:["O presente de Natal resolvido em 15 segundos.","Só hoje: o kit que esgotou no ano passado."],
+   roteiro:[{tempo:"0–3s",cena:"Mão colocando o kit embrulhado na mesa.",fala:"Presente resolvido.",texto_tela:"Black Friday • 20% OFF"},{tempo:"3–12s",cena:"Abrindo o kit: café, caneca e filtro.",fala:"Café da casa, caneca de cerâmica e filtro de pano.",texto_tela:"Kit Aurora"},{tempo:"12–15s",cena:"Embalagem fechando com laço.",fala:"Só até domingo. Link na bio.",texto_tela:"Link na bio"}],
+   legenda:"Black Friday na Aurora 🖤\n\nKit presente com 20% de desconto até domingo ou enquanto durar o estoque.",cta:"Comprar pelo link da bio",hashtags:["#blackfriday","#presentedenatal","#kitcafe","#cafeespecial"]}
+ ]};
+
+/* ---------- State ---------- */
+const now=new Date();
+const nextMonth=new Date(now.getFullYear(),now.getMonth()+1,1);
+const FEED=["Carrossel","Reels","Estático"];
+const form={mes:nextMonth.getMonth(),ano:nextMonth.getFullYear(),objetivo:"Vender",mix:{Carrossel:4,Reels:4,"Estático":4,Stories:0},semana:[2,4,6],datas:new Set(),temas:[]};
+let current=EXEMPLO, saved=[], clientes={}, filtroFormato="Todos", filtroPilar=null, busy=false, db=null, sample=null, downloads=null, openId=null, imgLimits=null;
+let anexos=[]; /* {id,name,kind:"img"|"pdf",blob,url,texto,paginas:[Blob]} */
+
+/* ---------- Form ---------- */
+const fMes=$("#fMes"),fAno=$("#fAno");
+MESES.forEach((m,i)=>fMes.add(new Option(m,i)));
+for(let y=now.getFullYear();y<=now.getFullYear()+2;y++)fAno.add(new Option(y,y));
+fMes.value=form.mes;fAno.value=form.ano;
+const objBox=$("#objetivos");
+OBJETIVOS.forEach(o=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=o;b.setAttribute("aria-pressed",o===form.objetivo);b.onclick=()=>{form.objetivo=o;objBox.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",c.textContent===o))};objBox.appendChild(b)});
+
+/* Formatos */
+const mixBox=$("#mix");
+FORMATOS.forEach(f=>{const d=document.createElement("div");d.className="step";d.innerHTML=`<span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span><div class="ctl"><button type="button" aria-label="Menos ${f}">−</button><output id="mix-${f}">${form.mix[f]}</output><button type="button" aria-label="Mais ${f}">+</button></div>`;
+ const [minus,plus]=d.querySelectorAll("button");minus.onclick=()=>setMix(f,-1);plus.onclick=()=>setMix(f,1);mixBox.appendChild(d)});
+function setMix(f,delta){form.mix[f]=Math.max(0,Math.min(31,form.mix[f]+delta));paintMix();updateTotal()}
+function paintMix(){FORMATOS.forEach(f=>{document.getElementById("mix-"+f).textContent=form.mix[f]})}
+function feedTotal(){return FEED.reduce((a,f)=>a+form.mix[f],0)}
+function totalPosts(){return FORMATOS.reduce((a,f)=>a+form.mix[f],0)}
+/* Spread the feed posts over the chosen dates, keeping the current proportion between formats */
+function fitMixToDatas(){const n=form.datas.size;if(!n)return;const cur=feedTotal()||1;const w=FEED.map(f=>(form.mix[f]||0)/cur);
+ if(!feedTotal())FEED.forEach((f,i)=>w[i]=1/3);
+ const raw=w.map(x=>x*n),base=raw.map(Math.floor);let left=n-base.reduce((a,b)=>a+b,0);
+ raw.map((x,i)=>[x-base[i],i]).sort((a,b)=>b[0]-a[0]).forEach(([,i])=>{if(left>0){base[i]++;left--}});
+ FEED.forEach((f,i)=>form.mix[f]=base[i]);paintMix()}
+function updateTotal(){
+ const t=totalPosts(),ft=feedTotal(),n=form.datas.size,el=$("#total");
+ el.classList.remove("warn");
+ if(!t){el.textContent="Escolha pelo menos um post"}
+ else if(n&&ft!==n){el.classList.add("warn");el.innerHTML=`${ft} ${ft===1?"post":"posts"} de feed para ${n} ${n===1?"data":"datas"}. <button type="button" class="fix" id="fixMix">Ajustar às datas</button>`;$("#fixMix").onclick=()=>{fitMixToDatas();updateTotal()}}
+ else{el.textContent=`${ft} no feed${form.mix.Stories?` + ${form.mix.Stories} Stories`:""} · ${t} ${t===1?"post":"posts"} no mês`}
+ $("#genBtn").disabled=busy||!t||!sample}
+
+/* Frequência e datas */
+const semBox=$("#semana");
+DIAS_C.forEach((d,i)=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=d;b.dataset.d=i;b.setAttribute("aria-label",DIAS[i]);b.onclick=()=>{const k=form.semana.indexOf(i);k>=0?form.semana.splice(k,1):form.semana.push(i);form.semana.sort();datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()};semBox.appendChild(b)});
+function datasPelaSemana(){form.datas=new Set();const n=daysIn(form.mes,form.ano);for(let d=1;d<=n;d++)if(form.semana.includes(dow(d,form.mes,form.ano)))form.datas.add(d)}
+function paintFreq(){
+ semBox.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",form.semana.includes(+c.dataset.d)));
+ const k=form.semana.length;$("#freqTxt").textContent=k?`${k}x por semana: ${form.semana.map(i=>DIAS[i]).join(", ")}`:"Escolha os dias da semana ou toque nas datas abaixo";
+ const n=daysIn(form.mes,form.ano),first=dow(1,form.mes,form.ano),hol=feriados(form.mes,form.ano);
+ let h=DIAS_C.map(d=>`<span class="dw">${d[0]}</span>`).join("");
+ for(let i=0;i<first;i++)h+=`<span></span>`;
+ for(let d=1;d<=n;d++)h+=`<button type="button" class="md${hol[d]?" hol":""}" data-day="${d}" aria-pressed="${form.datas.has(d)}" aria-label="${d} de ${MESES[form.mes].toLowerCase()}${hol[d]?", "+hol[d]:""}" title="${hol[d]||""}">${d}</button>`;
+ $("#miniCal").innerHTML=h;
+ $("#miniCal").querySelectorAll(".md").forEach(b=>b.onclick=()=>{const d=+b.dataset.day;form.datas.has(d)?form.datas.delete(d):form.datas.add(d);b.setAttribute("aria-pressed",form.datas.has(d));paintDatasTxt();fitMixToDatas();updateTotal()});
+ paintDatasTxt()}
+function paintDatasTxt(){const n=form.datas.size;$("#datasTxt").textContent=n?`${n} ${n===1?"data escolhida":"datas escolhidas"}`:"Nenhuma data: a pauta distribui sozinha"}
+$("#datasReset").onclick=()=>{datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()};
+function onMesAno(){form.mes=+fMes.value;form.ano=+fAno.value;datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()}
+fMes.onchange=onMesAno;fAno.onchange=onMesAno;
+/* Fixed-date Brazilian holidays and marketing dates, shown as dots on the date picker */
+function feriados(m,y){const f={0:{1:"Ano Novo"},1:{},2:{8:"Dia da Mulher",15:"Dia do Consumidor"},3:{21:"Tiradentes"},4:{1:"Dia do Trabalho"},5:{12:"Dia dos Namorados"},6:{},7:{},8:{7:"Independência",15:"Dia do Cliente"},9:{12:"Dia das Crianças",31:"Halloween"},10:{2:"Finados",15:"Proclamação da República",20:"Consciência Negra"},11:{24:"Véspera de Natal",25:"Natal",31:"Réveillon"}}[m]||{};
+ const r={...f};const nth=(wd,k)=>{let c=0;for(let d=1;d<=daysIn(m,y);d++)if(dow(d,m,y)===wd&&++c===k)return d};
+ if(m===4)r[nth(0,2)]="Dia das Mães";if(m===7)r[nth(0,2)]="Dia dos Pais";
+ if(m===10){let last=0;for(let d=1;d<=daysIn(m,y);d++)if(dow(d,m,y)===5)last=d;r[last]="Black Friday"}
+ return r}
+
+/* Temas */
+function addTema(){const v=$("#fTema").value.trim();if(!v)return;v.split(/[;,\n]/).map(t=>t.trim()).filter(Boolean).forEach(t=>{if(!form.temas.some(x=>x.toLowerCase()===t.toLowerCase()))form.temas.push(t)});$("#fTema").value="";paintTemas()}
+function paintTemas(){$("#temas").innerHTML=form.temas.map((t,i)=>`<button type="button" class="tchip" data-i="${i}" aria-label="Remover ${esc(t)}">${esc(t)}<i aria-hidden="true">✕</i></button>`).join("");
+ $("#temas").querySelectorAll(".tchip").forEach(b=>b.onclick=()=>{form.temas.splice(+b.dataset.i,1);paintTemas()})}
+$("#temaAdd").onclick=addTema;
+$("#fTema").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addTema()}});
+
+/* Arquivos do cliente */
+const drop=$("#drop"),fFiles=$("#fFiles");
+fFiles.onchange=()=>{addFiles(fFiles.files);fFiles.value=""};
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>addFiles(e.dataTransfer.files));
+document.addEventListener("paste",e=>{const fs=[...(e.clipboardData&&e.clipboardData.files||[])];if(fs.length&&!$("#viewNova").hidden){addFiles(fs)}});
+function maxImgs(){return (imgLimits&&imgLimits.maxCount)||0}
+async function addFiles(list){
+ for(const f of [...list]){
+  const id=Math.random().toString(36).slice(2);
+  if(f.type==="application/pdf"||/\.pdf$/i.test(f.name)){const a={id,name:f.name,kind:"pdf",blob:f,texto:"",paginas:[],lendo:true};anexos.push(a);paintFiles();readPdf(a)}
+  else if(/^image\//.test(f.type)){
+   if(!imgLimits){toast("Prints só funcionam com a página aberta no Claude");continue}
+   if(!imgLimits.mediaTypes.includes(f.type)){toast("Use JPG, PNG, WebP ou GIF");continue}
+   if(f.size>imgLimits.maxInputBytes){toast("Imagem grande demais");continue}
+   anexos.push({id,name:f.name,kind:"img",blob:f,url:URL.createObjectURL(f)})}
+  else toast("Envie imagens ou PDF")}
+ paintFiles()}
+function paintFiles(){const box=$("#files");box.hidden=!anexos.length;
+ box.innerHTML=anexos.map(a=>`<div class="file">${a.kind==="img"?`<img src="${a.url}" alt="">`:`<span class="ext">PDF</span><span class="fn">${esc(a.lendo?"Lendo…":a.name)}</span>`}<button type="button" class="rm" data-rm="${a.id}" aria-label="Remover ${esc(a.name)}">✕</button></div>`).join("");
+ box.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{const a=anexos.find(x=>x.id===b.dataset.rm);if(a&&a.url)URL.revokeObjectURL(a.url);anexos=anexos.filter(x=>x!==a);paintFiles()});
+ paintPerfilHint()}
+let pdfLib=null;
+function loadPdfJs(){if(pdfLib)return pdfLib;pdfLib=new Promise((res,rej)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";s.onload=()=>{try{window.pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";res(window.pdfjsLib)}catch(e){rej(e)}};s.onerror=()=>{pdfLib=null;rej(new Error("pdfjs"))};document.head.appendChild(s)});return pdfLib}
+async function readPdf(a){
+ try{const lib=await loadPdfJs();const doc=await lib.getDocument({data:new Uint8Array(await a.blob.arrayBuffer())}).promise;
+  const n=Math.min(doc.numPages,20);let txt="";
+  for(let i=1;i<=n;i++){const pg=await doc.getPage(i);const c=await pg.getTextContent();txt+=c.items.map(x=>x.str).join(" ")+"\n"}
+  a.texto=txt.replace(/[ \t]+/g," ").trim().slice(0,18000);
+  /* Scanned or image-heavy PDF: send the first pages as pictures */
+  if(a.texto.length<300&&imgLimits){for(let i=1;i<=Math.min(doc.numPages,4);i++){const pg=await doc.getPage(i);const v=pg.getViewport({scale:1});const sc=Math.min(2,1400/Math.max(v.width,v.height));const vp=pg.getViewport({scale:sc});const cv=document.createElement("canvas");cv.width=vp.width;cv.height=vp.height;await pg.render({canvasContext:cv.getContext("2d"),viewport:vp}).promise;const bl=await new Promise(r=>cv.toBlob(r,"image/jpeg",.85));if(bl)a.paginas.push(bl)}}
+  if(!a.texto&&!a.paginas.length)toast("Não consegui ler esse PDF. Descreva por escrito.")}
+ catch(e){toast("Não consegui abrir esse PDF")}
+ a.lendo=false;paintFiles()}
+
+/* Perfil salvo do cliente */
+function slugC(n){return slug(n||"")||"cliente"}
+function perfilSalvo(){return clientes[slugC($("#fCliente").value.trim())]||null}
+function paintPerfilHint(){const h=$("#perfilHint"),p=perfilSalvo();
+ if(!p||!p.perfil){h.hidden=true;return}
+ const quando=p.atualizadoEm?new Date(p.atualizadoEm).toLocaleDateString("pt-BR"):"";
+ h.hidden=false;h.innerHTML=`<span><b>Perfil de ${esc(p.nome)} salvo</b>${quando?" em "+quando:""}. ${anexos.length||$("#fSobre").value.trim()?"O material novo vai atualizar o perfil.":"Ele entra na pauta mesmo sem enviar arquivos de novo."}</span>`}
+$("#fSobre").addEventListener("input",()=>{clearTimeout(paintPerfilHint._t);paintPerfilHint._t=setTimeout(paintPerfilHint,300)});
+
+$("#moreBtn").onclick=e=>{const box=$("#moreBox");box.hidden=!box.hidden;e.target.setAttribute("aria-expanded",!box.hidden);e.target.textContent=box.hidden?"Mais detalhes":"Menos detalhes"};
+function preencherCliente(){const nome=$("#fCliente").value.trim();const n=nome.toLowerCase();const c=clientes[slugC(nome)];const p=saved.find(s=>s.cliente.toLowerCase()===n);
+ const b=(c&&c.briefing)||(p&&p.briefing)||{};
+ if(!$("#fArroba").value)$("#fArroba").value=(c&&c.arroba)||(p&&p.arroba)||"";if(!$("#fNicho").value)$("#fNicho").value=(c&&c.nicho)||(p&&p.nicho)||"";
+ if(!$("#fSobre").value&&c&&c.sobre)$("#fSobre").value=c.sobre;
+ if(!$("#fTom").value&&b.tom)$("#fTom").value=b.tom;if(!$("#fPublico").value&&b.publico)$("#fPublico").value=b.publico;if(!$("#fEvitar").value&&b.evitar)$("#fEvitar").value=b.evitar;
+ if(!form.temas.length&&Array.isArray(b.temas)&&b.temas.length){form.temas=[...b.temas];paintTemas()}
+ if(Array.isArray(b.semana)&&b.semana.length&&!preencherCliente.tocou){form.semana=[...b.semana];datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()}
+ paintPerfilHint()}
+$("#fCliente").addEventListener("change",preencherCliente);
+semBox.addEventListener("click",()=>{preencherCliente.tocou=true});
+$("#miniCal").addEventListener("click",()=>{preencherCliente.tocou=true});
+
+datasPelaSemana();fitMixToDatas();paintFreq();updateTotal();
+
+/* ---------- Tabs ---------- */
+function showView(v){$("#viewNova").hidden=v!=="nova";$("#hero").hidden=v!=="nova";$("#viewSalvas").hidden=v!=="salvas";$("#tabNova").setAttribute("aria-pressed",v==="nova");$("#tabSalvas").setAttribute("aria-pressed",v==="salvas");if(v==="salvas")renderSaved();window.scrollTo({top:0})}
+$("#tabNova").onclick=()=>showView("nova");$("#tabSalvas").onclick=()=>showView("salvas");
+
+/* ---------- Helpers ---------- */
+function daysIn(m,y){return new Date(y,m+1,0).getDate()}
+function dow(d,m,y){return new Date(y,m,d).getDay()}
+function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast._t);toast._t=setTimeout(()=>el.hidden=true,2200)}
+async function copy(text){try{await navigator.clipboard.writeText(text);toast("Copiado")}catch(e){const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast("Copiado")}catch(_){toast("Selecione e copie o texto")}ta.remove()}}
+function sorted(p){return [...p.posts].sort((a,b)=>a.dia-b.dia||FORMATOS.indexOf(a.formato)-FORMATOS.indexOf(b.formato))}
+function detailed(p){return !!(p.legenda)}
+
+/* ---------- Result render ---------- */
+function renderResult(progress){
+ const r=$("#result");const p=current;
+ if(!p){r.innerHTML=`<div class="panel empty-state"><h3>Nenhuma pauta aberta</h3><p>Preencha o briefing ao lado e toque em Gerar pauta.</p></div>`;return}
+ const mesNome=MESES[p.mes];
+ const counts=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(c=>c[1]);
+ let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow">${esc(p.arroba||p.nicho||"Pauta")}${p.exemplo?'<span class="tag">Exemplo</span>':""}</p><h2>${esc(p.cliente)} · ${mesNome} ${p.ano}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
+ <div class="actions">${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${downloads&&p.posts.length?`<button class="btn ghost" id="dlMd" type="button">Baixar .md</button>`:""}${!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
+ <div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
+ if(progress)html+=`<div class="panel progress"><div class="pl">${esc(progress.label)}<span>${esc(progress.detail||"")}</span></div><div class="track"><i style="width:${Math.round(progress.pct*100)}%"></i></div></div>`;
+ const pf=p.perfil;
+ if(pf&&(pf.resumo||(pf.produtos||[]).length)){const li=a=>`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
+  html+=`<div class="panel card"><h3>Sobre o cliente</h3><p class="lead">${esc(pf.resumo)}</p><div class="facts">
+  ${(pf.produtos||[]).length?`<div class="fact"><h4>Produtos e serviços</h4>${li(pf.produtos.slice(0,6))}</div>`:""}
+  ${pf.publico?`<div class="fact"><h4>Público</h4><p>${esc(pf.publico)}</p></div>`:""}
+  ${pf.tom?`<div class="fact"><h4>Tom de voz</h4><p>${esc(pf.tom)}</p></div>`:""}
+  ${(pf.diferenciais||[]).length?`<div class="fact"><h4>Diferenciais</h4>${li(pf.diferenciais.slice(0,5))}</div>`:""}
+  ${pf.visual?`<div class="fact"><h4>Identidade visual</h4><p>${esc(pf.visual)}</p></div>`:""}
+  ${pf.cuidados?`<div class="fact"><h4>Cuidados</h4><p>${esc(pf.cuidados)}</p></div>`:""}</div></div>`}
+ const e=p.estrategia;
+ if(e){const tm=(p.briefing&&p.briefing.temas)||[];html+=`<div class="panel card"><h3>Estratégia</h3><p class="lead">${esc(e.resumo)}</p><div class="pillars">${(e.pilares||[]).map(pl=>`<button type="button" class="pillar" data-pilar="${esc(pl.nome)}" aria-pressed="${filtroPilar===pl.nome}"><span class="pt">${esc(pl.nome)}<span class="pct">${pl.pct}%</span></span><span class="bar"><i style="width:${Math.min(100,pl.pct)}%"></i></span><p>${esc(pl.descricao)}</p></button>`).join("")}</div>
+ <div class="meta">${e.frequencia?`<span><b>Frequência</b> ${esc(e.frequencia)}</span>`:""}${(e.datas||[]).length?`<span><b>Datas</b> ${(e.datas||[]).map(d=>`${d.dia}/${p.mes+1} ${esc(d.nome)}`).join(" · ")}</span>`:""}</div>${tm.length?`<div class="temas-meta">${tm.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>`:""}</div>`;
+  html+=calendarHTML(p);
+  html+=postsHTML(p)}
+ r.innerHTML=html;
+ r.querySelectorAll(".pillar").forEach(b=>b.onclick=()=>{filtroPilar=filtroPilar===b.dataset.pilar?null:b.dataset.pilar;renderResult(progress)});
+ r.querySelectorAll("[data-post]").forEach(b=>b.onclick=()=>openPost(b.dataset.post));
+ r.querySelectorAll("[data-filtro]").forEach(b=>b.onclick=()=>{filtroFormato=b.dataset.filtro;renderResult(progress)});
+ const ca=$("#copyAll");if(ca)ca.onclick=()=>copy(toMarkdown(p));
+ const dl=$("#dlMd");if(dl)dl.onclick=async()=>{try{await downloads.save({filename:`pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}.md`,data:toMarkdown(p)})}catch(err){if(err&&err.code!=="cancelled")toast("Não foi possível baixar")}};
+ const del=$("#delBtn");if(del)del.onclick=()=>confirmDelete(del,p);
+}
+function confirmDelete(btn,p){if(btn.dataset.armed){deletePauta(p);return}btn.dataset.armed="1";btn.textContent="Toque para confirmar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.textContent="Excluir"}},3500)}
+function calendarHTML(p){
+ const n=daysIn(p.mes,p.ano),first=dow(1,p.mes,p.ano);
+ const byDay={};p.posts.forEach(x=>{(byDay[x.dia]=byDay[x.dia]||[]).push(x)});
+ const hol={};(p.estrategia.datas||[]).forEach(d=>hol[d.dia]=d.nome);
+ let cells=DIAS_C.map(d=>`<div class="dow">${d}</div>`).join("");
+ for(let i=0;i<first;i++)cells+=`<div class="day empty" aria-hidden="true"></div>`;
+ for(let d=1;d<=n;d++){const ps=(byDay[d]||[]);cells+=`<div class="day"><span class="n">${d}</span>${hol[d]?`<span class="hol">${esc(hol[d])}</span>`:""}${ps.map(x=>`<button type="button" class="pill ${x.formato}" data-post="${x.id}" title="${esc(x.formato+": "+x.tema)}">${esc(x.formato)}</button>`).join("")}</div>`}
+ return `<div class="panel card"><h3>Calendário</h3><p class="lead">Toque em um post para ver o conteúdo completo.</p><div class="cal-legend">${FORMATOS.map(f=>`<span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span>`).join("")}</div><div class="cal">${cells}</div></div>`}
+function postsHTML(p){
+ const present=FORMATOS.filter(f=>p.posts.some(x=>x.formato===f));
+ let list=sorted(p).filter(x=>(filtroFormato==="Todos"||x.formato===filtroFormato)&&(!filtroPilar||x.pilar===filtroPilar));
+ return `<div class="panel card"><div class="toolbar"><h3>Posts</h3><div class="seg" role="group" aria-label="Filtrar por formato">${["Todos",...present].map(f=>`<button type="button" data-filtro="${f}" aria-pressed="${filtroFormato===f}">${f}</button>`).join("")}</div></div>
+ ${filtroPilar?`<p class="lead">Pilar: ${esc(filtroPilar)}</p>`:""}
+ <div class="posts">${list.map(x=>`<button type="button" class="post" data-post="${x.id}"><span class="pm"><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${x.formato} · ${DIAS_C[dow(x.dia,p.mes,p.ano)]}, ${x.dia}/${p.mes+1} · ${esc(x.pilar)}</span><h4>${esc(x.titulo||x.tema)}</h4><p class="${detailed(x)?"":"pending"}">${esc(detailed(x)?x.descricao||(x.ganchos||[])[0]||x.objetivo:"Escrevendo o conteúdo…")}</p></button>`).join("")||`<p class="lead">Nenhum post com esse filtro.</p>`}</div></div>`}
+
+/* ---------- Sheet ---------- */
+function openPost(id){openId=id;renderSheet();$("#scrim").hidden=false;document.body.style.overflow="hidden";setTimeout(()=>{const x=$("#sheet .x");x&&x.focus()},30)}
+function closeSheet(){$("#scrim").hidden=true;document.body.style.overflow="";openId=null}
+$("#scrim").addEventListener("click",e=>{if(e.target.id==="scrim")closeSheet()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&openId)closeSheet()});
+function renderSheet(){
+ const p=current,list=sorted(p),i=list.findIndex(x=>x.id===openId),x=list[i];if(!x)return closeSheet();
+ const date=`${DIAS[dow(x.dia,p.mes,p.ano)]}, ${x.dia} de ${MESES[p.mes].toLowerCase()}`;
+ let body="";
+ if(!detailed(x)){body=`<div class="sec"><p class="lead">${busy?"Este post ainda está sendo escrito. Ele aparece aqui assim que ficar pronto.":"O conteúdo deste post não foi gerado. Use Refazer post abaixo."}</p></div>`}
+ else{
+  if(x.descricao)body+=`<div class="sec"><h5>Descrição do conteúdo <button type="button" data-copy="descricao">Copiar</button></h5><p class="desc">${esc(x.descricao)}</p></div>`;
+  body+=`<div class="sec kv"><div><b>Objetivo</b><span>${esc(x.objetivo)}</span></div>${x.horario?`<div><b>Quando postar</b><span>${esc(x.horario)}</span></div>`:""}${x.metrica?`<div><b>O que medir</b><span>${esc(x.metrica)}</span></div>`:""}</div>`;
+  if((x.producao||[]).length)body+=`<div class="sec"><h5>Como produzir</h5><ul class="check">${x.producao.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>`;
+  if(x.visual)body+=`<div class="sec"><h5>Direção visual</h5><p style="margin:0">${esc(x.visual)}</p></div>`;
+  body+=`<div class="sec"><h5>Ganchos</h5>${(x.ganchos||[]).map(g=>`<div class="hook">${esc(g)}</div>`).join("")}</div>`;
+  if(x.slides&&x.slides.length)body+=`<div class="sec"><h5>Slides <button type="button" data-copy="slides">Copiar</button></h5><div class="slides">${x.slides.map((s,k)=>`<div class="slide"><span class="sn">${k+1}/${x.slides.length}</span><b>${esc(s.titulo)}</b><p>${esc(s.texto)}</p></div>`).join("")}</div></div>`;
+  if(x.roteiro&&x.roteiro.length)body+=`<div class="sec"><h5>Roteiro <button type="button" data-copy="roteiro">Copiar</button></h5><div class="script">${x.roteiro.map(b=>`<div class="beat"><span class="tm">${esc(b.tempo)}</span><div><p>${esc(b.fala)}</p><div class="sm">Cena: ${esc(b.cena)}</div>${b.texto_tela?`<div class="sm">Na tela: ${esc(b.texto_tela)}</div>`:""}</div></div>`).join("")}</div></div>`;
+  if(x.arte)body+=`<div class="sec"><h5>Arte</h5><div class="hook">${esc(x.arte.frase)}</div><p style="margin:.3rem 0 0;color:var(--fg-2)">${esc(x.arte.direcao)}</p></div>`;
+  if(x.telas&&x.telas.length)body+=`<div class="sec"><h5>Telas dos Stories <button type="button" data-copy="telas">Copiar</button></h5><div class="script">${x.telas.map((t,k)=>`<div class="beat"><span class="tm">Tela ${k+1}</span><div><p>${esc(t.texto)}</p>${t.recurso?`<div class="sm">Recurso: ${esc(t.recurso)}</div>`:""}</div></div>`).join("")}</div></div>`;
+  body+=`<div class="sec"><h5>Legenda <button type="button" data-copy="legenda">Copiar</button></h5><div class="caption">${esc(x.legenda)}${x.hashtags&&x.hashtags.length?"\n\n"+esc(x.hashtags.join(" ")):""}</div></div>`;
+  body+=`<div class="sec"><h5>CTA</h5><p style="margin:0">${esc(x.cta)}</p></div>`;
+  if(x.hashtags&&x.hashtags.length)body+=`<div class="sec"><h5>Hashtags</h5><div class="tags">${x.hashtags.map(h=>`<span>${esc(h)}</span>`).join("")}</div></div>`;
+ }
+ if(!p.exemplo&&!busy)body+=`<div class="sec"><h5>Refazer post</h5><div class="redo"><input type="text" id="redoTxt" placeholder="Opcional: o que mudar (ex.: mais divertido)"><button type="button" class="btn ghost" id="redoBtn">Refazer</button></div><p class="note err" id="redoErr" hidden></p></div>`;
+ $("#sheet").innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow"><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${x.formato} · ${esc(x.pilar)}</p><h3 id="shTitle">${esc(x.titulo||x.tema)}</h3><p class="sub" style="margin:.25rem 0 0;color:var(--fg-2);font-size:.875rem">${date}</p></div><button type="button" class="x" aria-label="Fechar">✕</button></div>
+ <div class="sh-body">${body}</div>
+ <div class="sh-nav"><button type="button" class="btn link" id="prevP" ${i===0?"disabled":""}>‹ Anterior</button><button type="button" class="btn ghost" id="copyPost" ${detailed(x)?"":"disabled"}>Copiar post</button><button type="button" class="btn link" id="nextP" ${i===list.length-1?"disabled":""}>Próximo ›</button></div>`;
+ $("#sheet .x").onclick=closeSheet;
+ $("#prevP").onclick=()=>{if(i>0){openId=list[i-1].id;renderSheet();$("#sheet").scrollTop=0}};
+ $("#nextP").onclick=()=>{if(i<list.length-1){openId=list[i+1].id;renderSheet();$("#sheet").scrollTop=0}};
+ $("#copyPost").onclick=()=>copy(postMd(x,p));
+ $("#sheet").querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>{const k=b.dataset.copy;
+  if(k==="slides")copy(x.slides.map((s,j)=>`${j+1}. ${s.titulo}\n${s.texto}`).join("\n\n"));
+  if(k==="roteiro")copy(x.roteiro.map(r=>`[${r.tempo}] ${r.fala}\nCena: ${r.cena}${r.texto_tela?"\nNa tela: "+r.texto_tela:""}`).join("\n\n"));
+  if(k==="telas")copy(x.telas.map((t,j)=>`Tela ${j+1}: ${t.texto}${t.recurso?" ("+t.recurso+")":""}`).join("\n"));
+  if(k==="descricao")copy(x.descricao);
+  if(k==="legenda")copy(x.legenda+(x.hashtags&&x.hashtags.length?"\n\n"+x.hashtags.join(" "):""))});
+ const rb=$("#redoBtn");if(rb)rb.onclick=()=>redoPost(x,$("#redoTxt").value.trim(),rb);
+}
+
+/* ---------- Text export ---------- */
+function slug(s){return String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
+function postMd(x,p){let s=`## ${x.dia}/${p.mes+1} (${DIAS[dow(x.dia,p.mes,p.ano)]}) · ${x.formato} · ${x.pilar}\n### ${x.titulo||x.tema}\nObjetivo: ${x.objetivo}\n${x.descricao?"\nDescrição: "+x.descricao+"\n":""}${x.horario?"Quando postar: "+x.horario+"\n":""}${x.metrica?"O que medir: "+x.metrica+"\n":""}${(x.producao||[]).length?"\nComo produzir:\n"+x.producao.map(t=>"- [ ] "+t).join("\n")+"\n":""}${x.visual?"\nDireção visual: "+x.visual+"\n":""}\nGanchos:\n${(x.ganchos||[]).map(g=>"- "+g).join("\n")}\n`;
+ if(x.slides)s+=`\nSlides:\n${x.slides.map((t,j)=>`${j+1}. ${t.titulo} — ${t.texto}`).join("\n")}\n`;
+ if(x.roteiro)s+=`\nRoteiro:\n${x.roteiro.map(r=>`- [${r.tempo}] ${r.fala} (Cena: ${r.cena}${r.texto_tela?"; Na tela: "+r.texto_tela:""})`).join("\n")}\n`;
+ if(x.arte)s+=`\nArte: "${x.arte.frase}" — ${x.arte.direcao}\n`;
+ if(x.telas)s+=`\nTelas:\n${x.telas.map((t,j)=>`${j+1}. ${t.texto}${t.recurso?" ("+t.recurso+")":""}`).join("\n")}\n`;
+ if(x.legenda)s+=`\nLegenda:\n${x.legenda}\n\nCTA: ${x.cta}\nHashtags: ${(x.hashtags||[]).join(" ")}\n`;return s}
+function toMarkdown(p){const e=p.estrategia||{};let s=`# Pauta ${p.cliente} · ${MESES[p.mes]} ${p.ano}\n${p.arroba||""}${p.nicho?" · "+p.nicho:""}\nObjetivo: ${p.objetivo}\n${p.perfil&&p.perfil.resumo?"\n## Sobre o cliente\n"+p.perfil.resumo+"\n":""}${p.briefing&&(p.briefing.temas||[]).length?"\nTemas: "+p.briefing.temas.join("; ")+"\n":""}\n## Estratégia\n${e.resumo||""}\n\nPilares:\n${(e.pilares||[]).map(x=>`- ${x.nome} (${x.pct}%): ${x.descricao}`).join("\n")}\n\nFrequência: ${e.frequencia||""}\n`;
+ if((e.datas||[]).length)s+=`\nDatas:\n${e.datas.map(d=>`- ${d.dia}/${p.mes+1} ${d.nome}: ${d.uso}`).join("\n")}\n`;
+ s+=`\n## Calendário\n| Data | Dia | Formato | Pilar | Tema |\n|---|---|---|---|---|\n${sorted(p).map(x=>`| ${x.dia}/${p.mes+1} | ${DIAS[dow(x.dia,p.mes,p.ano)]} | ${x.formato} | ${x.pilar} | ${x.tema} |`).join("\n")}\n\n# Posts\n\n`;
+ return s+sorted(p).map(x=>postMd(x,p)).join("\n---\n\n")}
+
+/* ---------- Generation ---------- */
+function perfilTexto(pf){if(!pf)return"";const L=(k,v)=>v&&(Array.isArray(v)?v.length:true)?`${k}: ${Array.isArray(v)?v.join("; "):v}\n`:"";
+ return `PERFIL DO CLIENTE (lido do material enviado)\n`+L("O que faz",pf.resumo)+L("Produtos e serviços",pf.produtos)+L("Público",pf.publico)+L("Tom de voz",pf.tom)+L("Diferenciais",pf.diferenciais)+L("Identidade visual",pf.visual)+L("Oportunidades de conteúdo",pf.oportunidades)+L("Cuidados",pf.cuidados)}
+function briefingText(b){return `Cliente: ${b.cliente}${b.arroba?" ("+b.arroba+")":""}
+Nicho: ${b.nicho||"não informado"}
+Mês: ${MESES[b.mes]} de ${b.ano}
+Objetivo do mês: ${b.objetivo}
+Temas que a social media quer abordar: ${b.temas&&b.temas.length?b.temas.join("; "):"livre"}
+Produtos/promoções/eventos: ${b.destaques||"nenhum informado"}
+Tom de voz: ${b.tom||"adequado ao nicho"}
+Público: ${b.publico||"não informado"}
+Evitar: ${b.evitar||"nada específico"}
+${b.perfil?"\n"+perfilTexto(b.perfil):b.sobre?"\nSobre o cliente: "+b.sobre+"\n":""}`}
+function calendarioTexto(m,y){const n=daysIn(m,y);let a=[];for(let d=1;d<=n;d++)a.push(`${d} ${DIAS[dow(d,m,y)]}`);return a.join(", ")}
+const REGRAS=`Você é estrategista de conteúdo de Instagram da agência @isadsign.co. Escreva em português do Brasil, na linguagem do público do cliente. Use o que você sabe do cliente (produtos, diferenciais, público, visual) em cada ideia: nada genérico que serviria a qualquer perfil. Ganchos variados (pergunta, erro comum, número, polêmica leve, antes/depois). No máximo 1 em cada 4 posts é venda direta. Responda SOMENTE com JSON válido, sem texto antes ou depois.`;
+
+/* 1. Read prints, PDFs and the written description into a reusable client profile */
+async function lerCliente(b,imgs,pdfTexto){
+ const prompt=`Você é estrategista de conteúdo da agência @isadsign.co e vai montar o perfil de um cliente para planejar o Instagram dele.
+
+Cliente: ${b.cliente}${b.arroba?" ("+b.arroba+")":""}${b.nicho?"\nNicho: "+b.nicho:""}
+${b.sobre?"Descrição escrita pela social media:\n"+b.sobre+"\n":""}${pdfTexto?"\nTexto extraído dos PDFs do cliente:\n"+pdfTexto+"\n":""}${imgs.length?`\nAs ${imgs.length} imagens anexas são prints do perfil, fotos ou páginas de material do cliente. Observe produtos, preços, linguagem das legendas, paleta, tipografia, tipo de foto e o que mais engaja.`:""}
+${perfilSalvo()&&perfilSalvo().perfil?"\nPerfil anterior (atualize com o material novo, mantenha o que continua válido):\n"+JSON.stringify(perfilSalvo().perfil)+"\n":""}
+Responda SOMENTE com JSON:
+{"resumo":"2 a 3 frases: o que o negócio faz, onde e para quem","produtos":["produtos ou serviços principais, com preço se aparecer"],"publico":"quem compra e o que essa pessoa quer","tom":"como o cliente fala (palavras, emojis, formalidade)","diferenciais":["o que diferencia dos concorrentes"],"visual":"paleta, tipografia e estilo de foto que aparecem no material","oportunidades":["4 a 6 assuntos de conteúdo que o material sugere"],"cuidados":"o que evitar (promessas, termos proibidos, concorrentes) ou string vazia"}
+Use só o que o material mostra ou indica com clareza; quando não houver informação, deixe o campo curto em vez de inventar.`;
+ const opts={modelTier:"default"};if(imgs.length)opts.images=imgs;
+ const r=await sample.json(prompt,opts);
+ const S=v=>String(v||"").trim(),A=v=>(Array.isArray(v)?v:[]).map(S).filter(Boolean);
+ return {resumo:S(r.resumo),produtos:A(r.produtos),publico:S(r.publico),tom:S(r.tom),diferenciais:A(r.diferenciais),visual:S(r.visual),oportunidades:A(r.oportunidades),cuidados:S(r.cuidados)}}
+
+/* 2. Plan the month on the chosen dates */
+async function planPauta(b){
+ const mixTxt=FORMATOS.filter(f=>b.mix[f]).map(f=>`${b.mix[f]} ${f}`).join(", ");
+ const datas=(b.datas||[]).slice().sort((x,y)=>x-y);
+ const regraDatas=datas.length?`- DATAS FIXAS DO FEED (Carrossel, Reels e Estático): use EXATAMENTE estes dias, um post de feed por dia: ${datas.map(d=>`${d} (${DIAS[dow(d,b.mes,b.ano)]})`).join(", ")}. Não use outros dias para o feed. Stories podem cair em qualquer dia.`:`- Distribua os posts no mês: não repita o mesmo formato em dois dias seguidos, espalhe pelas semanas. Stories podem cair no mesmo dia de um post de feed.`;
+ const prompt=`${REGRAS}
+
+BRIEFING
+${briefingText(b)}
+CALENDÁRIO REAL DE ${MESES[b.mes].toUpperCase()} ${b.ano} (dia e dia da semana):
+${calendarioTexto(b.mes,b.ano)}
+
+TAREFA: planeje a pauta do mês com EXATAMENTE estes posts: ${mixTxt}.
+${regraDatas}
+- Frequência combinada: ${b.semana&&b.semana.length?`${b.semana.length}x por semana no feed (${b.semana.map(i=>DIAS[i]).join(", ")})`:"definida pelas datas acima"}.
+${b.temas&&b.temas.length?`- Cada tema pedido precisa aparecer em pelo menos um post: ${b.temas.join("; ")}. Complete com outros temas coerentes com o cliente.`:"- Escolha temas a partir do perfil e das oportunidades do cliente."}
+- Escolha de 3 a 4 pilares de conteúdo com porcentagens que somam 100.
+- Liste só datas comemorativas realmente relevantes para este nicho neste mês, com o dia correto, e aproveite as que caírem em dias de post.
+- Alterne formatos de modo que o mesmo formato não apareça em dias de feed seguidos quando der.
+
+Formato do JSON:
+{"resumo":"2 frases com a estratégia do mês","frequencia":"frase curta com dias e horários sugeridos","pilares":[{"nome":"","pct":0,"descricao":"1 frase"}],"datas":[{"dia":0,"nome":"","uso":"como usar no conteúdo"}],"posts":[{"dia":0,"formato":"Carrossel|Reels|Estático|Stories","pilar":"nome de um pilar","tema":"tema específico em até 10 palavras","objetivo":"1 frase"}]}`;
+ return sample.json(prompt,{modelTier:"default"});
+}
+function detailSpec(){return `Para cada post devolva um objeto COMPLETO:
+{"id":"","titulo":"título curto",
+ "descricao":"descrição completa do conteúdo em 4 a 6 frases: do que se trata, a ideia central, por que funciona para este público e este objetivo, como ele conversa com o produto ou serviço do cliente e qual resultado esperar",
+ "producao":["4 a 6 itens do que preparar para produzir: fotos ou cenas a captar, produtos a separar, elementos de arte, aprovações"],
+ "visual":"direção visual: cores, tipografia, enquadramento e estilo de imagem coerentes com a identidade do cliente",
+ "horario":"melhor dia e horário para publicar e por quê, em 1 frase",
+ "metrica":"o que medir para saber se deu certo (ex.: salvamentos, compartilhamentos, cliques no link)",
+ "ganchos":["2 opções de gancho para os 3 primeiros segundos ou primeiro slide"],
+ "slides":[{"titulo":"","texto":"texto completo do slide, pronto para diagramar"}] (SÓ Carrossel: 6 a 9 slides, o último com CTA),
+ "roteiro":[{"tempo":"0–3s","cena":"o que aparece e como gravar","fala":"","texto_tela":""}] (SÓ Reels: 15 a 45s com minutagem; gancho, desenvolvimento, CTA),
+ "arte":{"frase":"","direcao":"imagem, composição e hierarquia do texto"} (SÓ Estático),
+ "telas":[{"texto":"","recurso":"enquete, caixinha, link, quiz ou nenhum"}] (SÓ Stories: 3 a 6 telas),
+ "legenda":"legenda pronta no tom do cliente, com quebras de linha e emojis com moderação",
+ "cta":"chamada para ação clara","hashtags":["5 a 10, com #"]}
+Omita os campos slides, roteiro, arte e telas que não são do formato do post.`}
+async function detailBatch(p,batch,extra){
+ const ctx=`Estratégia: ${p.estrategia.resumo} Pilares: ${p.estrategia.pilares.map(x=>x.nome).join(", ")}.`;
+ const lista=batch.map(x=>`- id ${x.id} · dia ${x.dia} (${DIAS[dow(x.dia,p.mes,p.ano)]}) · ${x.formato} · pilar ${x.pilar} · tema: ${x.tema} · objetivo: ${x.objetivo}`).join("\n");
+ const prompt=`${REGRAS}
+
+BRIEFING
+${briefingText(p.briefing)}
+${ctx}
+
+POSTS PARA ESCREVER COMPLETOS:
+${lista}
+${extra?"\nPEDIDO DE AJUSTE: "+extra+"\n":""}
+${detailSpec()}
+
+Responda com {"posts":[ ... ]} na mesma ordem e com os mesmos ids.`;
+ const opts={modelTier:"default"};if(extra)opts.cache=false;
+ const r=await sample.json(prompt,opts);
+ return (r&&r.posts)||[];
+}
+const DETAIL_KEYS=["titulo","descricao","producao","visual","horario","metrica","ganchos","slides","roteiro","arte","telas","legenda","cta","hashtags"];
+function mergeDetail(p,d){const x=p.posts.find(y=>y.id===d.id);if(!x)return;DETAIL_KEYS.forEach(k=>{if(d[k]!=null)x[k]=d[k]});
+ if(x.formato!=="Carrossel")delete x.slides;if(x.formato!=="Reels")delete x.roteiro;if(x.formato!=="Estático")delete x.arte;if(x.formato!=="Stories")delete x.telas}
+function sanitizePlan(plan,b){
+ const n=daysIn(b.mes,b.ano);let posts=(plan.posts||[]).filter(x=>FORMATOS.includes(x.formato));
+ const out=[];FORMATOS.forEach(f=>{let have=posts.filter(x=>x.formato===f).slice(0,b.mix[f]);
+  while(have.length<b.mix[f])have.push({dia:0,formato:f,pilar:(plan.pilares&&plan.pilares[0]||{}).nome||"Geral",tema:(b.temas||[])[have.length%Math.max(1,(b.temas||[]).length)]||"Tema livre",objetivo:"Engajar o público."});out.push(...have)});
+ out.forEach((x,i)=>{let d=parseInt(x.dia,10);if(!(d>=1&&d<=n))d=Math.max(1,Math.round((i+.5)*n/out.length));x.dia=d;x.id="p"+(i+1)});
+ /* Keep feed posts on the chosen dates: one per date, moving strays to free dates in order */
+ const datas=(b.datas||[]).slice().sort((x,y)=>x-y);
+ if(datas.length){const feed=out.filter(x=>FEED.includes(x.formato)).sort((a,c)=>a.dia-c.dia);const used=new Set(),strays=[];
+  feed.forEach(x=>{if(datas.includes(x.dia)&&!used.has(x.dia))used.add(x.dia);else strays.push(x)});
+  const livres=datas.filter(d=>!used.has(d));
+  strays.forEach(x=>{if(livres.length){let k=0,best=1e9;livres.forEach((d,j)=>{const dist=Math.abs(d-x.dia);if(dist<best){best=dist;k=j}});x.dia=livres.splice(k,1)[0]}else{x.dia=datas[(strays.indexOf(x))%datas.length]}})}
+ const pil=(plan.pilares||[]).map(x=>({nome:String(x.nome||""),pct:Math.round(+x.pct||0),descricao:String(x.descricao||"")})).filter(x=>x.nome);
+ const datasC=(plan.datas||[]).map(d=>({dia:parseInt(d.dia,10),nome:String(d.nome||""),uso:String(d.uso||"")})).filter(d=>d.dia>=1&&d.dia<=n&&d.nome);
+ return {estrategia:{resumo:String(plan.resumo||""),frequencia:String(plan.frequencia||""),pilares:pil,datas:datasC},posts:out}}
+
+function readForm(){return {cliente:$("#fCliente").value.trim(),arroba:$("#fArroba").value.trim(),nicho:$("#fNicho").value.trim(),mes:form.mes,ano:form.ano,objetivo:form.objetivo,mix:{...form.mix},semana:[...form.semana],datas:[...form.datas].sort((a,b)=>a-b),temas:[...form.temas],sobre:$("#fSobre").value.trim(),destaques:$("#fDestaques").value.trim(),tom:$("#fTom").value.trim(),publico:$("#fPublico").value.trim(),evitar:$("#fEvitar").value.trim()}}
+function setNote(t,err){const n=$("#formNote");n.textContent=t;n.classList.toggle("err",!!err)}
+function errMsg(e){const c=e&&e.code;if(c==="not_granted")return"Permita que a página use o Claude para gerar a pauta.";if(c==="rate_limited")return"Muitos pedidos seguidos. Espere um minuto e tente de novo.";if(c==="invalid_json")return"A resposta veio incompleta. Tente gerar de novo.";if(c==="image_rejected")return"Uma das imagens não pôde ser lida. Troque o arquivo e tente de novo.";if(c==="prompt_too_large")return"O material ficou grande demais. Envie menos páginas de PDF.";return"Não foi possível gerar agora. Tente de novo em instantes."}
+
+$("#form").addEventListener("submit",async e=>{
+ e.preventDefault();if(busy||!sample)return;
+ const b=readForm();if(!b.cliente){$("#fCliente").focus();setNote("Informe o nome do cliente.",true);return}
+ if(!totalPosts())return;
+ if(anexos.some(a=>a.lendo)){setNote("Espere terminar de ler o PDF.",true);return}
+ busy=true;updateTotal();$("#genBtn").textContent="Gerando…";filtroFormato="Todos";filtroPilar=null;
+ current={id:"pauta-"+Date.now().toString(36),cliente:b.cliente,arroba:b.arroba,nicho:b.nicho,mes:b.mes,ano:b.ano,objetivo:b.objetivo,briefing:b,estrategia:null,posts:[],criadoEm:new Date().toISOString()};
+ if(window.innerWidth<=980)$("#result").scrollIntoView({behavior:"smooth",block:"start"});
+ try{
+  /* Client material: new files or text update the saved profile; otherwise reuse it */
+  const max=maxImgs();let imgs=[];anexos.forEach(a=>{if(a.kind==="img")imgs.push(a.blob);else imgs.push(...a.paginas)});
+  if(imgs.length>max){imgs=imgs.slice(0,max);toast(`Usei as ${max} primeiras imagens`)}
+  const pdfTexto=anexos.filter(a=>a.kind==="pdf"&&a.texto).map(a=>`[${a.name}]\n${a.texto}`).join("\n\n").slice(0,30000);
+  const salvo=perfilSalvo();
+  const novoMaterial=imgs.length||pdfTexto||(b.sobre&&(!salvo||salvo.sobre!==b.sobre));
+  if(novoMaterial){setNote("Lendo o material do cliente…");renderResult({label:"Lendo prints, PDF e descrição do cliente",pct:.03});
+   b.perfil=await lerCliente(b,imgs,pdfTexto);await saveCliente(b)}
+  else if(salvo&&salvo.perfil)b.perfil=salvo.perfil;
+  current.briefing=b;current.perfil=b.perfil||null;
+  setNote("Planejando o mês…");renderResult({label:"Planejando estratégia e calendário",pct:.1});
+  const plan=await planPauta(b);const s=sanitizePlan(plan,b);current.estrategia=s.estrategia;current.posts=s.posts;
+  const order=sorted(current),size=2,batches=[];for(let i=0;i<order.length;i+=size)batches.push(order.slice(i,i+size));
+  let done=0;const total=order.length;
+  const tick=()=>renderResult({label:"Escrevendo os posts",detail:`${done} de ${total}`,pct:.2+.8*done/total});
+  tick();await savePauta(current);setNote("Escrevendo os posts…");
+  let idx=0;
+  async function worker(){while(idx<batches.length){const bt=batches[idx++];try{const ds=await detailBatch(current,bt);ds.forEach(d=>mergeDetail(current,d))}catch(err){if(err&&(err.code==="not_granted"||err.code==="rate_limited"))throw err}done+=bt.length;tick();if(openId)renderSheet()}}
+  await Promise.all([worker(),worker()]);
+  const missing=current.posts.filter(x=>!detailed(x)).length;
+  await savePauta(current);
+  setNote(missing?`${missing} ${missing===1?"post ficou":"posts ficaram"} sem conteúdo. Abra e use Refazer post.`:"Pauta pronta e salva.",!!missing);
+  if(!missing){anexos.forEach(a=>a.url&&URL.revokeObjectURL(a.url));anexos=[];paintFiles()}
+ }catch(err){setNote(errMsg(err),true);if(!current.estrategia){current=saved[0]||EXEMPLO}else{await savePauta(current)}}
+ busy=false;$("#genBtn").textContent="Gerar pauta";updateTotal();renderResult();if(openId)renderSheet();
+});
+
+async function redoPost(x,extra,btn){
+ if(busy||!sample)return;btn.disabled=true;btn.textContent="Refazendo…";const errEl=$("#redoErr");errEl.hidden=true;
+ try{const ds=await detailBatch(current,[x],extra||"Escreva uma versão nova e diferente da anterior.");ds.forEach(d=>mergeDetail(current,{...d,id:x.id}));await savePauta(current);renderResult();renderSheet();toast("Post refeito")}
+ catch(err){errEl.textContent=errMsg(err);errEl.hidden=false;btn.disabled=false;btn.textContent="Refazer"}}
+
+/* ---------- Storage ---------- */
+async function savePauta(p){if(!db||p.exemplo)return;try{const data=JSON.parse(JSON.stringify(p));data.atualizadoEm=new Date().toISOString();await db.collection("pautas").doc(p.id).set(data)}catch(e){toast("Não foi possível salvar a pauta")}}
+async function saveCliente(b){if(!db||!b.perfil)return;const id=slugC(b.cliente);const data={nome:b.cliente,arroba:b.arroba||"",nicho:b.nicho||"",sobre:b.sobre||"",perfil:b.perfil,briefing:{tom:b.tom||"",publico:b.publico||"",evitar:b.evitar||"",temas:b.temas||[],semana:b.semana||[]},atualizadoEm:new Date().toISOString()};
+ clientes[id]=data;try{await db.collection("clientes").doc(id).set(data)}catch(e){}}
+async function deletePauta(p){if(!db)return;try{await db.collection("pautas").doc(p.id).delete();toast("Pauta excluída");current=null;renderResult()}catch(e){toast("Não foi possível excluir")}}
+function renderSaved(){
+ const box=$("#savedList");
+ if(!db){box.innerHTML=`<div class="panel empty-state" style="grid-column:1/-1"><h3>Pautas salvas aparecem aqui</h3><p>Abra esta página no Claude, com sua conta, para salvar e ver o histórico.</p></div>`;return}
+ if(!saved.length){box.innerHTML=`<div class="panel empty-state" style="grid-column:1/-1"><h3>Nenhuma pauta salva ainda</h3><p>Gere a primeira em Nova pauta. Ela fica guardada aqui por cliente e mês.</p></div>`;return}
+ box.innerHTML=saved.map(p=>{const c=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(x=>x[1]);
+  return `<button type="button" class="panel sv" data-open="${esc(p.id)}"><span class="m">${MESES[p.mes]} ${p.ano}</span><h3>${esc(p.cliente)}</h3><span class="m">${p.posts.length} posts · ${esc(p.objetivo)}</span><span class="mini">${c.map(([f,n])=>Array.from({length:n},()=>`<i class="dot" style="background:${FCOLOR[f]}" title="${f}"></i>`).join("")).join("")}</span></button>`}).join("");
+ box.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{const p=saved.find(s=>s.id===b.dataset.open);if(p){current=JSON.parse(JSON.stringify(p));filtroFormato="Todos";filtroPilar=null;renderResult();showView("nova")}})}
+function updateClientes(){const names=[...new Set([...saved.map(s=>s.cliente),...Object.values(clientes).map(c=>c.nome)])].sort((a,b)=>a.localeCompare(b,"pt"));$("#clientesList").innerHTML=names.map(n=>`<option value="${esc(n)}"></option>`).join("")}
+
+/* ---------- Boot ---------- */
+renderResult();
+(async()=>{
+ const c=window.claude;
+ if(!c||!c.use){setNote("Abra esta página no Claude para gerar pautas.",true);return}
+ const [s,d,dl]=await Promise.all([c.use("sample"),c.use("db"),c.use("downloads")]);
+ sample=s;db=d;downloads=dl;
+ if(!sample)setNote("Gerar pauta funciona quando a página está aberta no Claude.",true);
+ else{try{const lim=await sample.limits();imgLimits=lim&&lim.images||null}catch(e){imgLimits=null}}
+ if(!imgLimits){$("#fFiles").accept="application/pdf";$("#dropHint").textContent="PDF do cliente (catálogo, apresentação, cardápio). Para prints, abra a página no Claude."}
+ else $("#dropHint").textContent=`Prints do Instagram, fotos, catálogo ou apresentação em PDF. Até ${imgLimits.maxCount} imagens. Toque, arraste ou cole aqui.`;
+ updateTotal();renderResult();
+ if(db){db.collection("pautas").orderBy("criadoEm","desc").limit(200).onSnapshot(snap=>{
+   saved=snap.docs.map(x=>x.data()).filter(Boolean);updateClientes();
+   if(current&&current.exemplo&&saved.length&&!busy){current=JSON.parse(JSON.stringify(saved[0]));renderResult()}
+   if(!$("#viewSalvas").hidden)renderSaved()},()=>{});
+  db.collection("clientes").onSnapshot(snap=>{clientes={};snap.docs.forEach(x=>{const c=x.data();if(c&&c.nome)clientes[x.id]=c});updateClientes();paintPerfilHint()},()=>{})}
+})();
+})();
+</script>
