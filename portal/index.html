@@ -101,13 +101,13 @@ function ligarResposta(it){
     it.resposta={tipo:escolha,comentario:txt,em:new Date().toISOString()};it.status=escolha;escolha=null;
     toast("Resposta enviada para a isadsign");mostrar();
     const c=$("#respCard");if(c)c.scrollIntoView({block:"center"})}}
-/* E-mail to isadsign through Web3Forms; the answer is already saved, so a failure here only skips the e-mail */
+/* E-mail to isadsign (FormSubmit, or Web3Forms if configured); the answer is already saved, so a failure here only skips the e-mail */
 function avisarPorEmail(it,tipo,txt){
-  if(!cfg.web3formsKey)return;
-  const v=RESP[tipo],mes=`${MESES[it.mes]} ${it.ano}`;
-  fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},
-    body:JSON.stringify({access_key:cfg.web3formsKey,subject:`${v[2]} ${dados.cliente}: ${v[1].toLowerCase()} da pauta de ${mes}`,from_name:"Portal isadsign",
-      cliente:dados.cliente,pauta:mes,resposta:v[1],comentarios:txt||"(sem comentários)",painel:(cfg.siteUrl||"")+"painel.html"})}).catch(()=>{})}
+  const v=RESP[tipo],mes=`${MESES[it.mes]} ${it.ano}`,assunto=`${v[2]} ${dados.cliente}: ${v[1].toLowerCase()} da pauta de ${mes}`;
+  const campos={cliente:dados.cliente,pauta:mes,resposta:v[1],comentarios:txt||"(sem comentários)",painel:(cfg.siteUrl||"")+"painel.html"};
+  const post=(url,body)=>fetch(url,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(body)}).catch(()=>{});
+  if(cfg.formsubmit)post(`https://formsubmit.co/ajax/${encodeURIComponent(cfg.formsubmit)}`,{_subject:assunto,_template:"table",_captcha:"false",...campos});
+  else if(cfg.web3formsKey)post("https://api.web3forms.com/submit",{access_key:cfg.web3formsKey,subject:assunto,from_name:"Portal isadsign",...campos})}
 
 iniciar();
 })();
