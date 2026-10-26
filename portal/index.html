@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Sua pauta · isadsign</title>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Pauta <small>isadsign</small></div>
+    <button type="button" class="btn sm" id="sairBtn" hidden>Sair</button>
+  </div>
+</header>
+<main class="wrap" id="app" aria-live="polite">
+  <section class="panel gate"><p class="eyebrow">Pauta isadsign</p><h1>Carregando…</h1></section>
+</main>
+<div class="scrim" id="scrim" hidden><div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" id="sheet"></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="comum.js"></script>
+<script>
+/* Client portal: the client opens …/portal/#<token> (one link per client), types their code, lands on their profile
+   with every pauta listed by month, and opens each one to read and answer it. */
+(function(){
+const {MESES,RESP,STATUS,$,esc,normCod,cfg,sb,toast,statusChip,Pauta,ligarSheet}=window.P;
+const TOKEN=decodeURIComponent((location.hash||"").slice(1)||new URLSearchParams(location.search).get("c")||"");
+const LS="pauta-codigo-"+TOKEN;
+const lsGet=()=>{try{return localStorage.getItem(LS)}catch(e){return null}};
+const lsSet=v=>{try{v?localStorage.setItem(LS,v):localStorage.removeItem(LS)}catch(e){}};
+let dados=null, codigo="", atual=0, view=null, escolha=null, nome="", destinoAviso="";
+ligarSheet(()=>view);
+
+function aviso(t,msg){$("#sairBtn").hidden=true;$("#app").innerHTML=`<section class="panel gate"><p class="eyebrow">Pauta isadsign</p><h1>${esc(t)}</h1><p>${esc(msg)}</p></section>`}
+
+async function iniciar(){
+  const db=sb();
+  if(!db)return aviso("Portal em configuração","A isadsign ainda está preparando esta página. Tente de novo mais tarde.");
+  if(!/^[a-z0-9-]{6,80}$/.test(TOKEN))return aviso("Use o seu link","Abra o link completo que a isadsign enviou para você.");
+  const {data,error}=await db.rpc("portal_nome",{p_token:TOKEN});
+  if(error)return aviso("Não foi possível abrir","Verifique a sua conexão e recarregue a página.");
+  if(!data)return aviso("Link não encontrado","Confira se você abriu o link inteiro que a isadsign enviou.");
+  nome=data;document.title=`${nome} · Pauta isadsign`;
+  db.rpc("portal_aviso").then(r=>{if(r&&r.data)destinoAviso=r.data},()=>{});
+  const salvo=lsGet();if(salvo&&await entrar(salvo,false))return;
+  gate()}
+
+function gate(err){
+  $("#sairBtn").hidden=true;
+  $("#app").innerHTML=`<section class="panel gate"><p class="eyebrow">Seu perfil na isadsign</p><h1>${esc(nome)}</h1><p>Digite o código de acesso que a isadsign enviou para você.</p>
+  <form id="gateForm" autocomplete="off"><label for="codigo" class="lbl">Código de acesso</label><input type="text" class="codigo" id="codigo" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX" maxlength="12" required>
+  <label class="remember"><input type="checkbox" id="lembrar" checked> Lembrar neste aparelho</label>
+  ${err?`<p class="note err" role="alert">${esc(err)}</p>`:""}<button type="submit" class="btn primary" id="entrarBtn">Entrar</button></form></section>`;
+  const inp=$("#codigo");
+  inp.addEventListener("input",()=>{const v=normCod(inp.value).slice(0,8);inp.value=v.length>4?v.slice(0,4)+"-"+v.slice(4):v});
+  $("#gateForm").addEventListener("submit",async e=>{e.preventDefault();const b=$("#entrarBtn");b.disabled=true;b.textContent="Abrindo…";
+    const ok=await entrar(inp.value,$("#lembrar").checked);if(!ok){gate("Código incorreto. Confira as letras e os números e tente de novo.");$("#codigo").focus()}});
+  setTimeout(()=>inp.focus(),50)}
+
+async function entrar(cod,lembrar){
+  const {data,error}=await sb().rpc("portal_abrir",{p_token:TOKEN,p_codigo:cod});
+  if(error){toast("Sem conexão com o servidor. Tente de novo.");return false}
+  if(!data){lsSet(null);return false}
+  dados=data;codigo=normCod(cod);if(lembrar)lsSet(codigo);
+  atual=-1;$("#sairBtn").hidden=false;mostrar();return true}
+$("#sairBtn").onclick=()=>{lsSet(null);dados=null;view=null;gate()};
+
+/* atual = -1 shows the profile; otherwise the index of the open pauta */
+function mostrar(){
+  if(atual<0||!(dados.pautas||[])[atual])return perfil();
+  const it=dados.pautas[atual],p={...it.dados,cliente:it.dados.cliente||dados.cliente,mes:it.mes,ano:it.ano};
+  view=new Pauta($("#app"),p,{status:it.status,mesesHTML:`<div class="no-print"><button type="button" class="btn link" id="voltarPerfil">‹ Meu perfil</button></div>`,antesHTML:respostaHTML(it),onRender:r=>{
+    r.querySelector("#voltarPerfil").onclick=()=>history.back();
+    ligarResposta(it)}});
+  $("#app").insertAdjacentHTML("beforeend",`<p class="foot">Pauta feita pela isadsign · @isadsign.co</p>`)}
+function abrirPauta(i){atual=i;escolha=null;history.pushState({pauta:i},"",location.href);mostrar();window.scrollTo({top:0})}
+window.addEventListener("popstate",e=>{if(!dados)return;if(view)view.close();atual=e.state&&e.state.pauta!=null?e.state.pauta:-1;escolha=null;mostrar();window.scrollTo({top:0})});
+
+/* ---------- Profile: the client's home, with every pauta ---------- */
+function perfil(){
+  view=null;const ps=dados.pautas||[],ult=ps[0]&&ps[0].dados||{},pf=ult.perfil||{};
+  const pend=ps.filter(x=>x.status==="enviada"),ap=ps.filter(x=>x.status==="aprovada").length;
+  const card=(x)=>{const i=ps.indexOf(x),d=x.dados||{};return `<button type="button" class="post${x.status==="enviada"?" pend":""}" data-abrir="${i}"><span class="tags"><span class="tag mes">${MESES[x.mes]} ${x.ano}</span>${statusChip(x.status)}</span>
+    <h3>Pauta de ${MESES[x.mes].toLowerCase()}</h3><p>${esc((d.estrategia&&d.estrategia.resumo)||d.objetivo||"")}</p><span class="m">${(d.posts||[]).length} posts${d.objetivo?" · "+esc(d.objetivo):""}</span></button>`};
+  const li=a=>`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
+  $("#app").innerHTML=`<section class="panel head"><div><p class="eyebrow"><span>Seu perfil</span>${ult.arroba?`<span class="tag">${esc(ult.arroba)}</span>`:""}</p>
+   <h1>${esc(dados.cliente)}</h1>${ult.nicho?`<p class="sub">${esc(ult.nicho)}</p>`:""}</div>
+   <div class="counts"><div class="count"><b>${ps.length}</b><span>${ps.length===1?"pauta":"pautas"}</span></div><div class="count"><b>${pend.length}</b><span>esperando sua resposta</span></div><div class="count"><b>${ap}</b><span>${ap===1?"aprovada":"aprovadas"}</span></div></div></section>
+  ${!ps.length?`<section class="panel card"><h2>Nenhuma pauta ainda</h2><p class="lead">A pauta do mês aparece aqui assim que a isadsign liberar.</p></section>`:""}
+  ${pend.length?`<section class="panel card"><h2>Esperando sua resposta</h2><p class="lead">Abra a pauta, veja os posts e responda: aprovar, pedir revisão ou reprovar.</p><div class="posts">${pend.map(card).join("")}</div></section>`:""}
+  ${ps.length>pend.length?`<section class="panel card"><h2>${pend.length?"Outras pautas":"Suas pautas"}</h2><div class="posts">${ps.filter(x=>x.status!=="enviada").map(card).join("")}</div></section>`:""}
+  ${pf.resumo||(pf.produtos||[]).length?`<section class="panel card"><h2>Como entendemos a sua marca</h2><p class="lead">${esc(pf.resumo||"")}</p><div class="facts">
+   ${(pf.produtos||[]).length?`<div class="fact"><h4>Produtos e serviços</h4>${li(pf.produtos.slice(0,6))}</div>`:""}${pf.publico?`<div class="fact"><h4>Público</h4><p>${esc(pf.publico)}</p></div>`:""}
+   ${pf.tom?`<div class="fact"><h4>Tom de voz</h4><p>${esc(pf.tom)}</p></div>`:""}${pf.visual?`<div class="fact"><h4>Identidade visual</h4><p>${esc(pf.visual)}</p></div>`:""}</div></section>`:""}
+  <p class="foot">isadsign · @isadsign.co</p>`;
+  $("#app").querySelectorAll("[data-abrir]").forEach(b=>b.onclick=()=>abrirPauta(+b.dataset.abrir))}
+
+/* ---------- Answer ---------- */
+function respostaHTML(it){
+  const r=it.resposta;
+  return `<section class="panel card no-print" id="respCard"><h2>O que você achou desta pauta?</h2>
+  ${r?`<div class="ultima">Você enviou <b>${esc(RESP[r.tipo][1].toLowerCase())}</b> em ${new Date(r.em).toLocaleDateString("pt-BR")}${r.comentario?`: “${esc(r.comentario)}”`:"."} Se mudou de ideia, envie de novo.</div>`:`<p class="lead">A sua resposta chega na hora para a isadsign.</p>`}
+  <div class="resp-bt" role="group" aria-label="Sua resposta">${Object.entries(RESP).map(([k,v])=>`<button type="button" class="btn" data-resp="${k}" aria-pressed="${escolha===k}">${v[0]}</button>`).join("")}</div>
+  <form class="resp-env" id="respForm" ${escolha?"":"hidden"}><label class="lbl" for="respTxt">${escolha==="aprovada"?"Comentários (opcional)":"Comentários: o que você quer mudar?"}</label>
+  <textarea id="respTxt" rows="3" maxlength="2000" placeholder="${escolha==="aprovada"?"Ex.: amei o post do dia 10!":"Ex.: trocar o tema do dia 20 pelo lançamento do produto novo"}"></textarea>
+  <button type="submit" class="btn primary" id="respEnviar">Enviar resposta</button><p class="note err" id="respErr" hidden></p></form></section>`}
+function ligarResposta(it){
+  const card=$("#respCard");if(!card)return;
+  card.querySelectorAll("[data-resp]").forEach(b=>b.onclick=()=>{const keep=$("#respTxt")?$("#respTxt").value:"";escolha=b.dataset.resp;
+    card.outerHTML=respostaHTML(it);ligarResposta(it);$("#respTxt").value=keep;$("#respTxt").focus()});
+  const f=$("#respForm");if(!f||!escolha)return;
+  f.onsubmit=async e=>{e.preventDefault();const b=$("#respEnviar"),err=$("#respErr");const txt=$("#respTxt").value.trim();
+    if(escolha!=="aprovada"&&!txt){err.textContent="Conte o que você quer mudar para a isadsign ajustar.";err.hidden=false;$("#respTxt").focus();return}
+    b.disabled=true;b.textContent="Enviando…";err.hidden=true;
+    const {error}=await sb().rpc("portal_responder",{p_token:TOKEN,p_codigo:codigo,p_pauta:it.id,p_tipo:escolha,p_comentario:txt});
+    if(error){b.disabled=false;b.textContent="Enviar resposta";err.textContent="Não foi possível enviar. Verifique a conexão e tente de novo.";err.hidden=false;return}
+    avisarPorEmail(it,escolha,txt);
+    it.resposta={tipo:escolha,comentario:txt,em:new Date().toISOString()};it.status=escolha;escolha=null;
+    toast("Resposta enviada para a isadsign");mostrar();
+    const c=$("#respCard");if(c)c.scrollIntoView({block:"center"})}}
+/* E-mail to isadsign (FormSubmit, or Web3Forms if configured); the answer is already saved, so a failure here only skips the e-mail */
+function avisarPorEmail(it,tipo,txt){
+  const v=RESP[tipo],mes=`${MESES[it.mes]} ${it.ano}`,assunto=`${v[2]} ${dados.cliente}: ${v[1].toLowerCase()} da pauta de ${mes}`;
+  const campos={cliente:dados.cliente,pauta:mes,resposta:v[1],comentarios:txt||"(sem comentários)",painel:(cfg.siteUrl||"")+"painel.html"};
+  const post=(url,body)=>fetch(url,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(body)}).catch(()=>{});
+  const fs=cfg.formsubmit||destinoAviso;
+  if(fs)post(`https://formsubmit.co/ajax/${encodeURIComponent(fs)}`,{_subject:assunto,_template:"table",_captcha:"false",...campos});
+  else if(cfg.web3formsKey)post("https://api.web3forms.com/submit",{access_key:cfg.web3formsKey,subject:assunto,from_name:"Portal isadsign",...campos})}
+
+iniciar();
+})();
+</script>
+</body>
+</html>

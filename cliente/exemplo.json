@@ -1,0 +1,271 @@
+{
+ "id": "exemplo-cafe-aurora-novembro-2026",
+ "cliente": "Café Aurora",
+ "arroba": "@cafeaurora",
+ "nicho": "cafeteria artesanal",
+ "mes": 10,
+ "ano": 2026,
+ "objetivo": "Vender",
+ "briefing": {
+  "temas": [
+   "Métodos de preparo",
+   "Origem dos grãos",
+   "Kit presente"
+  ]
+ },
+ "perfil": {
+  "resumo": "Cafeteria de bairro com torra própria, que vende café especial no balcão e em pacotes. Atende moradores e quem trabalha por perto.",
+  "produtos": [
+   "Café coado e espresso de grãos próprios",
+   "Pacotes de 250 g moídos na hora",
+   "Kit presente com caneca e filtro de pano"
+  ],
+  "publico": "Adultos de 25 a 45 anos que gostam de café bom e querem aprender a fazer em casa.",
+  "tom": "Acolhedor e didático, frases curtas, poucos emojis (☕ 🤎).",
+  "diferenciais": [
+   "Torra na própria loja",
+   "Relação direta com produtores"
+  ],
+  "visual": "Marrom, creme e preto; fotos com luz natural e mãos em cena; tipografia serifada nos títulos.",
+  "cuidados": ""
+ },
+ "estrategia": {
+  "resumo": "Novembro aquece as vendas para o fim de ano: educar sobre o café especial durante o mês e concentrar as ofertas na Black Friday.",
+  "pilares": [
+   {
+    "nome": "Educativo",
+    "pct": 40,
+    "descricao": "Origem dos grãos, métodos de preparo e mitos do café."
+   },
+   {
+    "nome": "Bastidores",
+    "pct": 25,
+    "descricao": "Torra, equipe e rotina da loja."
+   },
+   {
+    "nome": "Prova social",
+    "pct": 15,
+    "descricao": "Clientes, avaliações e reposts."
+   },
+   {
+    "nome": "Venda",
+    "pct": 20,
+    "descricao": "Kits de presente e a Black Friday."
+   }
+  ],
+  "frequencia": "Feed às terças e sextas, Stories todos os dias.",
+  "datas": [
+   {
+    "dia": 20,
+    "nome": "Dia da Consciência Negra",
+    "uso": "Homenagem aos produtores de café."
+   },
+   {
+    "dia": 27,
+    "nome": "Black Friday",
+    "uso": "Oferta do kit presente."
+   }
+  ]
+ },
+ "posts": [
+  {
+   "id": "p1",
+   "dia": 3,
+   "formato": "Carrossel",
+   "pilar": "Educativo",
+   "tema": "5 erros que deixam o café amargo",
+   "objetivo": "Gerar salvamentos e mostrar autoridade.",
+   "descricao": "Carrossel educativo que mostra os cinco erros de preparo mais comuns e como corrigir cada um. A ideia é tirar a culpa do grão e mostrar que um café bom depende de detalhes simples, o que posiciona a Aurora como quem entende do assunto. É um post para salvar e mandar para alguém, por isso cada slide traz uma correção prática. No fim, abre caminho para vender os pacotes moídos na hora.",
+   "producao": [
+    "Foto de capa: xícara de café escuro sobre a bancada, luz da manhã",
+    "Fotos de apoio: chaleira, moedor, balança e pó em close",
+    "Conferir com a barista as temperaturas e proporções",
+    "Arte final no Canva com a paleta marrom e creme"
+   ],
+   "visual": "Fundo creme, números grandes em marrom, uma foto por slide com as mãos em cena; títulos na serifada da marca.",
+   "horario": "Terça às 8h, quando o público passa o primeiro café do dia.",
+   "metrica": "Salvamentos e compartilhamentos.",
+   "ganchos": [
+    "Seu café fica amargo? A culpa provavelmente não é do grão.",
+    "5 erros que você comete todo dia ao passar café."
+   ],
+   "slides": [
+    {
+     "titulo": "5 erros que deixam seu café amargo",
+     "texto": "E como resolver cada um hoje mesmo."
+    },
+    {
+     "titulo": "1. Água fervendo",
+     "texto": "O ideal é entre 90 °C e 96 °C. Espere 30 segundos depois de ferver."
+    },
+    {
+     "titulo": "2. Moagem fina demais",
+     "texto": "Para coado, use moagem média, parecida com açúcar refinado."
+    },
+    {
+     "titulo": "3. Pó velho",
+     "texto": "Café moído perde aroma em poucos dias. Moa na hora sempre que puder."
+    },
+    {
+     "titulo": "4. Proporção errada",
+     "texto": "Comece com 10 g de café para 150 ml de água."
+    },
+    {
+     "titulo": "5. Café requentado",
+     "texto": "Prepare só o que vai beber agora."
+    },
+    {
+     "titulo": "Salve para não esquecer",
+     "texto": "E marque quem precisa ver isso."
+    }
+   ],
+   "legenda": "Quase todo café amargo tem a ver com o preparo, não com o grão ☕\n\nArrasta para o lado e vê qual desses erros você comete. O nº 2 é o mais comum aqui na loja.\n\nSalva este post para consultar na próxima passada.",
+   "cta": "Salvar o post e marcar um amigo",
+   "hashtags": [
+    "#cafeespecial",
+    "#metodosdepreparo",
+    "#cafecoado",
+    "#baristaemcasa",
+    "#cafeteria"
+   ]
+  },
+  {
+   "id": "p2",
+   "dia": 10,
+   "formato": "Reels",
+   "pilar": "Bastidores",
+   "tema": "Da saca à xícara em 30 segundos",
+   "objetivo": "Alcance e conexão com a marca.",
+   "descricao": "Reels de bastidor que acompanha o grão desde a saca até a xícara em 30 segundos. Mostra a torra artesanal, que é o maior diferencial da loja, e cria vínculo ao revelar um processo que o cliente nunca vê. O ritmo rápido e o som do primeiro crack seguram a atenção. Termina convidando para provar o café no balcão.",
+   "producao": [
+    "Gravar a abertura da saca com grãos verdes em close",
+    "Captar o torrador girando e o som do primeiro crack",
+    "Extração no V60 em câmera lenta",
+    "Cliente sorrindo com a xícara no balcão (pedir autorização)"
+   ],
+   "visual": "Luz natural quente, cortes rápidos no ritmo da música, texto na tela em creme com sombra suave.",
+   "horario": "Sexta às 18h, quando o alcance de Reels costuma subir.",
+   "metrica": "Alcance para não seguidores e visitas ao perfil.",
+   "ganchos": [
+    "Esse grão verde vira o seu café em 30 segundos.",
+    "Você nunca viu o seu café antes de ele ficar marrom."
+   ],
+   "roteiro": [
+    {
+     "tempo": "0–3s",
+     "cena": "Close das mãos abrindo a saca de grãos verdes.",
+     "fala": "Esse grão verde vira o seu café.",
+     "texto_tela": "Da saca à xícara ☕"
+    },
+    {
+     "tempo": "3–15s",
+     "cena": "Torrador girando, grãos mudando de cor, som do primeiro crack.",
+     "fala": "Aqui ele ganha cor, aroma e doçura. Cada lote leva uns 12 minutos.",
+     "texto_tela": "Torra artesanal • 12 min"
+    },
+    {
+     "tempo": "15–25s",
+     "cena": "Moagem e extração no V60 em câmera lenta.",
+     "fala": "Depois é moer na hora e passar com calma.",
+     "texto_tela": "Moído na hora"
+    },
+    {
+     "tempo": "25–30s",
+     "cena": "Cliente sorrindo com a xícara no balcão.",
+     "fala": "Vem provar o resultado.",
+     "texto_tela": "Rua das Flores, 120"
+    }
+   ],
+   "legenda": "Todo café que sai do nosso balcão passa por aqui primeiro 🤎\n\nQual parte você não conhecia?",
+   "cta": "Comentar e vir provar na loja",
+   "hashtags": [
+    "#torraartesanal",
+    "#cafeespecial",
+    "#bastidores",
+    "#cafeteria"
+   ]
+  },
+  {
+   "id": "p3",
+   "dia": 20,
+   "formato": "Estático",
+   "pilar": "Educativo",
+   "tema": "Quem planta o seu café",
+   "objetivo": "Valorizar os produtores na data.",
+   "descricao": "Post estático em homenagem aos produtores no Dia da Consciência Negra, com o retrato de um parceiro real da lavoura. Valoriza quem está por trás do café e reforça a relação direta da marca com os produtores. O texto curto deixa a imagem falar e leva para a história completa nos Stories.",
+   "producao": [
+    "Retrato do produtor parceiro com autorização de uso",
+    "Confirmar nome e cidade do produtor",
+    "Logo pequena da Aurora em PNG"
+   ],
+   "visual": "Foto em preto e branco ocupando toda a arte, frase em branco no rodapé, logo discreta no canto.",
+   "horario": "Quinta, dia 20, às 9h.",
+   "metrica": "Comentários e respostas nos Stories.",
+   "ganchos": [
+    "Antes da xícara, tem gente.",
+    "Conheça quem planta o café que você bebe."
+   ],
+   "arte": {
+    "frase": "Antes da xícara, tem gente.",
+    "direcao": "Retrato em preto e branco de um produtor parceiro na lavoura, frase em branco no rodapé, logo pequena no canto."
+   },
+   "legenda": "Neste 20 de novembro, nossa homenagem a quem planta, colhe e cuida do café que chega até você.\n\nConheça a história do Seu Antônio nos Stories.",
+   "cta": "Ver a história completa nos Stories",
+   "hashtags": [
+    "#consciencianegra",
+    "#produtoresdecafe",
+    "#cafeespecial"
+   ]
+  },
+  {
+   "id": "p4",
+   "dia": 27,
+   "formato": "Reels",
+   "pilar": "Venda",
+   "tema": "Kit presente com 20% na Black Friday",
+   "objetivo": "Converter em vendas do kit.",
+   "descricao": "Reels de venda do kit presente com desconto na Black Friday. Mostra o que vem no kit de forma rápida e resolve o problema de quem procura presente de Natal. A urgência do prazo e o link na bio levam direto para a compra.",
+   "producao": [
+    "Kit montado e embrulhado para gravar",
+    "Fundo neutro e laço na cor da marca",
+    "Link da loja atualizado na bio antes de publicar",
+    "Confirmar estoque e prazo da promoção"
+   ],
+   "visual": "Mesa clara, mãos abrindo o kit, selo \"20% OFF\" em preto e creme, cortes no ritmo da música.",
+   "horario": "Sexta, dia 27, às 7h, para pegar o começo da Black Friday.",
+   "metrica": "Cliques no link da bio e vendas do kit.",
+   "ganchos": [
+    "O presente de Natal resolvido em 15 segundos.",
+    "Só hoje: o kit que esgotou no ano passado."
+   ],
+   "roteiro": [
+    {
+     "tempo": "0–3s",
+     "cena": "Mão colocando o kit embrulhado na mesa.",
+     "fala": "Presente resolvido.",
+     "texto_tela": "Black Friday • 20% OFF"
+    },
+    {
+     "tempo": "3–12s",
+     "cena": "Abrindo o kit: café, caneca e filtro.",
+     "fala": "Café da casa, caneca de cerâmica e filtro de pano.",
+     "texto_tela": "Kit Aurora"
+    },
+    {
+     "tempo": "12–15s",
+     "cena": "Embalagem fechando com laço.",
+     "fala": "Só até domingo. Link na bio.",
+     "texto_tela": "Link na bio"
+    }
+   ],
+   "legenda": "Black Friday na Aurora 🖤\n\nKit presente com 20% de desconto até domingo ou enquanto durar o estoque.",
+   "cta": "Comprar pelo link da bio",
+   "hashtags": [
+    "#blackfriday",
+    "#presentedenatal",
+    "#kitcafe",
+    "#cafeespecial"
+   ]
+  }
+ ]
+}
