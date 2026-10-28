@@ -21,3 +21,12 @@ O app roda no claude.ai, como página da Central isadsign, e usa o Claude da pr�
 ## Como atualizar
 
 Peça ao Claude a mudança. Ele edita o `index.html`, faz o commit aqui e republica a página no mesmo link da Central.
+
+## Aprovações do portal → app no Claude
+
+Quando o cliente responde no portal (`portal/`), a pauta no app do Claude também muda de status, e a pauta aprovada mostra **Gerar calendário**.
+
+1. O workflow `.github/workflows/aprovacoes.yml` roda a cada 10 minutos, chama a função `portal_status` do Supabase e grava `aprovacoes.json` na branch `dados` (só o id da pauta em SHA-256, o status e a data; nada de nome, código ou comentário).
+2. A tarefa agendada "Aprovações do portal → Pauta isadsign" (8h23, 12h23, 16h23, 20h23, e toda vez que a Isa abre o app) lê esse arquivo e marca a pauta do app como aprovada, pediu revisão ou reprovada.
+
+Configurar uma vez: no Supabase, SQL Editor, rode `supabase/status-sync.sql`.

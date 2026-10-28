@@ -1,0 +1,58 @@
+# Leva as respostas do portal (Supabase) para a branch "dados", onde o app Pauta isadsign,
+# no Claude, lê quais pautas o cliente aprovou. Roda a cada 10 minutos e só grava quando muda.
+name: Aprovações do portal
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: aprovacoes
+  cancel-in-progress: false
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      # Mesmos valores públicos de portal/config.js
+      SUPABASE_URL: https://medtwwswykitfapxplrf.supabase.co
+      SUPABASE_KEY: sb_publishable_Ubm6ZGvT556W_vfbPpAfbg_uneayMcL
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: dados
+
+      - name: Ler respostas do portal
+        id: ler
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o resp.json -w '%{http_code}' -X POST "$SUPABASE_URL/rest/v1/rpc/portal_status" \
+            -H "apikey: $SUPABASE_KEY" -H "Content-Type: application/json" -d '{}')
+          if [ "$code" != "200" ]; then
+            echo "::warning::O portal respondeu $code. Rode supabase/status-sync.sql no Supabase."
+            cat resp.json || true
+            echo "ok=0" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          jq -S '{v: 1, pautas: ((. // []) | map(select(.h != null)) | sort_by(.h))}' resp.json > aprovacoes.json
+          rm -f resp.json
+          echo "ok=1" >> "$GITHUB_OUTPUT"
+
+      - name: Gravar se mudou
+        if: steps.ler.outputs.ok == '1'
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- aprovacoes.json; then
+            echo "Nada mudou."
+            exit 0
+          fi
+          git config user.name "isadsign-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add aprovacoes.json
+          git commit -m "Aprovações do portal atualizadas"
+          git push origin HEAD:dados

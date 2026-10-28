@@ -1,6 +1,6 @@
-<title>Pauta isadsign</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body><title>Pauta isadsign</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<style>
+<style id="css">
 /* Layout: frosted top bar, briefing panel at left (sticky on wide screens), result canvas at right; stacks to one column on phones. Scales type up on TVs. */
 :root{
   --bg:#f5f5f7; --surface:#ffffff; --surface-2:#f0f0f3; --fg:#1d1d1f; --fg-2:#6e6e73; --line:rgba(0,0,0,.09);
@@ -64,6 +64,15 @@ input[type=text],select,textarea{width:100%;background:var(--surface-2);border:1
 input[type=text]:focus,select:focus,textarea:focus{border-color:var(--accent);background:var(--surface)}
 textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .chips{display:flex;flex-wrap:wrap;gap:.4rem}
+.qp{margin-top:.15rem}
+.qp-t{font-size:.75rem;font-weight:500;color:var(--fg-2);width:100%;display:flex;justify-content:space-between;gap:.5rem}
+.qp-t button{border:0;background:none;color:var(--accent);font-size:.75rem;padding:0}
+.qp .chip{display:inline-flex;align-items:center;gap:.35rem;max-width:100%}
+.qp .chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.qp .chip small{font-size:.6875rem;color:var(--fg-2);font-weight:400}
+.qp .chip[aria-pressed="true"] small{color:inherit;opacity:.7}
+.qp .chip .ok{width:.4rem;height:.4rem;border-radius:50%;background:var(--accent);flex:none}
+.chip-dem{font-size:.6875rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--fg-2);background:var(--surface-2);border-radius:999px;padding:.1rem .45rem}
 .chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:.35rem .8rem;font-size:.8125rem}
 .chip[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .mix{display:grid;grid-template-columns:repeat(auto-fit,minmax(10.5rem,1fr));gap:.5rem}
@@ -120,7 +129,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .tchip i{font-style:normal;width:1.1rem;height:1.1rem;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.65rem;background:var(--accent);color:var(--on-accent)}
 
 /* Client profile + post description */
-.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.9rem 1.5rem;margin-top:.2rem}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.9rem 1.5rem;margin-top:.2rem}
 .fact h4{margin:0 0 .25rem;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-2)}
 .fact p{margin:0;font-size:.9375rem;line-height:1.45}
 .fact ul{margin:0;padding-left:1.1rem;font-size:.9375rem;line-height:1.45}
@@ -128,7 +137,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .check{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.4rem}
 .check li{display:grid;grid-template-columns:1.1rem minmax(0,1fr);gap:.55rem;font-size:.9375rem;line-height:1.4}
 .check li::before{content:"";width:.95rem;height:.95rem;margin-top:.15rem;border-radius:.3rem;border:1.5px solid var(--fg-2)}
-.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(12rem,1fr));gap:.75rem}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,12rem),1fr));gap:.75rem}
 .kv div{background:var(--surface-2);border-radius:var(--r-sm);padding:.7rem .85rem}
 .kv b{display:block;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--fg-2);margin-bottom:.2rem}
 .kv span{font-size:.9375rem;line-height:1.4}
@@ -150,7 +159,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .card{padding:1.4rem 1.5rem}
 .card h3{font-size:1.25rem;letter-spacing:-.02em;margin:0 0 .25rem;font-weight:600}
 .card .lead{color:var(--fg-2);margin:0 0 1.1rem;max-width:44rem}
-.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(13rem,1fr));gap:.75rem}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:.75rem}
 .pillar{border:1px solid var(--line);border-radius:var(--r-md);padding:.9rem 1rem;text-align:left;background:transparent;display:flex;flex-direction:column;gap:.35rem}
 .pillar[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
 .pillar .pt{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;font-weight:600}
@@ -178,7 +187,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 
 /* Posts */
 .toolbar{display:flex;flex-wrap:wrap;gap:.75rem;align-items:center;justify-content:space-between;margin-bottom:1rem}
-.posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(17rem,1fr));gap:.75rem}
+.posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr));gap:.75rem}
 .post{border:1px solid var(--line);border-radius:var(--r-md);padding:1rem;text-align:left;background:transparent;display:flex;flex-direction:column;gap:.45rem;min-width:0;transition:border-color .15s,transform .15s}
 .post:hover{border-color:var(--fg-2)}
 .post .pm{display:flex;align-items:center;gap:.45rem;font-size:.8125rem;color:var(--fg-2);font-variant-numeric:tabular-nums}
@@ -196,12 +205,23 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .track i{display:block;height:100%;width:0;background:var(--accent);border-radius:3px;transition:width .4s ease}
 
 /* Saved list */
-.saved{display:grid;grid-template-columns:repeat(auto-fill,minmax(18rem,1fr));gap:.75rem;padding-bottom:4rem}
+.saved{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,18rem),1fr));gap:.75rem;padding-bottom:4rem}
 .sv{padding:1.2rem;text-align:left;border:0;display:flex;flex-direction:column;gap:.3rem}
 .sv .m{font-size:.8125rem;color:var(--fg-2)}
 .sv h3{margin:0;font-size:1.1875rem;letter-spacing:-.02em}
 .sv .mini{display:flex;gap:.3rem;margin-top:.4rem;flex-wrap:wrap}
 .sv .mini .dot{width:.55rem;height:.55rem}
+.acessos{margin-bottom:4rem}
+#viewSalvas .saved{padding-bottom:1.25rem}
+.ac{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:.5rem 1rem;align-items:center;padding:.8rem 0;border-top:1px solid var(--line)}
+.ac:first-of-type{border-top:0}
+.ac .nm{min-width:0}
+.ac .nm b{display:block}
+.ac .nm span{font-size:.8125rem;color:var(--fg-2)}
+.ac code{font-family:var(--mono);font-size:.9375rem;letter-spacing:.06em;background:var(--surface-2);border-radius:var(--r-sm);padding:.35rem .6rem}
+.ac .bt{display:flex;gap:.4rem;flex-wrap:wrap}
+.ac .btn{padding:.4rem .8rem;font-size:.8125rem}
+@media (max-width:640px){.ac{grid-template-columns:minmax(0,1fr) auto}.ac .bt{grid-column:1/-1}}
 
 /* Sheet */
 .scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:40;display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
@@ -230,19 +250,197 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 .tags{display:flex;flex-wrap:wrap;gap:.35rem}
 .tags span{font-size:.8125rem;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:.2rem .6rem}
 .redo{display:flex;gap:.5rem;flex-wrap:wrap}
+.fmtsw{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.4rem}
+@media (max-width:420px){.fmtsw{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.fmtsw button{border:1px solid var(--line);background:transparent;border-radius:var(--r-sm);padding:.6rem .4rem;font-size:.875rem;display:flex;align-items:center;justify-content:center;gap:.4rem;min-width:0}
+.fmtsw button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);font-weight:600}
+.fmtsw button.atual{cursor:default}
+.fmtsw button .now{font-size:.6875rem;font-weight:500;color:var(--fg-2)}
+.fmt-act{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+.fmt-act input{flex:1 1 12rem}
+.fmt-hint{font-size:.8125rem;color:var(--fg-2);margin:.5rem 0 0;line-height:1.4}
 .redo input{flex:1 1 12rem}
 .sh-nav{display:flex;justify-content:space-between;gap:.5rem;padding:.75rem 1.25rem 1.1rem;border-top:1px solid var(--line)}
+/* Client folders, status, answers */
+.tags{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center}
+.tag.mes{background:var(--accent-soft);color:var(--accent)}
+.eyebrow{flex-wrap:wrap;row-gap:.35rem}
+.eyebrow .eb{min-width:0;overflow-wrap:anywhere}
+.chip-st{font-size:.6875rem;font-weight:600;letter-spacing:.02em;border-radius:999px;padding:.15rem .55rem;white-space:nowrap}
+.st-neutro{background:var(--surface-2);color:var(--fg-2)}
+.st-info{background:color-mix(in srgb,var(--c-reel) 15%,transparent);color:var(--c-reel)}
+.st-ok{background:color-mix(in srgb,var(--c-sto) 16%,transparent);color:var(--c-sto)}
+.st-warn{background:color-mix(in srgb,var(--c-est) 16%,transparent);color:var(--c-est)}
+.st-bad{background:color-mix(in srgb,var(--danger) 14%,transparent);color:var(--danger)}
+.clientes{display:flex;flex-direction:column;gap:1.25rem;padding-block:2rem 4rem}
+.cl-head h2{font-size:clamp(1.75rem,4vw,2.5rem);letter-spacing:-.03em;margin:0;line-height:1.1}
+.cl-head .lead{color:var(--fg-2);margin:.35rem 0 0}
+.folders{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,16rem),1fr));gap:.75rem}
+.folder{border:0;text-align:left;padding:1.1rem 1.2rem;display:flex;flex-direction:column;gap:.35rem;min-width:0}
+.folder h3{margin:.2rem 0 0;font-size:1.1875rem;letter-spacing:-.02em;overflow-wrap:anywhere}
+.folder .m,.hrow .m{font-size:.8125rem;color:var(--fg-2);overflow-wrap:anywhere}
+.fo-top{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.fo-ic{width:1.6rem;height:1.25rem;border-radius:.3rem;background:var(--accent-soft);position:relative}
+.fo-ic::before{content:"";position:absolute;left:0;top:-.25rem;width:.8rem;height:.35rem;border-radius:.25rem .25rem 0 0;background:var(--accent-soft)}
+.sw{display:flex;gap:.25rem;flex-wrap:wrap}
+.sw i{width:1rem;height:1rem;border-radius:50%;box-shadow:inset 0 0 0 1px var(--line)}
+.pasta{display:flex;flex-direction:column;gap:1.25rem}
+.pasta .card h3{margin-bottom:.35rem}
+.pt-nome{font-size:clamp(1.6rem,4vw,2.25rem);letter-spacing:-.03em;margin:0 0 1rem;line-height:1.1;overflow-wrap:anywhere}
+.pasta-form{max-width:44rem}
+@media (max-width:560px){.pasta-form .row2{grid-template-columns:minmax(0,1fr)}}
+.cores{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.5rem}
+.cor{display:inline-flex;align-items:center;gap:.4rem;background:var(--surface-2);border-radius:999px;padding:.25rem .35rem .25rem .3rem;font-size:.8125rem}
+.cor i{width:1.1rem;height:1.1rem;border-radius:50%;box-shadow:inset 0 0 0 1px var(--line)}
+.cor code{font-family:var(--mono);font-size:.75rem}
+.cor button{border:0;background:var(--surface);border-radius:50%;width:1.3rem;height:1.3rem;font-size:.65rem}
+.cor-add{flex-wrap:wrap}
+.cor-add input[type=color]{width:2.6rem;height:2.4rem;border:0;padding:0;background:none;flex:none}
+.cor-add input[type=text]{flex:1 1 7rem;min-width:0;font-family:var(--mono)}
+.linkbox{font-family:var(--mono);font-size:.8125rem;background:var(--surface-2);border-radius:var(--r-sm);padding:.7rem .8rem;margin:0 0 .75rem;word-break:break-all;user-select:all}
+.mono{font-family:var(--mono);letter-spacing:.06em}
+.hist{display:flex;flex-direction:column}
+.hrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.6rem 1rem;align-items:center;padding:.85rem 0;border-top:1px solid var(--line)}
+.hrow:first-child{border-top:0}
+.h-info{display:flex;flex-direction:column;gap:.3rem;min-width:0}
+.h-nota{margin:0;font-size:.875rem;color:var(--fg-2);overflow-wrap:anywhere}
+.h-act{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:flex-end}
+.h-act select{width:auto;max-width:100%}
+.h-act .btn,.h-nota-in .btn{padding:.5rem .9rem;font-size:.875rem}
+.h-nota-in{grid-column:1/-1;display:flex;gap:.4rem;flex-wrap:wrap}
+.h-nota-in input{flex:1 1 12rem;min-width:0}
+@media (max-width:560px){.hrow{grid-template-columns:minmax(0,1fr)}.h-act{justify-content:flex-start}}
+.btn.danger{background:color-mix(in srgb,var(--danger) 12%,transparent);color:var(--danger)}
+.note.warn{color:var(--c-est);text-align:left}
+.cfg .tagin input{min-width:0}
+.resp .lead{margin-bottom:.9rem}
+.resp-bt{display:flex;flex-wrap:wrap;gap:.5rem}
+.resp-bt .btn{flex:1 1 9rem;border:1px solid var(--line);background:transparent;white-space:normal}
+.resp-bt .btn[aria-pressed="true"].resp-aprovada{background:var(--c-sto);color:var(--on-accent);border-color:var(--c-sto)}
+.resp-bt .btn[aria-pressed="true"].resp-revisao{background:var(--c-est);color:var(--on-accent);border-color:var(--c-est)}
+.resp-bt .btn[aria-pressed="true"].resp-reprovada{background:var(--danger);color:var(--on-accent);border-color:var(--danger)}
+.resp-env{display:flex;flex-direction:column;gap:.5rem;margin-top:1rem}
+.resp-env .btn{align-self:flex-start;text-decoration:none}
+.resp-env .note{text-align:left;margin:0}
+/* Long words and links never push a card wider than the screen */
+.panel,.post,.sv,.fact,.kv span,.caption,.hook,.slide,.beat,.pillar,.head h2,.sh-top h3{overflow-wrap:anywhere}
+.head .t{flex:1 1 16rem}
+.btn{max-width:100%}
+.actions .btn{white-space:normal;text-align:center}
+@media (max-width:430px){.brand small{display:none}.top .seg button{padding:.3rem .6rem}.top .wrap{gap:.5rem}}
+.sv .tags{margin-bottom:.15rem}
+.toolbar .seg{display:flex;flex-wrap:wrap;max-width:100%}
+.toolbar .seg button{flex:1 1 auto}
+
+/* Client view and release */
+.btn.sm{padding:.35rem .8rem;font-size:.8125rem}
+.btn.lib{background:var(--accent);color:var(--on-accent)}
+.btn.lib:disabled{opacity:.55;cursor:default}
+.seg.modo{display:flex;width:100%}
+.seg.modo button{flex:1}
+#intervaloBox{grid-template-columns:minmax(0,1fr)}
+.cliente .top .seg,.cliente #hero,.cliente #form{display:none}
+.cliente .grid{grid-template-columns:minmax(0,1fr);max-width:64rem;margin:0 auto;padding-top:2rem}
+.gate{max-width:26rem;width:100%;margin:2rem auto;padding:2rem 1.5rem;text-align:center}
+.gate .eyebrow{justify-content:center}
+.gate h2{font-size:clamp(1.75rem,6vw,2.25rem);letter-spacing:-.03em;line-height:1.1;margin:0 0 .5rem;text-wrap:balance}
+.gate p{color:var(--fg-2);margin:0 0 1.5rem;text-wrap:pretty}
+.gate form{display:flex;flex-direction:column;gap:.75rem}
+.gate input[type=text]{font-family:var(--mono);font-size:1.25rem;letter-spacing:.12em;text-align:center;text-transform:uppercase;padding:.8rem .9rem}
+.gate .remember{display:flex;align-items:center;justify-content:center;gap:.45rem;font-size:.875rem;color:var(--fg-2)}
+.gate .note{margin:0}
+.months{display:flex;flex-wrap:wrap;gap:.4rem;padding:0 1.5rem 1.1rem}
+.months button{border:1px solid var(--line);background:transparent;border-radius:999px;padding:.35rem .85rem;font-size:.8125rem}
+.months button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
 .toast{position:fixed;left:50%;bottom:calc(1.5rem + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:.6rem 1.1rem;border-radius:999px;font-size:.875rem;font-weight:500;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.2)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* Calendário do cliente (pauta aprovada) */
+.calst{padding:1.1rem 1.5rem;display:flex;flex-wrap:wrap;gap:.9rem 1.25rem;align-items:center;justify-content:space-between}
+.calst .t{min-width:0;flex:1 1 20rem;display:flex;flex-direction:column;gap:.2rem}
+.calst .t b{font-weight:600;font-size:1.0625rem;letter-spacing:-.015em}
+.calst .t span{font-size:.875rem;color:var(--fg-2);line-height:1.4}
+.calst .t span.ok{color:var(--c-sto)}
+.calst .actions .btn{padding:.55rem 1.05rem;font-size:.875rem}
+.hr-all{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;padding:.9rem 1.25rem 0;font-size:.8125rem;color:var(--fg-2)}
+.hr-all input{width:auto;background:var(--surface-2);border:1px solid transparent;border-radius:var(--r-sm);padding:.4rem .55rem;font-variant-numeric:tabular-nums}
+.hrs{display:flex;flex-direction:column;gap:.4rem;padding:.9rem 1.25rem 1.1rem}
+.hr-row{display:grid;grid-template-columns:3.6rem minmax(0,1fr) 7.6rem;gap:.75rem;align-items:center;background:var(--surface-2);border-radius:var(--r-sm);padding:.5rem .6rem .5rem .8rem;cursor:default}
+.hr-row .d{font-weight:600;font-variant-numeric:tabular-nums;font-size:.875rem;line-height:1.2}
+.hr-row .d small{display:block;font-weight:400;color:var(--fg-2);font-size:.75rem}
+.hr-row .tt{min-width:0;display:flex;flex-direction:column;gap:.1rem}
+.hr-row .tt b{font-weight:500;font-size:.9375rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hr-row .tt span{font-size:.75rem;color:var(--fg-2);display:flex;align-items:center;gap:.35rem;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hr-row input[type=time]{width:100%;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:.45rem .5rem;font-variant-numeric:tabular-nums;font-size:.9375rem}
+.hr-row.sug input[type=time]{border-color:var(--accent);background:var(--accent-soft)}
+.sh-foot{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:.9rem 1.25rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.sh-foot .note{margin:0 auto 0 0;text-align:left;flex:1 1 14rem}
+.sheet.wide{width:min(92rem,100%);height:100%}
+.sheet.wide .sh-top{align-items:center}
+.calprev{flex:1;min-height:70vh;border:0;width:100%;background:#282828;border-radius:0 0 var(--r-lg) var(--r-lg);display:block}
+@media (max-width:640px){.sheet.wide{height:92%}.calprev{border-radius:0}}
+@media (max-width:520px){.hr-row{grid-template-columns:3rem minmax(0,1fr) 6.8rem;gap:.5rem}}
+
+/* Arte do post + humanizar */
+.arte-strip{display:flex;gap:.5rem;overflow-x:auto;padding-bottom:.35rem;margin-bottom:.8rem;scroll-snap-type:x mandatory}
+.arte-strip img{height:10rem;width:auto;max-width:none;border-radius:var(--r-sm);flex:none;scroll-snap-align:start;background:var(--surface-2);box-shadow:var(--shadow)}
+.vd{font-size:.6875rem;font-weight:600;border-radius:999px;padding:.15rem .55rem;text-transform:none;letter-spacing:0;white-space:nowrap}
+.vd.ok{background:rgba(36,138,61,.14);color:var(--c-sto)}
+.vd.aj{background:rgba(199,106,0,.14);color:var(--c-est)}
+.vd.rf{background:rgba(215,0,21,.12);color:var(--danger)}
+.an-h{font-size:.8125rem;font-weight:600;margin:1rem 0 .45rem;color:var(--fg)}
+.an-lead{margin:0;font-size:.9375rem;line-height:1.5}
+.ok-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.35rem}
+.ok-list li{display:grid;grid-template-columns:1.1rem minmax(0,1fr);gap:.5rem;font-size:.9375rem;line-height:1.45}
+.ok-list li::before{content:"✓";color:var(--c-sto);font-weight:700}
+.ok-list.fix li::before{content:"✎";color:var(--c-est)}
+.aj-list{display:grid;gap:.45rem}
+.aj-item{background:var(--surface-2);border-radius:var(--r-sm);padding:.7rem .85rem}
+.aj-item b{display:block;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:.2rem}
+.aj-item p{margin:0;font-size:.9375rem;line-height:1.45}
+.aj-item p+p{color:var(--fg-2);margin-top:.25rem}
+.an-act{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.5rem}
+.an-act .btn{padding:.5rem 1rem;font-size:.875rem}
+.drop.sm{padding:.85rem .9rem;position:relative}
+.arte-go{margin-top:.6rem;width:100%}
+.hum{display:flex;gap:.5rem 1rem;flex-wrap:wrap;align-items:center}
+.hum p{margin:0;flex:1 1 14rem;font-size:.875rem;color:var(--fg-2);line-height:1.4}
+.hum .btn{padding:.6rem 1.15rem}
+.tag.hum-tag{background:var(--accent-soft);color:var(--accent)}
+.instr{margin-top:.6rem}
+.instr textarea{min-height:4.8rem}
+.instr .lbl{display:block;margin-bottom:.35rem}
+.resp-box{background:var(--accent-soft);border-radius:var(--r-md);padding:.9rem 1rem;margin-bottom:.9rem}
+.resp-box b{display:block;font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);margin-bottom:.3rem}
+.resp-box .q{font-size:.8125rem;color:var(--fg-2);margin:0 0 .5rem;font-style:italic}
+.resp-box .a{margin:0;font-size:.9375rem;line-height:1.55;white-space:pre-wrap}
+.cts{display:flex;flex-direction:column;gap:.75rem}
+.ct{border:1px solid var(--line);border-radius:var(--r-md);padding:.85rem;display:flex;flex-direction:column;gap:.6rem;background:var(--surface)}
+.ct-top{display:flex;justify-content:space-between;align-items:center;gap:.5rem}
+.ct-n{font-size:.8125rem;font-weight:600;display:flex;align-items:center;gap:.4rem}
+.ct-rm{border:0;background:none;color:var(--fg-2);font-size:.8125rem;padding:0}
+.ct .seg{width:100%;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.ct .seg button{padding:.4rem .3rem;text-align:center}
+.ct textarea{min-height:3.6rem}
+.ct .drop{padding:.7rem .8rem;position:relative}
+.ct .drop b{font-size:.875rem}
+.ct .files{margin-top:0}
+.ct-add{width:100%;margin-top:.75rem;border:1.5px dashed var(--line);background:transparent;color:var(--accent);font-weight:600}
+.ct-add span{font-size:1.15rem;line-height:1}
+.ct-add:hover{background:var(--accent-soft);border-color:var(--accent)}
+.badge-arte{font-size:.6875rem;font-weight:600;border-radius:999px;padding:.1rem .45rem;margin-left:.35rem;white-space:nowrap}
 </style>
 
+<template id="markup">
 <header class="top">
   <div class="wrap">
     <div class="brand">Pauta <small>isadsign</small></div>
     <div class="seg" role="group" aria-label="Seções">
       <button type="button" id="tabNova" aria-pressed="true">Nova pauta</button>
+      <button type="button" id="tabClientes" aria-pressed="false">Clientes</button>
       <button type="button" id="tabSalvas" aria-pressed="false">Salvas</button>
     </div>
+    <button type="button" class="btn ghost sm" id="sairBtn" hidden="">Sair</button>
   </div>
 </header>
 
@@ -257,8 +455,9 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
       <h2>Briefing</h2>
       <div class="field">
         <label for="fCliente">Cliente</label>
-        <input type="text" id="fCliente" list="clientesList" placeholder="Ex.: Ousion" required>
+        <input type="text" id="fCliente" list="clientesList" placeholder="Ex.: Ousion" required="">
         <datalist id="clientesList"></datalist>
+        <div class="chips qp" id="qpClientes" hidden=""></div>
       </div>
       <div class="row2">
         <div class="field"><label for="fArroba">@ do perfil</label><input type="text" id="fArroba" placeholder="@perfil"></div>
@@ -267,19 +466,34 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
 
       <h3 class="sec-t">Sobre o cliente</h3>
       <div class="field">
-        <span class="lbl">Prints do perfil, fotos ou PDF</span>
-        <label class="drop" id="drop" for="fFiles">
-          <input type="file" id="fFiles" multiple accept="image/jpeg,image/png,image/webp,image/gif,application/pdf">
-          <b>Adicionar arquivos</b>
-          <span id="dropHint">Prints do Instagram, catálogo, apresentação ou cardápio. Toque ou arraste aqui.</span>
+        <span class="lbl">Resumo do cliente</span>
+        <label class="drop" id="dropResumo" for="fResumo">
+          <input type="file" id="fResumo" multiple="" accept="image/jpeg,image/png,image/webp,image/gif,application/pdf">
+          <b>Subir resumo</b>
+          <span id="resumoHint">Briefing, apresentação, mídia kit ou prints do perfil. PDF ou imagem.</span>
         </label>
-        <div class="files" id="files" hidden></div>
+        <div class="files" id="filesResumo" hidden=""></div>
       </div>
       <div class="field">
         <label for="fSobre">O que o cliente faz, por escrito</label>
         <textarea id="fSobre" rows="4" placeholder="Ex.: clínica de estética em Campinas, carro-chefe é limpeza de pele; atende mulheres 25–45; quer vender mais pacotes."></textarea>
       </div>
-      <p class="hint" id="perfilHint" hidden></p>
+      <p class="hint" id="perfilHint" hidden=""></p>
+
+      <h3 class="sec-t">Material e instruções</h3>
+      <div class="field">
+        <span class="lbl">Material para a pauta</span>
+        <label class="drop" id="drop" for="fFiles">
+          <input type="file" id="fFiles" multiple="" accept="image/jpeg,image/png,image/webp,image/gif,application/pdf">
+          <b>Adicionar arquivos</b>
+          <span id="dropHint">Prints do Instagram, catálogo, apresentação ou cardápio. Toque ou arraste aqui.</span>
+        </label>
+        <div class="files" id="files" hidden=""></div>
+      </div>
+      <div class="field">
+        <label for="fInstr">Instruções para o Claude</label>
+        <textarea id="fInstr" rows="4" placeholder="Ex.: use as artes que subi como referência de estilo; transforme o PDF do cardápio em posts de produto; os 4 carrosséis precisam ser sobre os temas do print; não fale de preço."></textarea>
+      </div>
 
       <h3 class="sec-t">Quando postar</h3>
       <div class="row2">
@@ -288,7 +502,12 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
       </div>
       <div class="field">
         <span class="lbl" id="freqLbl">Frequência do feed</span>
-        <div class="chips wk" id="semana" role="group" aria-labelledby="freqLbl"></div>
+        <div class="seg modo" id="freqModo" role="group" aria-labelledby="freqLbl"><button type="button" data-modo="semana">Dias da semana</button><button type="button" data-modo="intervalo">A cada X dias</button></div>
+        <div class="chips wk" id="semana" role="group" aria-label="Dias da semana"></div>
+        <div class="mix" id="intervaloBox" hidden="">
+          <div class="step"><span>Posta a cada</span><div class="ctl"><button type="button" id="intMenos" aria-label="Menos dias">−</button><output id="intN">2</output><button type="button" id="intMais" aria-label="Mais dias">+</button></div></div>
+          <div class="step"><span>Começa no dia</span><div class="ctl"><button type="button" id="iniMenos" aria-label="Dia anterior">−</button><output id="iniN">1</output><button type="button" id="iniMais" aria-label="Dia seguinte">+</button></div></div>
+        </div>
         <p class="total" id="freqTxt"></p>
       </div>
       <div class="field">
@@ -301,6 +520,12 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
         <div class="mix" id="mix"></div>
         <p class="total" id="total"></p>
       </div>
+
+      <h3 class="sec-t">Conteúdos definidos</h3>
+      <p class="hint"><span>Coloque os conteúdos que você já quer no mês: tema, instrução, arquivos e formato. O Claude cria o restante para completar a quantidade da pauta.</span></p>
+      <div class="cts" id="conteudos"></div>
+      <button type="button" class="btn ghost ct-add" id="ctAdd"><span aria-hidden="true">+</span> Adicionar conteúdo</button>
+      <p class="total" id="ctTxt" hidden=""></p>
 
       <h3 class="sec-t">O que falar</h3>
       <div class="field">
@@ -317,7 +542,7 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
         <textarea id="fDestaques" placeholder="Ex.: lançamento do sérum dia 12; frete grátis na Black Friday"></textarea>
       </div>
       <button type="button" class="more" id="moreBtn" aria-expanded="false">Mais detalhes</button>
-      <div id="moreBox" hidden>
+      <div id="moreBox" hidden="">
         <div class="field"><label for="fTom">Tom de voz</label><textarea id="fTom" placeholder="Ex.: próximo, divertido, sem gírias pesadas"></textarea></div>
         <div class="field"><label for="fPublico">Público</label><input type="text" id="fPublico" placeholder="Ex.: mulheres 25–40, pele sensível"></div>
         <div class="field"><label for="fEvitar">Evitar</label><input type="text" id="fEvitar" placeholder="Temas, palavras ou concorrentes"></div>
@@ -329,18 +554,26 @@ textarea{resize:vertical;min-height:4.2rem;line-height:1.4}
     <div class="result" id="result" aria-live="polite"></div>
   </section>
 
-  <section id="viewSalvas" hidden>
+  <section id="viewSalvas" hidden="">
     <div class="saved" id="savedList"></div>
   </section>
+
+  <section id="viewClientes" class="clientes" hidden=""></section>
 </main>
 
-<div class="scrim" id="scrim" hidden>
+<div class="scrim" id="scrim" hidden="">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle" id="sheet"></div>
 </div>
-<div class="toast" id="toast" hidden></div>
-
-<script>
+<div class="scrim" id="calScrim" hidden="">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="calShTitle" id="calSheet"></div>
+</div>
+<div class="toast" id="toast" hidden=""></div>
+</template>
+<script type="application/json" id="portal">{}</script>
+<script id="src">
 (function(){
+/* The markup lives in a <template> so the page can republish itself from its own source (see publishPortal) */
+const MARKUP=document.getElementById("markup");document.body.insertBefore(MARKUP.content.cloneNode(true),MARKUP);
 const MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 const DIAS=["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
 const DIAS_C=["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
@@ -385,8 +618,9 @@ const EXEMPLO={id:"exemplo",exemplo:true,cliente:"Café Aurora",arroba:"@cafeaur
 const now=new Date();
 const nextMonth=new Date(now.getFullYear(),now.getMonth()+1,1);
 const FEED=["Carrossel","Reels","Estático"];
-const form={mes:nextMonth.getMonth(),ano:nextMonth.getFullYear(),objetivo:"Vender",mix:{Carrossel:4,Reels:4,"Estático":4,Stories:0},semana:[2,4,6],datas:new Set(),temas:[]};
+const form={mes:nextMonth.getMonth(),ano:nextMonth.getFullYear(),objetivo:"Vender",mix:{Carrossel:4,Reels:4,"Estático":4,Stories:0},semana:[2,4,6],freq:"semana",intervalo:2,inicio:1,datas:new Set(),temas:[]};
 let current=EXEMPLO, saved=[], clientes={}, filtroFormato="Todos", filtroPilar=null, busy=false, db=null, sample=null, downloads=null, openId=null, imgLimits=null;
+let acessos=[]; /* client pages: {cliente,url,codigo,meses,atualizadoEm}, written by Claude when it publishes a client's page */
 let anexos=[]; /* {id,name,kind:"img"|"pdf",blob,url,texto,paginas:[Blob]} */
 
 /* ---------- Form ---------- */
@@ -401,7 +635,7 @@ OBJETIVOS.forEach(o=>{const b=document.createElement("button");b.type="button";b
 const mixBox=$("#mix");
 FORMATOS.forEach(f=>{const d=document.createElement("div");d.className="step";d.innerHTML=`<span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span><div class="ctl"><button type="button" aria-label="Menos ${f}">−</button><output id="mix-${f}">${form.mix[f]}</output><button type="button" aria-label="Mais ${f}">+</button></div>`;
  const [minus,plus]=d.querySelectorAll("button");minus.onclick=()=>setMix(f,-1);plus.onclick=()=>setMix(f,1);mixBox.appendChild(d)});
-function setMix(f,delta){form.mix[f]=Math.max(0,Math.min(31,form.mix[f]+delta));paintMix();updateTotal()}
+function setMix(f,delta){const m=minFixo(f);if(delta<0&&form.mix[f]<=m&&m){toast(`Você tem ${m} ${f} definido${m>1?"s":""} nos conteúdos`);return}form.mix[f]=Math.max(m,Math.min(31,form.mix[f]+delta));paintMix();updateTotal()}
 function paintMix(){FORMATOS.forEach(f=>{document.getElementById("mix-"+f).textContent=form.mix[f]})}
 function feedTotal(){return FEED.reduce((a,f)=>a+form.mix[f],0)}
 function totalPosts(){return FORMATOS.reduce((a,f)=>a+form.mix[f],0)}
@@ -417,15 +651,20 @@ function updateTotal(){
  if(!t){el.textContent="Escolha pelo menos um post"}
  else if(n&&ft!==n){el.classList.add("warn");el.innerHTML=`${ft} ${ft===1?"post":"posts"} de feed para ${n} ${n===1?"data":"datas"}. <button type="button" class="fix" id="fixMix">Ajustar às datas</button>`;$("#fixMix").onclick=()=>{fitMixToDatas();updateTotal()}}
  else{el.textContent=`${ft} no feed${form.mix.Stories?` + ${form.mix.Stories} Stories`:""} · ${t} ${t===1?"post":"posts"} no mês`}
- $("#genBtn").disabled=busy||!t||!sample}
+ $("#genBtn").disabled=busy||!t||!sample;if(typeof ctResumoTxt==="function"&&form.conteudos)ctResumoTxt()}
 
 /* Frequência e datas */
 const semBox=$("#semana");
 DIAS_C.forEach((d,i)=>{const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=d;b.dataset.d=i;b.setAttribute("aria-label",DIAS[i]);b.onclick=()=>{const k=form.semana.indexOf(i);k>=0?form.semana.splice(k,1):form.semana.push(i);form.semana.sort();datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()};semBox.appendChild(b)});
-function datasPelaSemana(){form.datas=new Set();const n=daysIn(form.mes,form.ano);for(let d=1;d<=n;d++)if(form.semana.includes(dow(d,form.mes,form.ano)))form.datas.add(d)}
+function datasPelaSemana(){form.datas=new Set();const n=daysIn(form.mes,form.ano);
+ if(form.freq==="intervalo"){form.inicio=Math.min(form.inicio,n);for(let d=form.inicio;d<=n;d+=form.intervalo)form.datas.add(d);return}
+ for(let d=1;d<=n;d++)if(form.semana.includes(dow(d,form.mes,form.ano)))form.datas.add(d)}
 function paintFreq(){
+ const iv=form.freq==="intervalo";semBox.hidden=iv;$("#intervaloBox").hidden=!iv;
+ $("#freqModo").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.modo===form.freq));
+ $("#intN").textContent=form.intervalo;$("#iniN").textContent=form.inicio;
  semBox.querySelectorAll(".chip").forEach(c=>c.setAttribute("aria-pressed",form.semana.includes(+c.dataset.d)));
- const k=form.semana.length;$("#freqTxt").textContent=k?`${k}x por semana: ${form.semana.map(i=>DIAS[i]).join(", ")}`:"Escolha os dias da semana ou toque nas datas abaixo";
+ const k=form.semana.length;$("#freqTxt").textContent=iv?freqIntervaloTxt(form):k?`${k}x por semana: ${form.semana.map(i=>DIAS[i]).join(", ")}`:"Escolha os dias da semana ou toque nas datas abaixo";
  const n=daysIn(form.mes,form.ano),first=dow(1,form.mes,form.ano),hol=feriados(form.mes,form.ano);
  let h=DIAS_C.map(d=>`<span class="dw">${d[0]}</span>`).join("");
  for(let i=0;i<first;i++)h+=`<span></span>`;
@@ -435,6 +674,12 @@ function paintFreq(){
  paintDatasTxt()}
 function paintDatasTxt(){const n=form.datas.size;$("#datasTxt").textContent=n?`${n} ${n===1?"data escolhida":"datas escolhidas"}`:"Nenhuma data: a pauta distribui sozinha"}
 $("#datasReset").onclick=()=>{datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()};
+function freqIntervaloTxt(b){return `${b.intervalo===1?"Todo dia":`A cada ${b.intervalo} dias`}, a partir do dia ${b.inicio}`}
+$("#freqModo").querySelectorAll("button").forEach(b=>b.onclick=()=>{form.freq=b.dataset.modo;preencherCliente.tocou=true;datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()});
+function setIntervalo(campo,delta){if(campo==="intervalo")form.intervalo=Math.max(1,Math.min(15,form.intervalo+delta));else form.inicio=Math.max(1,Math.min(daysIn(form.mes,form.ano),form.inicio+delta));
+ preencherCliente.tocou=true;datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()}
+$("#intMenos").onclick=()=>setIntervalo("intervalo",-1);$("#intMais").onclick=()=>setIntervalo("intervalo",1);
+$("#iniMenos").onclick=()=>setIntervalo("inicio",-1);$("#iniMais").onclick=()=>setIntervalo("inicio",1);
 function onMesAno(){form.mes=+fMes.value;form.ano=+fAno.value;datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()}
 fMes.onchange=onMesAno;fAno.onchange=onMesAno;
 /* Fixed-date Brazilian holidays and marketing dates, shown as dots on the date picker */
@@ -457,7 +702,7 @@ fFiles.onchange=()=>{addFiles(fFiles.files);fFiles.value=""};
 ["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
 ["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
 drop.addEventListener("drop",e=>addFiles(e.dataTransfer.files));
-document.addEventListener("paste",e=>{const fs=[...(e.clipboardData&&e.clipboardData.files||[])];if(fs.length&&!$("#viewNova").hidden){addFiles(fs)}});
+document.addEventListener("paste",e=>{const fs=[...(e.clipboardData&&e.clipboardData.files||[])];if(!fs.length)return;if(openId&&!$("#scrim").hidden){addArtes(fs);return}if(!$("#viewNova").hidden){addFiles(fs)}});
 function maxImgs(){return (imgLimits&&imgLimits.maxCount)||0}
 async function addFiles(list){
  for(const f of [...list]){
@@ -485,7 +730,60 @@ async function readPdf(a){
   if(a.texto.length<300&&imgLimits){for(let i=1;i<=Math.min(doc.numPages,4);i++){const pg=await doc.getPage(i);const v=pg.getViewport({scale:1});const sc=Math.min(2,1400/Math.max(v.width,v.height));const vp=pg.getViewport({scale:sc});const cv=document.createElement("canvas");cv.width=vp.width;cv.height=vp.height;await pg.render({canvasContext:cv.getContext("2d"),viewport:vp}).promise;const bl=await new Promise(r=>cv.toBlob(r,"image/jpeg",.85));if(bl)a.paginas.push(bl)}}
   if(!a.texto&&!a.paginas.length)toast("Não consegui ler esse PDF. Descreva por escrito.")}
  catch(e){toast("Não consegui abrir esse PDF")}
- a.lendo=false;paintFiles()}
+ a.lendo=false;(a.repaint||paintFiles)()}
+
+
+/* ---------- Resumo do cliente e conteúdos definidos ---------- */
+let anexosResumo=[];const FMT_CT=["Reels","Estático","Carrossel"];let ctImgs={};
+function addFilesTo(arr,list,repaint){
+ for(const f of [...list]){const id=Math.random().toString(36).slice(2);
+  if(f.type==="application/pdf"||/\.pdf$/i.test(f.name)){const a={id,name:f.name,kind:"pdf",blob:f,texto:"",paginas:[],lendo:true,repaint};arr.push(a);readPdf(a)}
+  else if(/^image\//.test(f.type)){
+   if(!imgLimits){toast("Imagens só funcionam com a página aberta no Claude");continue}
+   if(!imgLimits.mediaTypes.includes(f.type)){toast("Use JPG, PNG, WebP ou GIF");continue}
+   if(f.size>imgLimits.maxInputBytes){toast("Imagem grande demais");continue}
+   arr.push({id,name:f.name,kind:"img",blob:f,url:URL.createObjectURL(f)})}
+  else toast("Envie imagens ou PDF")}
+ repaint()}
+function filesHTML(arr,grp){return arr.map(a=>`<div class="file">${a.kind==="img"?`<img src="${a.url}" alt="">`:`<span class="ext">PDF</span><span class="fn">${esc(a.lendo?"Lendo…":a.name)}</span>`}<button type="button" class="rm" data-rmf="${grp}" data-id="${a.id}" aria-label="Remover ${esc(a.name)}">✕</button></div>`).join("")}
+function soltarArquivos(arr,id){const a=arr.find(x=>x.id===id);if(a&&a.url)URL.revokeObjectURL(a.url);return arr.filter(x=>x!==a)}
+function ligarDrop(dz,onFiles){["dragenter","dragover"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add("over")}));["dragleave","drop"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove("over")}));dz.addEventListener("drop",e=>onFiles(e.dataTransfer.files))}
+function paintResumo(){const box=$("#filesResumo");box.hidden=!anexosResumo.length;box.innerHTML=filesHTML(anexosResumo,"resumo");
+ box.querySelectorAll("[data-rmf]").forEach(b=>b.onclick=()=>{anexosResumo=soltarArquivos(anexosResumo,b.dataset.id);paintResumo()});paintPerfilHint()}
+$("#fResumo").onchange=()=>{addFilesTo(anexosResumo,$("#fResumo").files,paintResumo);$("#fResumo").value=""};
+ligarDrop($("#dropResumo"),fs=>addFilesTo(anexosResumo,fs,paintResumo));
+
+form.conteudos=[];
+function minFixo(f){return (form.conteudos||[]).filter(c=>c.formato===f).length}
+function garantirFixos(){let mudou=false;FMT_CT.forEach(f=>{const m=minFixo(f);if(form.mix[f]<m){form.mix[f]=m;mudou=true}});if(mudou){paintMix();updateTotal()}}
+function ctResumoTxt(){const el=$("#ctTxt");const n=form.conteudos.length;el.hidden=!n;if(!n)return;
+ const tot=totalPosts();el.textContent=`${n} ${n===1?"conteúdo definido por você":"conteúdos definidos por você"} · o Claude cria os outros ${Math.max(0,tot-n)}`}
+function novoConteudo(){form.conteudos.push({id:"c"+Math.random().toString(36).slice(2,8),tema:"",instr:"",formato:"Carrossel",arquivos:[]});garantirFixos();paintConteudos();
+ const ult=$("#conteudos").lastElementChild;if(ult){const t=ult.querySelector("[data-k=tema]");t&&t.focus()}}
+function paintConteudos(){const box=$("#conteudos");const acc=imgLimits?"image/jpeg,image/png,image/webp,image/gif,application/pdf":"application/pdf";
+ box.innerHTML=form.conteudos.map((c,i)=>`<div class="ct" data-ct="${c.id}">
+  <div class="ct-top"><span class="ct-n"><i class="dot" style="background:${FCOLOR[c.formato]}"></i>Conteúdo ${i+1}</span><button type="button" class="ct-rm" data-ctrm>Remover</button></div>
+  <div class="seg" role="group" aria-label="Formato do conteúdo ${i+1}">${FMT_CT.map(f=>`<button type="button" data-fmt="${f}" aria-pressed="${c.formato===f}">${f}</button>`).join("")}</div>
+  <input type="text" data-k="tema" placeholder="Tema do conteúdo" value="${esc(c.tema)}" aria-label="Tema do conteúdo ${i+1}">
+  <textarea data-k="instr" placeholder="Instrução: o que mostrar, o que falar, referência, CTA…" aria-label="Instrução do conteúdo ${i+1}">${esc(c.instr)}</textarea>
+  <label class="drop"><input type="file" multiple accept="${acc}" data-ctf><b>Subir arquivos</b><span>Referências, fotos, roteiro ou PDF deste conteúdo.</span></label>
+  ${c.arquivos.length?`<div class="files">${filesHTML(c.arquivos,c.id)}</div>`:""}
+ </div>`).join("");
+ box.querySelectorAll(".ct").forEach(el=>{const c=form.conteudos.find(x=>x.id===el.dataset.ct);if(!c)return;
+  const rp=()=>paintConteudos();
+  el.querySelectorAll("[data-k]").forEach(inp=>inp.oninput=()=>{c[inp.dataset.k]=inp.value});
+  el.querySelectorAll("[data-fmt]").forEach(b=>b.onclick=()=>{c.formato=b.dataset.fmt;garantirFixos();rp()});
+  el.querySelector("[data-ctrm]").onclick=()=>{c.arquivos.forEach(a=>a.url&&URL.revokeObjectURL(a.url));form.conteudos=form.conteudos.filter(x=>x!==c);rp()};
+  const fi=el.querySelector("[data-ctf]");fi.onchange=()=>{addFilesTo(c.arquivos,fi.files,rp);fi.value=""};
+  ligarDrop(el.querySelector(".drop"),fs=>addFilesTo(c.arquivos,fs,rp));
+  el.querySelectorAll("[data-rmf]").forEach(b=>b.onclick=()=>{c.arquivos=soltarArquivos(c.arquivos,b.dataset.id);rp()})});
+ ctResumoTxt()}
+$("#ctAdd").onclick=novoConteudo;
+function blobsDe(arr){const o=[];arr.forEach(a=>{if(a.kind==="img")o.push(a.blob);else o.push(...(a.paginas||[]))});return o}
+function aplicarFixos(posts,cts){(cts||[]).forEach(c=>{let x=posts.find(y=>y.fixo===c.id&&y.formato===c.formato);
+  if(!x)x=posts.find(y=>y.formato===c.formato&&!(cts||[]).some(k=>k.id===y.fixo&&y.fixo!==c.id)&&!y._fixado);
+  if(!x)return;x.fixo=c.id;x._fixado=true;if(c.tema)x.tema=c.tema;if(c.instr)x.instrucao=c.instr});
+ posts.forEach(y=>{delete y._fixado;if(y.fixo&&!(cts||[]).some(c=>c.id===y.fixo))delete y.fixo})}
 
 /* Perfil salvo do cliente */
 function slugC(n){return slug(n||"")||"cliente"}
@@ -503,17 +801,19 @@ function preencherCliente(){const nome=$("#fCliente").value.trim();const n=nome.
  if(!$("#fSobre").value&&c&&c.sobre)$("#fSobre").value=c.sobre;
  if(!$("#fTom").value&&b.tom)$("#fTom").value=b.tom;if(!$("#fPublico").value&&b.publico)$("#fPublico").value=b.publico;if(!$("#fEvitar").value&&b.evitar)$("#fEvitar").value=b.evitar;
  if(!form.temas.length&&Array.isArray(b.temas)&&b.temas.length){form.temas=[...b.temas];paintTemas()}
- if(Array.isArray(b.semana)&&b.semana.length&&!preencherCliente.tocou){form.semana=[...b.semana];datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()}
+ if(!preencherCliente.tocou&&(b.freq==="intervalo"||Array.isArray(b.semana)&&b.semana.length)){if(Array.isArray(b.semana)&&b.semana.length)form.semana=[...b.semana];form.freq=b.freq==="intervalo"?"intervalo":"semana";form.intervalo=+b.intervalo||2;datasPelaSemana();fitMixToDatas();paintFreq();updateTotal()}
  paintPerfilHint()}
-$("#fCliente").addEventListener("change",preencherCliente);
+$("#fCliente").addEventListener("change",()=>{preencherCliente();renderQp()});
 semBox.addEventListener("click",()=>{preencherCliente.tocou=true});
 $("#miniCal").addEventListener("click",()=>{preencherCliente.tocou=true});
 
 datasPelaSemana();fitMixToDatas();paintFreq();updateTotal();
 
 /* ---------- Tabs ---------- */
-function showView(v){$("#viewNova").hidden=v!=="nova";$("#hero").hidden=v!=="nova";$("#viewSalvas").hidden=v!=="salvas";$("#tabNova").setAttribute("aria-pressed",v==="nova");$("#tabSalvas").setAttribute("aria-pressed",v==="salvas");if(v==="salvas")renderSaved();window.scrollTo({top:0})}
-$("#tabNova").onclick=()=>showView("nova");$("#tabSalvas").onclick=()=>showView("salvas");
+function showView(v){$("#viewNova").hidden=v!=="nova";$("#hero").hidden=v!=="nova";$("#viewSalvas").hidden=v!=="salvas";$("#viewClientes").hidden=v!=="clientes";
+ ["nova","clientes","salvas"].forEach(k=>$("#tab"+k[0].toUpperCase()+k.slice(1)).setAttribute("aria-pressed",v===k));
+ if(v==="salvas")renderSaved();if(v==="clientes")renderClientes();window.scrollTo({top:0})}
+$("#tabNova").onclick=()=>showView("nova");$("#tabSalvas").onclick=()=>showView("salvas");$("#tabClientes").onclick=()=>{pastaAberta=null;showView("clientes")};
 
 /* ---------- Helpers ---------- */
 function daysIn(m,y){return new Date(y,m+1,0).getDate()}
@@ -529,31 +829,42 @@ function renderResult(progress){
  if(!p){r.innerHTML=`<div class="panel empty-state"><h3>Nenhuma pauta aberta</h3><p>Preencha o briefing ao lado e toque em Gerar pauta.</p></div>`;return}
  const mesNome=MESES[p.mes];
  const counts=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(c=>c[1]);
- let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow">${esc(p.arroba||p.nicho||"Pauta")}${p.exemplo?'<span class="tag">Exemplo</span>':""}</p><h2>${esc(p.cliente)} · ${mesNome} ${p.ano}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
- <div class="actions">${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${downloads&&p.posts.length?`<button class="btn ghost" id="dlMd" type="button">Baixar .md</button>`:""}${!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
- <div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
+ let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow"><span class="eb">${esc(p.arroba||p.nicho||"Pauta")}</span><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${p.exemplo?'<span class="tag">Exemplo</span>':""}${!modoCliente&&!p.exemplo?statusChip(p):""}</p><h2>${esc(p.cliente)} · ${mesNome} ${p.ano}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
+ <div class="actions">${!modoCliente&&dono&&artifactCap&&db&&!p.exemplo&&!busy&&p.posts.length?`<button class="btn lib" id="libBtn" type="button">Liberar para o cliente</button>`:""}${downloads&&p.posts.length&&!busy?`<button class="btn ghost" id="dlPdf" type="button">Baixar PDF</button><button class="btn ghost" id="dlHtml" type="button">Baixar HTML</button>`:""}${!modoCliente&&downloads&&!p.exemplo&&p.posts.length&&!busy?`<button class="btn ghost" id="dlPortal" type="button">Arquivo para o portal</button>`:""}${!modoCliente&&!p.exemplo&&!busy&&sample&&p.posts.some(detailed)?`<button class="btn ghost" id="humAll" type="button">Humanizar tudo</button>`:""}${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${!modoCliente&&!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
+ ${modoCliente&&clientePautas.length>1?`<div class="months" role="group" aria-label="Escolher mês">${clientePautas.map((x,i)=>`<button type="button" data-mes="${i}" aria-pressed="${x===p}">${MESES[x.mes]} ${x.ano}</button>`).join("")}</div>`:""}<div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
+ if(modoCliente)html+=respostaHTML(p);
+ html+=calStatusHTML(p);
  if(progress)html+=`<div class="panel progress"><div class="pl">${esc(progress.label)}<span>${esc(progress.detail||"")}</span></div><div class="track"><i style="width:${Math.round(progress.pct*100)}%"></i></div></div>`;
  const pf=p.perfil;
  if(pf&&(pf.resumo||(pf.produtos||[]).length)){const li=a=>`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
-  html+=`<div class="panel card"><h3>Sobre o cliente</h3><p class="lead">${esc(pf.resumo)}</p><div class="facts">
+  html+=`<div class="panel card"><h3>${modoCliente?"Como entendemos a sua marca":"Sobre o cliente"}</h3><p class="lead">${esc(pf.resumo)}</p><div class="facts">
   ${(pf.produtos||[]).length?`<div class="fact"><h4>Produtos e serviços</h4>${li(pf.produtos.slice(0,6))}</div>`:""}
   ${pf.publico?`<div class="fact"><h4>Público</h4><p>${esc(pf.publico)}</p></div>`:""}
   ${pf.tom?`<div class="fact"><h4>Tom de voz</h4><p>${esc(pf.tom)}</p></div>`:""}
   ${(pf.diferenciais||[]).length?`<div class="fact"><h4>Diferenciais</h4>${li(pf.diferenciais.slice(0,5))}</div>`:""}
   ${pf.visual?`<div class="fact"><h4>Identidade visual</h4><p>${esc(pf.visual)}</p></div>`:""}
-  ${pf.cuidados?`<div class="fact"><h4>Cuidados</h4><p>${esc(pf.cuidados)}</p></div>`:""}</div></div>`}
+  ${pf.cuidados&&!modoCliente?`<div class="fact"><h4>Cuidados</h4><p>${esc(pf.cuidados)}</p></div>`:""}</div></div>`}
  const e=p.estrategia;
  if(e){const tm=(p.briefing&&p.briefing.temas)||[];html+=`<div class="panel card"><h3>Estratégia</h3><p class="lead">${esc(e.resumo)}</p><div class="pillars">${(e.pilares||[]).map(pl=>`<button type="button" class="pillar" data-pilar="${esc(pl.nome)}" aria-pressed="${filtroPilar===pl.nome}"><span class="pt">${esc(pl.nome)}<span class="pct">${pl.pct}%</span></span><span class="bar"><i style="width:${Math.min(100,pl.pct)}%"></i></span><p>${esc(pl.descricao)}</p></button>`).join("")}</div>
  <div class="meta">${e.frequencia?`<span><b>Frequência</b> ${esc(e.frequencia)}</span>`:""}${(e.datas||[]).length?`<span><b>Datas</b> ${(e.datas||[]).map(d=>`${d.dia}/${p.mes+1} ${esc(d.nome)}`).join(" · ")}</span>`:""}</div>${tm.length?`<div class="temas-meta">${tm.map(t=>`<span class="tag">${esc(t)}</span>`).join("")}</div>`:""}</div>`;
   html+=calendarHTML(p);
   html+=postsHTML(p)}
  r.innerHTML=html;
+ bindCalStatus(p);
  r.querySelectorAll(".pillar").forEach(b=>b.onclick=()=>{filtroPilar=filtroPilar===b.dataset.pilar?null:b.dataset.pilar;renderResult(progress)});
  r.querySelectorAll("[data-post]").forEach(b=>b.onclick=()=>openPost(b.dataset.post));
  r.querySelectorAll("[data-filtro]").forEach(b=>b.onclick=()=>{filtroFormato=b.dataset.filtro;renderResult(progress)});
  const ca=$("#copyAll");if(ca)ca.onclick=()=>copy(toMarkdown(p));
- const dl=$("#dlMd");if(dl)dl.onclick=async()=>{try{await downloads.save({filename:`pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}.md`,data:toMarkdown(p)})}catch(err){if(err&&err.code!=="cancelled")toast("Não foi possível baixar")}};
+ const ha=$("#humAll");if(ha)ha.onclick=()=>humanizarTodos();
+ if(!modoCliente&&db&&!p.exemplo)carregarArtes(p);
+ const dh=$("#dlHtml");if(dh)dh.onclick=()=>baixar(`${nomeArquivo(p)}.html`,()=>pautaHTML(p),dh);
+ const dp=$("#dlPdf");if(dp)dp.onclick=()=>baixar(`${nomeArquivo(p)}.pdf`,()=>pautaPDF(p),dp);
+ /* The external client portal (portal/painel.html) imports this file */
+ const dpo=$("#dlPortal");if(dpo)dpo.onclick=()=>baixar(`portal-${nomeArquivo(p)}.json`,()=>JSON.stringify(limpar(p)),dpo);
+ if(modoCliente)bindResposta(p);
  const del=$("#delBtn");if(del)del.onclick=()=>confirmDelete(del,p);
+ const lib=$("#libBtn");if(lib)lib.onclick=()=>liberar(p,lib);
+ r.querySelectorAll("[data-mes]").forEach(b=>b.onclick=()=>{current=clientePautas[+b.dataset.mes];filtroFormato="Todos";filtroPilar=null;renderResult();window.scrollTo({top:0})});
 }
 function confirmDelete(btn,p){if(btn.dataset.armed){deletePauta(p);return}btn.dataset.armed="1";btn.textContent="Toque para confirmar";setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.textContent="Excluir"}},3500)}
 function calendarHTML(p){
@@ -569,11 +880,11 @@ function postsHTML(p){
  let list=sorted(p).filter(x=>(filtroFormato==="Todos"||x.formato===filtroFormato)&&(!filtroPilar||x.pilar===filtroPilar));
  return `<div class="panel card"><div class="toolbar"><h3>Posts</h3><div class="seg" role="group" aria-label="Filtrar por formato">${["Todos",...present].map(f=>`<button type="button" data-filtro="${f}" aria-pressed="${filtroFormato===f}">${f}</button>`).join("")}</div></div>
  ${filtroPilar?`<p class="lead">Pilar: ${esc(filtroPilar)}</p>`:""}
- <div class="posts">${list.map(x=>`<button type="button" class="post" data-post="${x.id}"><span class="pm"><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${x.formato} · ${DIAS_C[dow(x.dia,p.mes,p.ano)]}, ${x.dia}/${p.mes+1} · ${esc(x.pilar)}</span><h4>${esc(x.titulo||x.tema)}</h4><p class="${detailed(x)?"":"pending"}">${esc(detailed(x)?x.descricao||(x.ganchos||[])[0]||x.objetivo:"Escrevendo o conteúdo…")}</p></button>`).join("")||`<p class="lead">Nenhum post com esse filtro.</p>`}</div></div>`}
+ <div class="posts">${list.map(x=>`<button type="button" class="post" data-post="${x.id}"><span class="pm"><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${x.formato} · ${DIAS_C[dow(x.dia,p.mes,p.ano)]}, ${x.dia}/${p.mes+1} · ${esc(x.pilar)}${x.fixo?` · <b style="color:var(--accent);font-weight:600">seu conteúdo</b>`:""}${badgeArte(p,x)}</span><h4>${esc(x.titulo||x.tema)}</h4><p class="${detailed(x)?"":"pending"}">${esc(detailed(x)?x.descricao||(x.ganchos||[])[0]||x.objetivo:"Escrevendo o conteúdo…")}</p></button>`).join("")||`<p class="lead">Nenhum post com esse filtro.</p>`}</div></div>`}
 
 /* ---------- Sheet ---------- */
-function openPost(id){openId=id;renderSheet();$("#scrim").hidden=false;document.body.style.overflow="hidden";setTimeout(()=>{const x=$("#sheet .x");x&&x.focus()},30)}
-function closeSheet(){$("#scrim").hidden=true;document.body.style.overflow="";openId=null}
+function openPost(id){openId=id;fmtEscolha=null;renderSheet();$("#scrim").hidden=false;document.body.style.overflow="hidden";setTimeout(()=>{const x=$("#sheet .x");x&&x.focus()},30)}
+function closeSheet(){fmtEscolha=null;$("#scrim").hidden=true;document.body.style.overflow="";openId=null}
 $("#scrim").addEventListener("click",e=>{if(e.target.id==="scrim")closeSheet()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&openId)closeSheet()});
 function renderSheet(){
@@ -583,6 +894,7 @@ function renderSheet(){
  if(!detailed(x)){body=`<div class="sec"><p class="lead">${busy?"Este post ainda está sendo escrito. Ele aparece aqui assim que ficar pronto.":"O conteúdo deste post não foi gerado. Use Refazer post abaixo."}</p></div>`}
  else{
   if(x.descricao)body+=`<div class="sec"><h5>Descrição do conteúdo <button type="button" data-copy="descricao">Copiar</button></h5><p class="desc">${esc(x.descricao)}</p></div>`;
+  if(x.fixo&&x.instrucao)body+=`<div class="sec"><h5>Sua instrução</h5><p style="margin:0">${esc(x.instrucao)}</p></div>`;
   body+=`<div class="sec kv"><div><b>Objetivo</b><span>${esc(x.objetivo)}</span></div>${x.horario?`<div><b>Quando postar</b><span>${esc(x.horario)}</span></div>`:""}${x.metrica?`<div><b>O que medir</b><span>${esc(x.metrica)}</span></div>`:""}</div>`;
   if((x.producao||[]).length)body+=`<div class="sec"><h5>Como produzir</h5><ul class="check">${x.producao.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div>`;
   if(x.visual)body+=`<div class="sec"><h5>Direção visual</h5><p style="margin:0">${esc(x.visual)}</p></div>`;
@@ -595,13 +907,18 @@ function renderSheet(){
   body+=`<div class="sec"><h5>CTA</h5><p style="margin:0">${esc(x.cta)}</p></div>`;
   if(x.hashtags&&x.hashtags.length)body+=`<div class="sec"><h5>Hashtags</h5><div class="tags">${x.hashtags.map(h=>`<span>${esc(h)}</span>`).join("")}</div></div>`;
  }
- if(!p.exemplo&&!busy)body+=`<div class="sec"><h5>Refazer post</h5><div class="redo"><input type="text" id="redoTxt" placeholder="Opcional: o que mudar (ex.: mais divertido)"><button type="button" class="btn ghost" id="redoBtn">Refazer</button></div><p class="note err" id="redoErr" hidden></p></div>`;
- $("#sheet").innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow"><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${x.formato} · ${esc(x.pilar)}</p><h3 id="shTitle">${esc(x.titulo||x.tema)}</h3><p class="sub" style="margin:.25rem 0 0;color:var(--fg-2);font-size:.875rem">${date}</p></div><button type="button" class="x" aria-label="Fechar">✕</button></div>
+ if(!p.exemplo&&!modoCliente&&db)body+=arteHTML(p,x);
+ if(!p.exemplo&&!busy&&!modoCliente){const alvo=fmtEscolha&&fmtEscolha!==x.formato?fmtEscolha:null;
+  body+=`<div class="sec"><h5>Mudar formato</h5><div class="fmtsw" role="group" aria-label="Formato do post">${FORMATOS.map(f=>`<button type="button" data-fmt="${f}" class="${f===x.formato?"atual":""}" aria-pressed="${f===(alvo||x.formato)}"><i class="dot" style="background:${FCOLOR[f]}"></i>${f}${f===x.formato?` <span class="now">atual</span>`:""}</button>`).join("")}</div>
+  ${alvo?`<p class="fmt-hint">O post vira ${alvo} com o mesmo tema, pilar e data. O Claude reescreve o conteúdo inteiro para o novo formato${alvo==="Carrossel"?" (slides)":alvo==="Reels"?" (roteiro com minutagem)":alvo==="Estático"?" (frase e direção da arte)":" (telas dos Stories)"}.</p><div class="fmt-act"><input type="text" id="fmtTxt" placeholder="Opcional: o que manter ou mudar"><button type="button" class="btn ghost" id="fmtBtn">Mudar para ${alvo}</button></div>`:`<p class="fmt-hint">Escolha outro formato para reescrever este post.</p>`}<p class="note err" id="fmtErr" hidden></p></div>`}
+ if(!p.exemplo&&!busy&&!modoCliente&&detailed(x))body+=`<div class="sec"><h5>Deixar mais humano</h5><div class="hum"><p>${x.humanizado?"Este post já foi humanizado. Pode passar de novo para soltar ainda mais o texto.":"Reescreve ganchos, slides, roteiro, legenda e CTA sem cara de IA, no tom do cliente. Fatos e estrutura continuam iguais."}</p>${antesHumano.has(x.id)?`<button type="button" class="btn link" id="humUndo">Desfazer</button>`:""}<button type="button" class="btn ghost" id="humBtn">Humanizar</button></div></div>`;
+ if(!p.exemplo&&!busy&&!modoCliente)body+=`<div class="sec"><h5>Refazer post</h5><div class="redo"><input type="text" id="redoTxt" placeholder="Opcional: o que mudar (ex.: mais divertido)"><button type="button" class="btn ghost" id="redoBtn">Refazer</button></div><p class="note err" id="redoErr" hidden></p></div>`;
+ $("#sheet").innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow"><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${x.formato} · ${esc(x.pilar)}${x.fixo?`<span class="tag hum-tag">Seu conteúdo</span>`:""}${x.humanizado?`<span class="tag hum-tag">Humanizado</span>`:""}</p><h3 id="shTitle">${esc(x.titulo||x.tema)}</h3><p class="sub" style="margin:.25rem 0 0;color:var(--fg-2);font-size:.875rem">${date}</p></div><button type="button" class="x" aria-label="Fechar">✕</button></div>
  <div class="sh-body">${body}</div>
  <div class="sh-nav"><button type="button" class="btn link" id="prevP" ${i===0?"disabled":""}>‹ Anterior</button><button type="button" class="btn ghost" id="copyPost" ${detailed(x)?"":"disabled"}>Copiar post</button><button type="button" class="btn link" id="nextP" ${i===list.length-1?"disabled":""}>Próximo ›</button></div>`;
  $("#sheet .x").onclick=closeSheet;
- $("#prevP").onclick=()=>{if(i>0){openId=list[i-1].id;renderSheet();$("#sheet").scrollTop=0}};
- $("#nextP").onclick=()=>{if(i<list.length-1){openId=list[i+1].id;renderSheet();$("#sheet").scrollTop=0}};
+ $("#prevP").onclick=()=>{if(i>0){openId=list[i-1].id;fmtEscolha=null;renderSheet();$("#sheet").scrollTop=0}};
+ $("#nextP").onclick=()=>{if(i<list.length-1){openId=list[i+1].id;fmtEscolha=null;renderSheet();$("#sheet").scrollTop=0}};
  $("#copyPost").onclick=()=>copy(postMd(x,p));
  $("#sheet").querySelectorAll("[data-copy]").forEach(b=>b.onclick=()=>{const k=b.dataset.copy;
   if(k==="slides")copy(x.slides.map((s,j)=>`${j+1}. ${s.titulo}\n${s.texto}`).join("\n\n"));
@@ -610,7 +927,159 @@ function renderSheet(){
   if(k==="descricao")copy(x.descricao);
   if(k==="legenda")copy(x.legenda+(x.hashtags&&x.hashtags.length?"\n\n"+x.hashtags.join(" "):""))});
  const rb=$("#redoBtn");if(rb)rb.onclick=()=>redoPost(x,$("#redoTxt").value.trim(),rb);
+ $("#sheet").querySelectorAll("[data-fmt]").forEach(b=>b.onclick=()=>{const f=b.dataset.fmt;fmtEscolha=f===x.formato?null:f;const st=$("#sheet").scrollTop;renderSheet();$("#sheet").scrollTop=st;const t=$("#fmtTxt");t&&t.focus({preventScroll:true})});
+ const fb=$("#fmtBtn");if(fb)fb.onclick=()=>mudarFormato(x,fmtEscolha,$("#fmtTxt").value.trim(),fb);
+ const hb=$("#humBtn");if(hb)hb.onclick=()=>humanizarPost(x,hb);
+ const hu=$("#humUndo");if(hu)hu.onclick=()=>desfazerHumano(x);
+ bindArte(p,x);
 }
+
+
+/* ---------- Humanizar: mesmas regras da skill humanizar-conteudo-isadsign ---------- */
+const HUMANIZAR=`REGRAS PARA HUMANIZAR O TEXTO
+- Escreva como uma pessoa de verdade do negócio falaria com a cliente no direct: natural, específico, sem cara de texto de IA.
+- Frases de tamanhos variados, muitas curtas. Uma ideia por frase. Parágrafos de 1 a 3 linhas.
+- Corte clichês e muletas de IA: "descubra", "transforme", "eleve", "potencialize", "mergulhe", "jornada", "no mundo de hoje", "não é apenas X, é Y", "o segredo é", "imagine só", "você sabia que…" repetido, tríades de adjetivos, perguntas retóricas em série, travessão (—) em toda frase, emoji em toda linha, caixa alta sem motivo, exclamação em excesso.
+- Troque o genérico pelo concreto: um detalhe real do produto, uma situação do dia a dia do público, um número, um exemplo, uma frase que a cliente realmente ouviria.
+- Use o tom de voz do cliente. Se o tom permitir, use o português falado ("pra", "tá", "a gente"), sem gíria forçada.
+- Pode ter opinião e humor leve quando combinar com a marca. Nada de entusiasmo exagerado nem promessa milagrosa.
+- CTA como conversa ("me conta aqui nos comentários…", "me chama no direct que eu te explico…"), nunca ordem fria.
+- Emojis: no máximo 1 por parágrafo e só quando somam sentido.
+- NÃO mude fatos, produtos, preços, datas, nomes, a estrutura do post nem a quantidade de slides, cenas ou telas. Mantenha o tamanho aproximado de cada texto.`;
+const antesHumano=new Map();
+function textosPost(x){const o={id:x.id,ganchos:x.ganchos||[],legenda:x.legenda||"",cta:x.cta||""};
+ if(x.slides)o.slides=x.slides.map(s=>({titulo:s.titulo||"",texto:s.texto||""}));
+ if(x.roteiro)o.roteiro=x.roteiro.map(r=>({fala:r.fala||"",texto_tela:r.texto_tela||""}));
+ if(x.arte)o.arte_frase=x.arte.frase||"";
+ if(x.telas)o.telas=x.telas.map(t=>({texto:t.texto||""}));return o}
+function aplicarHumano(x,h){if(!h)return;const S=v=>typeof v==="string"&&v.trim()?v:null;
+ if(!antesHumano.has(x.id))antesHumano.set(x.id,JSON.parse(JSON.stringify({ganchos:x.ganchos,legenda:x.legenda,cta:x.cta,slides:x.slides,roteiro:x.roteiro,arte:x.arte,telas:x.telas,humanizado:!!x.humanizado})));
+ if(Array.isArray(h.ganchos)&&h.ganchos.filter(S).length)x.ganchos=h.ganchos.filter(S);
+ if(S(h.legenda))x.legenda=h.legenda;if(S(h.cta))x.cta=h.cta;
+ const L=(a,i)=>Array.isArray(a)&&a[i]||{};
+ if(x.slides&&Array.isArray(h.slides))x.slides=x.slides.map((s,i)=>({...s,titulo:S(L(h.slides,i).titulo)||s.titulo,texto:S(L(h.slides,i).texto)||s.texto}));
+ if(x.roteiro&&Array.isArray(h.roteiro))x.roteiro=x.roteiro.map((r,i)=>({...r,fala:S(L(h.roteiro,i).fala)||r.fala,texto_tela:typeof L(h.roteiro,i).texto_tela==="string"?L(h.roteiro,i).texto_tela:r.texto_tela}));
+ if(x.arte&&S(h.arte_frase))x.arte={...x.arte,frase:h.arte_frase};
+ if(x.telas&&Array.isArray(h.telas))x.telas=x.telas.map((t,i)=>({...t,texto:S(L(h.telas,i).texto)||t.texto}));
+ x.humanizado=true}
+async function humanizarLote(p,lista){const pf=p.perfil||{},b=p.briefing||{};
+ const prompt=`Você é redatora de social media da agência @isadsign.co e vai deixar textos de Instagram mais humanos.
+
+${HUMANIZAR}
+
+CLIENTE: ${p.cliente}${p.nicho?" · "+p.nicho:""}
+${pf.tom?"Como o cliente fala: "+pf.tom+"\n":""}${b.tom?"Tom pedido: "+b.tom+"\n":""}${pf.publico||b.publico?"Público: "+(pf.publico||b.publico)+"\n":""}${b.evitar?"Evitar: "+b.evitar+"\n":""}
+TEXTOS PARA HUMANIZAR:
+${JSON.stringify({posts:lista.map(textosPost)})}
+
+Devolva SOMENTE {"posts":[...]} com os mesmos ids, as mesmas chaves e a mesma quantidade de itens em cada lista, só com os textos reescritos.`;
+ const r=await sample.json(prompt,{modelTier:"default",cache:false});return (r&&r.posts)||[]}
+async function humanizarPost(x,btn){if(busy||!sample)return;btn.disabled=true;btn.textContent="Humanizando…";
+ try{const hs=await humanizarLote(current,[x]);const h=hs.find(y=>y&&y.id===x.id)||hs[0];if(!h)throw {code:"invalid_json"};aplicarHumano(x,h);await savePauta(current);renderResult();renderSheet();toast("Post humanizado")}
+ catch(err){toast(errMsg(err));btn.disabled=false;btn.textContent="Humanizar"}}
+async function desfazerHumano(x){const a=antesHumano.get(x.id);if(!a)return;["ganchos","legenda","cta","slides","roteiro","arte","telas"].forEach(k=>{if(a[k]===undefined)delete x[k];else x[k]=a[k]});x.humanizado=a.humanizado;antesHumano.delete(x.id);await savePauta(current);renderResult();renderSheet();toast("Texto anterior de volta")}
+async function humanizarTodos(){if(busy||!sample)return;const p=current;const lista=sorted(p).filter(x=>detailed(x)&&!x.humanizado);
+ if(!lista.length){toast("Todos os posts já estão humanizados");return}
+ busy=true;const bs=[];for(let i=0;i<lista.length;i+=3)bs.push(lista.slice(i,i+3));let done=0,idx=0,erro=null;const tot=lista.length;
+ const tick=()=>renderResult({label:"Humanizando os posts",detail:`${done} de ${tot}`,pct:Math.max(.03,done/tot)});tick();
+ async function w(){while(idx<bs.length&&!erro){const bt=bs[idx++];try{const hs=await humanizarLote(p,bt);bt.forEach(x=>aplicarHumano(x,hs.find(h=>h&&h.id===x.id)))}catch(e){if(e&&(e.code==="not_granted"||e.code==="rate_limited"))erro=e}done+=bt.length;tick();if(openId)renderSheet()}}
+ await Promise.all([w(),w()]);await savePauta(p);busy=false;renderResult();if(openId)renderSheet();
+ const falta=lista.filter(x=>!x.humanizado).length;toast(erro?errMsg(erro):falta?`${falta} ${falta===1?"post não foi humanizado":"posts não foram humanizados"}. Tente de novo.`:"Pauta humanizada")}
+
+/* ---------- Arte do post: upload e análise pelo Claude ---------- */
+const artesCache={};const arteNovas={};let arteBusy=false;const legAntes=new Map();const arteUltimas={};const arteInstr={};
+async function carregarArtes(p){if(!db||p.exemplo||artesCache[p.id])return;artesCache[p.id]={};
+ try{const snap=await db.collection("artes").where("pautaId","==",p.id).get();snap.docs.forEach(d=>{const a=d.data();if(a&&a.postId)artesCache[p.id][a.postId]=a});
+  if(current===p&&!busy)renderResult();if(openId)renderSheet()}catch(e){delete artesCache[p.id]}}
+function arteDoPost(p,x){return (artesCache[p.id]||{})[x.id]||null}
+const VD={"Aprovada":"ok","Pequenos ajustes":"aj","Refazer":"rf"};
+function vdClass(a){return VD[a.analise&&a.analise.veredito]||"aj"}
+function badgeArte(p,x){const a=arteDoPost(p,x);if(!a||!a.analise)return "";return `<span class="badge-arte vd ${vdClass(a)}">Arte ${a.analise.nota}/10</span>`}
+function maxArtes(){return Math.min(10,maxImgs()||0)}
+async function pdfParaImagens(file,max){const lib=await loadPdfJs();const doc=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;const out=[];
+ for(let i=1;i<=Math.min(doc.numPages,max);i++){const pg=await doc.getPage(i);const v=pg.getViewport({scale:1});const sc=Math.min(2.5,1600/Math.max(v.width,v.height));const vp=pg.getViewport({scale:sc});const cv=document.createElement("canvas");cv.width=vp.width;cv.height=vp.height;const cx=cv.getContext("2d");cx.fillStyle="#fff";cx.fillRect(0,0,cv.width,cv.height);await pg.render({canvasContext:cx,viewport:vp}).promise;const bl=await new Promise(r=>cv.toBlob(r,"image/jpeg",.9));if(bl)out.push(bl)}return out}
+async function addArtes(list){const x=current&&current.posts.find(y=>y.id===openId);if(!x||!sample)return;
+ if(!imgLimits){toast("A análise de arte funciona com a página aberta no Claude");return}
+ const arr=arteNovas[x.id]=arteNovas[x.id]||[];const max=maxArtes();
+ for(const f of [...list]){if(arr.length>=max){toast(`Até ${max} imagens por arte`);break}
+  try{let blobs=[];
+   if(f.type==="application/pdf"||/\.pdf$/i.test(f.name)){toast("Lendo o PDF…");blobs=await pdfParaImagens(f,max-arr.length)}
+   else if(/^image\//.test(f.type)){if(!imgLimits.mediaTypes.includes(f.type)){toast("Use JPG, PNG, WebP ou GIF");continue}if(f.size>imgLimits.maxInputBytes){toast("Imagem grande demais");continue}blobs=[f]}
+   else{toast("Envie imagem ou PDF");continue}
+   blobs.forEach(b=>arr.push({id:Math.random().toString(36).slice(2),blob:b,url:URL.createObjectURL(b)}))}
+  catch(e){toast("Não consegui abrir esse arquivo")}}
+ if(openId===x.id)renderSheet()}
+async function miniatura(blob,max){const bmp=await createImageBitmap(blob);const s=Math.min(1,max/Math.max(bmp.width,bmp.height));const cv=document.createElement("canvas");cv.width=Math.max(1,Math.round(bmp.width*s));cv.height=Math.max(1,Math.round(bmp.height*s));const cx=cv.getContext("2d");cx.fillStyle="#fff";cx.fillRect(0,0,cv.width,cv.height);cx.drawImage(bmp,0,0,cv.width,cv.height);return cv.toDataURL("image/jpeg",.7)}
+function limparAnalise(r){const S=v=>String(v==null?"":v).trim(),A=v=>(Array.isArray(v)?v:[]);let nota=Math.round(+r.nota);if(!(nota>=0&&nota<=10))nota=0;
+ const vd=["Aprovada","Pequenos ajustes","Refazer"].includes(S(r.veredito))?S(r.veredito):(nota>=8?"Aprovada":nota>=5?"Pequenos ajustes":"Refazer");
+ return {nota,veredito:vd,resumo:S(r.resumo),pontos_fortes:A(r.pontos_fortes).map(S).filter(Boolean),ajustes:A(r.ajustes).map(a=>({onde:S(a&&a.onde),problema:S(a&&a.problema),como:S(a&&a.como)})).filter(a=>a.problema||a.como),revisao_texto:A(r.revisao_texto).map(S).filter(Boolean),texto_na_arte:S(r.texto_na_arte),legenda_sugerida:S(r.legenda_sugerida),alt_text:S(r.alt_text),resposta_instrucao:S(r.resposta_instrucao)}}
+async function analisarArte(x,btn){const p=current;const temNovas=(arteNovas[x.id]||[]).length;const novas=temNovas?arteNovas[x.id]:(arteUltimas[x.id]||[]);if(!novas.length||arteBusy||!sample)return;
+ const instr=(arteInstr[x.id]||"").trim();
+ arteBusy=true;btn.disabled=true;btn.textContent="Analisando a arte…";const errEl=$("#arteErr");if(errEl)errEl.hidden=true;
+ try{const pf=p.perfil||{};const n=novas.length;
+  const prompt=`Você é diretora de arte e estrategista de conteúdo da agência @isadsign.co. Analise com olhar crítico e construtivo ${n===1?"a arte anexa":`as ${n} imagens anexas (na ordem dos slides ou telas)`}, feita${n===1?"":"s"} para este post do Instagram.
+
+CLIENTE: ${p.cliente}${p.arroba?" ("+p.arroba+")":""}${p.nicho?" · "+p.nicho:""}
+${pf.visual?"Identidade visual do cliente: "+pf.visual+"\n":""}${pf.tom?"Como o cliente fala: "+pf.tom+"\n":""}${pf.publico?"Público: "+pf.publico+"\n":""}
+POST PLANEJADO:
+${postMd(x,p)}
+
+Avalie:
+1. Se a arte entrega o que o post planejou (tema, gancho, slides ou telas, CTA).
+2. Leitura no celular: hierarquia, tamanho da fonte, contraste, excesso de texto, margens seguras do Instagram (corte do grid 4:5 e 3:4, áreas de interface nos Stories e Reels).
+3. Coerência com a identidade visual do cliente.
+4. Erros de português ou digitação no texto da arte.
+5. Potencial de parar o scroll e gerar salvamento ou compartilhamento.
+Seja específica: diga em qual slide ou elemento está cada ponto. Não invente o que não aparece nas imagens.
+${instr?`
+INSTRUÇÕES DA ISA PARA ESTA ANÁLISE (prioridade máxima):
+${instr}
+Siga exatamente essas instruções: analise o que ela pediu, do jeito que ela pediu. Responda a elas por completo no campo "resposta_instrucao". Os itens 1 a 5 acima viram apoio; foque os pontos fortes e os ajustes no que ela pediu. Se ela pedir para não avaliar algo, não avalie.
+`:""}
+Responda SOMENTE com JSON:
+{"resposta_instrucao":"${instr?"resposta completa e direta às instruções da Isa, organizada em parágrafos curtos":""}","nota":0,"veredito":"Aprovada|Pequenos ajustes|Refazer","resumo":"2 frases com a avaliação geral","pontos_fortes":["2 a 4 itens"],"ajustes":[{"onde":"ex.: slide 2, título","problema":"o que não funciona","como":"o que fazer, de forma prática"}],"revisao_texto":["erro encontrado → correção; lista vazia se não houver"],"texto_na_arte":"transcrição do texto que aparece na arte","legenda_sugerida":"legenda ajustada ao que a arte realmente mostra, no tom do cliente, humana e sem cara de IA, com quebras de linha, CTA e as hashtags do post","alt_text":"descrição curta da imagem para acessibilidade"}
+A nota vai de 0 a 10.`;
+  const r=await sample.json(prompt,{modelTier:"default",images:novas.map(a=>a.blob),cache:false});
+  const analise=limparAnalise(r||{});analise.instrucao=instr;if(!instr)analise.resposta_instrucao="";
+  let thumbs=await Promise.all(novas.map(a=>miniatura(a.blob,420)));
+  let doc={pautaId:p.id,postId:x.id,cliente:p.cliente,thumbs,analise,analisadoEm:new Date().toISOString()};
+  if(JSON.stringify(doc).length>230000){thumbs=await Promise.all(novas.map(a=>miniatura(a.blob,260)));doc.thumbs=thumbs}
+  (artesCache[p.id]=artesCache[p.id]||{})[x.id]=doc;
+  try{await db.collection("artes").doc(`${p.id}-${x.id}`).set(doc)}catch(e){toast("A análise saiu, mas não foi salva")}
+  if(temNovas){(arteUltimas[x.id]||[]).forEach(a=>{if(!novas.includes(a))URL.revokeObjectURL(a.url)});arteUltimas[x.id]=novas;arteNovas[x.id]=[]}arteBusy=false;renderResult();if(openId===x.id)renderSheet();toast("Arte analisada")}
+ catch(err){arteBusy=false;btn.disabled=false;btn.textContent="Analisar arte";const e2=$("#arteErr");if(e2){e2.textContent=errMsg(err).replace("gerar a pauta","analisar a arte");e2.hidden=false}}}
+function arteHTML(p,x){const a=arteDoPost(p,x),an=a&&a.analise,novas=arteNovas[x.id]||[];const li=(arr,cls)=>`<ul class="ok-list ${cls||""}">${arr.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`;
+ let h=`<div class="sec" id="arteSec"><h5>Arte do post ${an?`<span class="vd ${vdClass(a)}">${esc(an.veredito)} · ${an.nota}/10</span>`:""}</h5>`;
+ if(a&&(a.thumbs||[]).length)h+=`<div class="arte-strip">${a.thumbs.map((t,k)=>`<img src="${t}" alt="${esc(k===0&&an&&an.alt_text?an.alt_text:"Arte "+(k+1))}">`).join("")}</div>`;
+ if(an){
+  if(an.resposta_instrucao)h+=`<div class="resp-box"><b>Sua análise</b>${an.instrucao?`<p class="q">“${esc(an.instrucao)}”</p>`:""}<p class="a">${esc(an.resposta_instrucao)}</p></div>`;
+  if(an.resumo)h+=`<p class="an-lead">${esc(an.resumo)}</p>`;
+  if(an.pontos_fortes.length)h+=`<p class="an-h">O que está funcionando</p>${li(an.pontos_fortes)}`;
+  if(an.ajustes.length)h+=`<p class="an-h">Ajustes</p><div class="aj-list">${an.ajustes.map(j=>`<div class="aj-item">${j.onde?`<b>${esc(j.onde)}</b>`:""}<p>${esc(j.problema)}</p>${j.como?`<p>${esc(j.como)}</p>`:""}</div>`).join("")}</div>`;
+  if(an.revisao_texto.length)h+=`<p class="an-h">Revisão do texto</p>${li(an.revisao_texto,"fix")}`;
+  if(an.legenda_sugerida)h+=`<p class="an-h">Legenda ajustada à arte</p><div class="caption">${esc(an.legenda_sugerida)}</div><div class="an-act"><button type="button" class="btn ghost" data-an="legenda">Copiar</button>${!busy?(legAntes.has(x.id)?`<button type="button" class="btn link" data-an="voltar">Voltar à legenda anterior</button>`:`<button type="button" class="btn ghost" data-an="usar">Usar no post</button>`):""}</div>`;
+  if(an.alt_text)h+=`<p class="an-h">Texto alternativo</p><div class="an-act" style="margin:0;align-items:center"><p class="an-lead" style="flex:1 1 14rem;color:var(--fg-2)">${esc(an.alt_text)}</p><button type="button" class="btn link" data-an="alt">Copiar</button></div>`;
+  h+=`<div style="height:.9rem"></div>`}
+ const max=maxArtes();
+ if(imgLimits&&sample){
+  h+=`<label class="drop sm" for="arteFiles"><input type="file" id="arteFiles" multiple accept="${esc((imgLimits.mediaTypes||[]).join(","))},application/pdf"><b>${an?"Enviar nova versão":"Subir a arte"}</b><span>JPG, PNG ou PDF${x.formato==="Carrossel"||x.formato==="Stories"?`, com ${x.formato==="Carrossel"?"os slides":"as telas"} na ordem`:""}. Até ${max} imagens. Toque, arraste ou cole aqui.</span></label>`;
+  const ult=(arteUltimas[x.id]||[]).length;
+  if(novas.length)h+=`<div class="files">${novas.map(f=>`<div class="file"><img src="${f.url}" alt=""><button type="button" class="rm" data-arm="${f.id}" aria-label="Remover imagem">✕</button></div>`).join("")}</div>`;
+  if(novas.length||ult)h+=`<div class="field instr"><label class="lbl" for="arteInstr">O que você quer que eu analise <span style="font-weight:400">(opcional)</span></label><textarea id="arteInstr" placeholder="Ex.: veja só a legibilidade no celular e se o CTA está claro; compare com a paleta do cliente; não avalie as fotos.">${esc(arteInstr[x.id]||"")}</textarea></div><button type="button" class="btn primary arte-go" id="arteGo" ${arteBusy?"disabled":""}>${arteBusy?"Analisando…":novas.length?"Analisar arte":"Analisar de novo com essa instrução"}</button>`;
+  h+=`<p class="note err" id="arteErr" hidden></p>`}
+ else if(!an)h+=`<p class="an-lead" style="color:var(--fg-2)">Abra a página no Claude para subir e analisar a arte.</p>`;
+ return h+`</div>`}
+function bindArte(p,x){const sec=$("#arteSec");if(!sec)return;const a=arteDoPost(p,x),an=a&&a.analise;
+ const inp=$("#arteFiles");if(inp)inp.onchange=()=>{addArtes(inp.files);inp.value=""};
+ const dz=sec.querySelector(".drop");if(dz){["dragenter","dragover"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.add("over")}));["dragleave","drop"].forEach(ev=>dz.addEventListener(ev,e=>{e.preventDefault();dz.classList.remove("over")}));dz.addEventListener("drop",e=>addArtes(e.dataTransfer.files))}
+ sec.querySelectorAll("[data-arm]").forEach(b=>b.onclick=()=>{const arr=arteNovas[x.id]||[];const f=arr.find(y=>y.id===b.dataset.arm);if(f)URL.revokeObjectURL(f.url);arteNovas[x.id]=arr.filter(y=>y!==f);renderSheet()});
+ const ai=$("#arteInstr");if(ai)ai.oninput=()=>{arteInstr[x.id]=ai.value};
+ const go=$("#arteGo");if(go)go.onclick=()=>{if(ai)arteInstr[x.id]=ai.value;analisarArte(x,go)};
+ sec.querySelectorAll("[data-an]").forEach(b=>b.onclick=async()=>{const k=b.dataset.an;
+  if(k==="legenda")copy(an.legenda_sugerida);
+  if(k==="alt")copy(an.alt_text);
+  if(k==="usar"){legAntes.set(x.id,x.legenda||"");x.legenda=an.legenda_sugerida;await savePauta(current);renderSheet();toast("Legenda atualizada no post")}
+  if(k==="voltar"){x.legenda=legAntes.get(x.id);legAntes.delete(x.id);await savePauta(current);renderSheet();toast("Legenda anterior de volta")}})}
 
 /* ---------- Text export ---------- */
 function slug(s){return String(s).normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")}
@@ -637,7 +1106,7 @@ Produtos/promoções/eventos: ${b.destaques||"nenhum informado"}
 Tom de voz: ${b.tom||"adequado ao nicho"}
 Público: ${b.publico||"não informado"}
 Evitar: ${b.evitar||"nada específico"}
-${b.perfil?"\n"+perfilTexto(b.perfil):b.sobre?"\nSobre o cliente: "+b.sobre+"\n":""}`}
+${b.perfil?"\n"+perfilTexto(b.perfil):b.sobre?"\nSobre o cliente: "+b.sobre+"\n":""}${pastaTexto(b.cliente)}${b.material?"\nO QUE O MATERIAL ENVIADO MOSTRA E PEDE PARA ESTA PAUTA:\n"+b.material+"\n":""}${(b.conteudos||[]).length?"\nCONTEÚDOS JÁ DEFINIDOS PELA ISA (entram na pauta exatamente como pedidos):\n"+b.conteudos.map(c=>`- ${c.id} · ${c.formato} · tema: ${c.tema||"definido pelos arquivos"}${c.instr?" · instrução: "+c.instr:""}${c.arquivos&&c.arquivos.length?" · arquivos: "+c.arquivos.join(", "):""}${c.pdfTexto?"\n  texto do PDF: "+c.pdfTexto:""}`).join("\n")+"\n":""}${b.instr?"\nINSTRUÇÕES DA ISA (prioridade máxima: siga à risca em cada post; se conflitarem com as regras gerais, as instruções dela vencem, menos o formato do JSON, as datas e a quantidade de posts):\n"+b.instr+"\n":""}`}
 function calendarioTexto(m,y){const n=daysIn(m,y);let a=[];for(let d=1;d<=n;d++)a.push(`${d} ${DIAS[dow(d,m,y)]}`);return a.join(", ")}
 const REGRAS=`Você é estrategista de conteúdo de Instagram da agência @isadsign.co. Escreva em português do Brasil, na linguagem do público do cliente. Use o que você sabe do cliente (produtos, diferenciais, público, visual) em cada ideia: nada genérico que serviria a qualquer perfil. Ganchos variados (pergunta, erro comum, número, polêmica leve, antes/depois). No máximo 1 em cada 4 posts é venda direta. Responda SOMENTE com JSON válido, sem texto antes ou depois.`;
 
@@ -647,17 +1116,18 @@ async function lerCliente(b,imgs,pdfTexto){
 
 Cliente: ${b.cliente}${b.arroba?" ("+b.arroba+")":""}${b.nicho?"\nNicho: "+b.nicho:""}
 ${b.sobre?"Descrição escrita pela social media:\n"+b.sobre+"\n":""}${pdfTexto?"\nTexto extraído dos PDFs do cliente:\n"+pdfTexto+"\n":""}${imgs.length?`\nAs ${imgs.length} imagens anexas são prints do perfil, fotos ou páginas de material do cliente. Observe produtos, preços, linguagem das legendas, paleta, tipografia, tipo de foto e o que mais engaja.`:""}
-${perfilSalvo()&&perfilSalvo().perfil?"\nPerfil anterior (atualize com o material novo, mantenha o que continua válido):\n"+JSON.stringify(perfilSalvo().perfil)+"\n":""}
+${b.instr?"\nINSTRUÇÕES DA ISA sobre este material e a pauta:\n"+b.instr+"\n":""}${perfilSalvo()&&perfilSalvo().perfil?"\nPerfil anterior (atualize com o material novo, mantenha o que continua válido):\n"+JSON.stringify(perfilSalvo().perfil)+"\n":""}
 Responda SOMENTE com JSON:
-{"resumo":"2 a 3 frases: o que o negócio faz, onde e para quem","produtos":["produtos ou serviços principais, com preço se aparecer"],"publico":"quem compra e o que essa pessoa quer","tom":"como o cliente fala (palavras, emojis, formalidade)","diferenciais":["o que diferencia dos concorrentes"],"visual":"paleta, tipografia e estilo de foto que aparecem no material","oportunidades":["4 a 6 assuntos de conteúdo que o material sugere"],"cuidados":"o que evitar (promessas, termos proibidos, concorrentes) ou string vazia"}
+{"resumo":"2 a 3 frases: o que o negócio faz, onde e para quem","produtos":["produtos ou serviços principais, com preço se aparecer"],"publico":"quem compra e o que essa pessoa quer","tom":"como o cliente fala (palavras, emojis, formalidade)","diferenciais":["o que diferencia dos concorrentes"],"visual":"paleta, tipografia e estilo de foto que aparecem no material","oportunidades":["4 a 6 assuntos de conteúdo que o material sugere"],"cuidados":"o que evitar (promessas, termos proibidos, concorrentes) ou string vazia","material":"o que este material mostra e pede para a pauta deste mês, lido conforme as instruções da Isa: posts ou temas já definidos, referências de estilo e formato a seguir, textos e informações a aproveitar, o que evitar. 3 a 10 frases objetivas e específicas (cite o que aparece no material); string vazia se o material só descreve o cliente e não há instruções"}
 Use só o que o material mostra ou indica com clareza; quando não houver informação, deixe o campo curto em vez de inventar.`;
  const opts={modelTier:"default"};if(imgs.length)opts.images=imgs;
  const r=await sample.json(prompt,opts);
  const S=v=>String(v||"").trim(),A=v=>(Array.isArray(v)?v:[]).map(S).filter(Boolean);
- return {resumo:S(r.resumo),produtos:A(r.produtos),publico:S(r.publico),tom:S(r.tom),diferenciais:A(r.diferenciais),visual:S(r.visual),oportunidades:A(r.oportunidades),cuidados:S(r.cuidados)}}
+ return {resumo:S(r.resumo),produtos:A(r.produtos),publico:S(r.publico),tom:S(r.tom),diferenciais:A(r.diferenciais),visual:S(r.visual),oportunidades:A(r.oportunidades),cuidados:S(r.cuidados),material:S(r.material)}}
 
 /* 2. Plan the month on the chosen dates */
-async function planPauta(b){
+function totalDe(b){return FORMATOS.reduce((a,f)=>a+(b.mix[f]||0),0)}
+async function planPauta(b,imgs){
  const mixTxt=FORMATOS.filter(f=>b.mix[f]).map(f=>`${b.mix[f]} ${f}`).join(", ");
  const datas=(b.datas||[]).slice().sort((x,y)=>x-y);
  const regraDatas=datas.length?`- DATAS FIXAS DO FEED (Carrossel, Reels e Estático): use EXATAMENTE estes dias, um post de feed por dia: ${datas.map(d=>`${d} (${DIAS[dow(d,b.mes,b.ano)]})`).join(", ")}. Não use outros dias para o feed. Stories podem cair em qualquer dia.`:`- Distribua os posts no mês: não repita o mesmo formato em dois dias seguidos, espalhe pelas semanas. Stories podem cair no mesmo dia de um post de feed.`;
@@ -668,17 +1138,20 @@ ${briefingText(b)}
 CALENDÁRIO REAL DE ${MESES[b.mes].toUpperCase()} ${b.ano} (dia e dia da semana):
 ${calendarioTexto(b.mes,b.ano)}
 
-TAREFA: planeje a pauta do mês com EXATAMENTE estes posts: ${mixTxt}.
+${imgs&&imgs.length?`As ${imgs.length} imagens anexas são o material que a Isa enviou para esta pauta. Use-as como ela pediu nas instruções (referência de estilo, temas, posts a criar).
+`:""}TAREFA: planeje a pauta do mês com EXATAMENTE estes posts: ${mixTxt}.
+${(b.conteudos||[]).length?`- ${b.conteudos.length} desses posts são os CONTEÚDOS JÁ DEFINIDOS PELA ISA (lista no briefing): inclua cada um com o mesmo formato e tema, marque o campo "fixo" com o id dele (${b.conteudos.map(c=>c.id).join(", ")}) e escolha o melhor dia. Crie os outros ${Math.max(0,totalDe(b)-b.conteudos.length)} posts para completar o mês, com "fixo" vazio, sem repetir os temas definidos.`:""}
 ${regraDatas}
-- Frequência combinada: ${b.semana&&b.semana.length?`${b.semana.length}x por semana no feed (${b.semana.map(i=>DIAS[i]).join(", ")})`:"definida pelas datas acima"}.
+- Frequência combinada: ${b.freq==="intervalo"?`feed ${freqIntervaloTxt(b).toLowerCase()}`:b.semana&&b.semana.length?`${b.semana.length}x por semana no feed (${b.semana.map(i=>DIAS[i]).join(", ")})`:"definida pelas datas acima"}.
 ${b.temas&&b.temas.length?`- Cada tema pedido precisa aparecer em pelo menos um post: ${b.temas.join("; ")}. Complete com outros temas coerentes com o cliente.`:"- Escolha temas a partir do perfil e das oportunidades do cliente."}
 - Escolha de 3 a 4 pilares de conteúdo com porcentagens que somam 100.
 - Liste só datas comemorativas realmente relevantes para este nicho neste mês, com o dia correto, e aproveite as que caírem em dias de post.
 - Alterne formatos de modo que o mesmo formato não apareça em dias de feed seguidos quando der.
 
 Formato do JSON:
-{"resumo":"2 frases com a estratégia do mês","frequencia":"frase curta com dias e horários sugeridos","pilares":[{"nome":"","pct":0,"descricao":"1 frase"}],"datas":[{"dia":0,"nome":"","uso":"como usar no conteúdo"}],"posts":[{"dia":0,"formato":"Carrossel|Reels|Estático|Stories","pilar":"nome de um pilar","tema":"tema específico em até 10 palavras","objetivo":"1 frase"}]}`;
- return sample.json(prompt,{modelTier:"default"});
+{"resumo":"2 frases com a estratégia do mês","frequencia":"frase curta com dias e horários sugeridos","pilares":[{"nome":"","pct":0,"descricao":"1 frase"}],"datas":[{"dia":0,"nome":"","uso":"como usar no conteúdo"}],"posts":[{"dia":0,"formato":"Carrossel|Reels|Estático|Stories","pilar":"nome de um pilar","tema":"tema específico em até 10 palavras","objetivo":"1 frase","fixo":"id do conteúdo definido ou vazio"}]}`;
+ const opts={modelTier:"default"};if(imgs&&imgs.length){opts.images=imgs;opts.cache=false}
+ return sample.json(prompt,opts);
 }
 function detailSpec(){return `Para cada post devolva um objeto COMPLETO:
 {"id":"","titulo":"título curto",
@@ -697,7 +1170,8 @@ function detailSpec(){return `Para cada post devolva um objeto COMPLETO:
 Omita os campos slides, roteiro, arte e telas que não são do formato do post.`}
 async function detailBatch(p,batch,extra){
  const ctx=`Estratégia: ${p.estrategia.resumo} Pilares: ${p.estrategia.pilares.map(x=>x.nome).join(", ")}.`;
- const lista=batch.map(x=>`- id ${x.id} · dia ${x.dia} (${DIAS[dow(x.dia,p.mes,p.ano)]}) · ${x.formato} · pilar ${x.pilar} · tema: ${x.tema} · objetivo: ${x.objetivo}`).join("\n");
+ const ims=batch.flatMap(x=>x.fixo&&ctImgs[x.fixo]||[]).slice(0,maxImgs()||0);
+ const lista=batch.map(x=>`- id ${x.id} · dia ${x.dia} (${DIAS[dow(x.dia,p.mes,p.ano)]}) · ${x.formato} · pilar ${x.pilar} · tema: ${x.tema} · objetivo: ${x.objetivo}${x.fixo?` · CONTEÚDO DEFINIDO PELA ISA${x.instrucao?` · instrução dela (siga à risca): ${x.instrucao}`:""}`:""}`).join("\n");
  const prompt=`${REGRAS}
 
 BRIEFING
@@ -706,11 +1180,11 @@ ${ctx}
 
 POSTS PARA ESCREVER COMPLETOS:
 ${lista}
-${extra?"\nPEDIDO DE AJUSTE: "+extra+"\n":""}
+${extra?"\nPEDIDO DE AJUSTE: "+extra+"\n":""}${ims.length?`\nAs ${ims.length} imagens anexas são os arquivos que a Isa subiu para o conteúdo definido. Use o que elas mostram (referência, produto, roteiro, texto) e siga a instrução dela.\n`:""}
 ${detailSpec()}
 
 Responda com {"posts":[ ... ]} na mesma ordem e com os mesmos ids.`;
- const opts={modelTier:"default"};if(extra)opts.cache=false;
+ const opts={modelTier:"default"};if(extra)opts.cache=false;if(ims.length){opts.images=ims;opts.cache=false}
  const r=await sample.json(prompt,opts);
  return (r&&r.posts)||[];
 }
@@ -719,7 +1193,7 @@ function mergeDetail(p,d){const x=p.posts.find(y=>y.id===d.id);if(!x)return;DETA
  if(x.formato!=="Carrossel")delete x.slides;if(x.formato!=="Reels")delete x.roteiro;if(x.formato!=="Estático")delete x.arte;if(x.formato!=="Stories")delete x.telas}
 function sanitizePlan(plan,b){
  const n=daysIn(b.mes,b.ano);let posts=(plan.posts||[]).filter(x=>FORMATOS.includes(x.formato));
- const out=[];FORMATOS.forEach(f=>{let have=posts.filter(x=>x.formato===f).slice(0,b.mix[f]);
+ const out=[];FORMATOS.forEach(f=>{let have=posts.filter(x=>x.formato===f).sort((a,c)=>(c.fixo?1:0)-(a.fixo?1:0)).slice(0,b.mix[f]);
   while(have.length<b.mix[f])have.push({dia:0,formato:f,pilar:(plan.pilares&&plan.pilares[0]||{}).nome||"Geral",tema:(b.temas||[])[have.length%Math.max(1,(b.temas||[]).length)]||"Tema livre",objetivo:"Engajar o público."});out.push(...have)});
  out.forEach((x,i)=>{let d=parseInt(x.dia,10);if(!(d>=1&&d<=n))d=Math.max(1,Math.round((i+.5)*n/out.length));x.dia=d;x.id="p"+(i+1)});
  /* Keep feed posts on the chosen dates: one per date, moving strays to free dates in order */
@@ -732,32 +1206,34 @@ function sanitizePlan(plan,b){
  const datasC=(plan.datas||[]).map(d=>({dia:parseInt(d.dia,10),nome:String(d.nome||""),uso:String(d.uso||"")})).filter(d=>d.dia>=1&&d.dia<=n&&d.nome);
  return {estrategia:{resumo:String(plan.resumo||""),frequencia:String(plan.frequencia||""),pilares:pil,datas:datasC},posts:out}}
 
-function readForm(){return {cliente:$("#fCliente").value.trim(),arroba:$("#fArroba").value.trim(),nicho:$("#fNicho").value.trim(),mes:form.mes,ano:form.ano,objetivo:form.objetivo,mix:{...form.mix},semana:[...form.semana],datas:[...form.datas].sort((a,b)=>a-b),temas:[...form.temas],sobre:$("#fSobre").value.trim(),destaques:$("#fDestaques").value.trim(),tom:$("#fTom").value.trim(),publico:$("#fPublico").value.trim(),evitar:$("#fEvitar").value.trim()}}
+function readForm(){return {cliente:$("#fCliente").value.trim(),arroba:$("#fArroba").value.trim(),nicho:$("#fNicho").value.trim(),mes:form.mes,ano:form.ano,objetivo:form.objetivo,mix:{...form.mix},semana:[...form.semana],freq:form.freq,intervalo:form.intervalo,inicio:form.inicio,datas:[...form.datas].sort((a,b)=>a-b),temas:[...form.temas],sobre:$("#fSobre").value.trim(),destaques:$("#fDestaques").value.trim(),tom:$("#fTom").value.trim(),publico:$("#fPublico").value.trim(),evitar:$("#fEvitar").value.trim(),instr:$("#fInstr").value.trim(),conteudos:(form.conteudos||[]).filter(c=>c.tema.trim()||c.instr.trim()||c.arquivos.length).map(c=>({id:c.id,formato:c.formato,tema:c.tema.trim(),instr:c.instr.trim(),arquivos:c.arquivos.map(a=>a.name),pdfTexto:c.arquivos.filter(a=>a.kind==="pdf"&&a.texto).map(a=>a.texto).join("\n").slice(0,4000)}))}}
 function setNote(t,err){const n=$("#formNote");n.textContent=t;n.classList.toggle("err",!!err)}
 function errMsg(e){const c=e&&e.code;if(c==="not_granted")return"Permita que a página use o Claude para gerar a pauta.";if(c==="rate_limited")return"Muitos pedidos seguidos. Espere um minuto e tente de novo.";if(c==="invalid_json")return"A resposta veio incompleta. Tente gerar de novo.";if(c==="image_rejected")return"Uma das imagens não pôde ser lida. Troque o arquivo e tente de novo.";if(c==="prompt_too_large")return"O material ficou grande demais. Envie menos páginas de PDF.";return"Não foi possível gerar agora. Tente de novo em instantes."}
 
 $("#form").addEventListener("submit",async e=>{
  e.preventDefault();if(busy||!sample)return;
- const b=readForm();if(!b.cliente){$("#fCliente").focus();setNote("Informe o nome do cliente.",true);return}
+ garantirFixos();const b=readForm();if(!b.cliente){$("#fCliente").focus();setNote("Informe o nome do cliente.",true);return}
  if(!totalPosts())return;
- if(anexos.some(a=>a.lendo)){setNote("Espere terminar de ler o PDF.",true);return}
+ if([...anexos,...anexosResumo,...(form.conteudos||[]).flatMap(c=>c.arquivos)].some(a=>a.lendo)){setNote("Espere terminar de ler o PDF.",true);return}
  busy=true;updateTotal();$("#genBtn").textContent="Gerando…";filtroFormato="Todos";filtroPilar=null;
  current={id:"pauta-"+Date.now().toString(36),cliente:b.cliente,arroba:b.arroba,nicho:b.nicho,mes:b.mes,ano:b.ano,objetivo:b.objetivo,briefing:b,estrategia:null,posts:[],criadoEm:new Date().toISOString()};
  if(window.innerWidth<=980)$("#result").scrollIntoView({behavior:"smooth",block:"start"});
  try{
   /* Client material: new files or text update the saved profile; otherwise reuse it */
-  const max=maxImgs();let imgs=[];anexos.forEach(a=>{if(a.kind==="img")imgs.push(a.blob);else imgs.push(...a.paginas)});
+  const max=maxImgs();let imgsMat=blobsDe(anexos);let imgs=[...blobsDe(anexosResumo),...imgsMat];
   if(imgs.length>max){imgs=imgs.slice(0,max);toast(`Usei as ${max} primeiras imagens`)}
-  const pdfTexto=anexos.filter(a=>a.kind==="pdf"&&a.texto).map(a=>`[${a.name}]\n${a.texto}`).join("\n\n").slice(0,30000);
+  if(imgsMat.length>max)imgsMat=imgsMat.slice(0,max);
+  ctImgs={};(form.conteudos||[]).forEach(c=>{const bl=blobsDe(c.arquivos).slice(0,max);if(bl.length)ctImgs[c.id]=bl});
+  const pdfTexto=[...anexosResumo,...anexos].filter(a=>a.kind==="pdf"&&a.texto).map(a=>`[${a.name}]\n${a.texto}`).join("\n\n").slice(0,30000);
   const salvo=perfilSalvo();
   const novoMaterial=imgs.length||pdfTexto||(b.sobre&&(!salvo||salvo.sobre!==b.sobre));
-  if(novoMaterial){setNote("Lendo o material do cliente…");renderResult({label:"Lendo prints, PDF e descrição do cliente",pct:.03});
-   b.perfil=await lerCliente(b,imgs,pdfTexto);await saveCliente(b)}
+  if(novoMaterial){setNote("Lendo o material e as instruções…");renderResult({label:"Lendo o material enviado e as suas instruções",pct:.03});
+   const lido=await lerCliente(b,imgs,pdfTexto);b.material=lido.material;delete lido.material;b.perfil=lido;await saveCliente(b)}
   else if(salvo&&salvo.perfil)b.perfil=salvo.perfil;
   current.briefing=b;current.perfil=b.perfil||null;
   setNote("Planejando o mês…");renderResult({label:"Planejando estratégia e calendário",pct:.1});
-  const plan=await planPauta(b);const s=sanitizePlan(plan,b);current.estrategia=s.estrategia;current.posts=s.posts;
-  const order=sorted(current),size=2,batches=[];for(let i=0;i<order.length;i+=size)batches.push(order.slice(i,i+size));
+  const plan=await planPauta(b,imgsMat);const s=sanitizePlan(plan,b);aplicarFixos(s.posts,b.conteudos);current.estrategia=s.estrategia;current.posts=s.posts;
+  const order=sorted(current),batches=[];let par=[];order.forEach(x=>{if(x.fixo&&ctImgs[x.fixo])batches.push([x]);else{par.push(x);if(par.length===2){batches.push(par);par=[]}}});if(par.length)batches.push(par);
   let done=0;const total=order.length;
   const tick=()=>renderResult({label:"Escrevendo os posts",detail:`${done} de ${total}`,pct:.2+.8*done/total});
   tick();await savePauta(current);setNote("Escrevendo os posts…");
@@ -767,11 +1243,23 @@ $("#form").addEventListener("submit",async e=>{
   const missing=current.posts.filter(x=>!detailed(x)).length;
   await savePauta(current);
   setNote(missing?`${missing} ${missing===1?"post ficou":"posts ficaram"} sem conteúdo. Abra e use Refazer post.`:"Pauta pronta e salva.",!!missing);
-  if(!missing){anexos.forEach(a=>a.url&&URL.revokeObjectURL(a.url));anexos=[];paintFiles()}
+  if(!missing){[...anexos,...anexosResumo,...form.conteudos.flatMap(c=>c.arquivos)].forEach(a=>a.url&&URL.revokeObjectURL(a.url));anexos=[];anexosResumo=[];form.conteudos=[];paintFiles();paintResumo();paintConteudos()}
  }catch(err){setNote(errMsg(err),true);if(!current.estrategia){current=saved[0]||EXEMPLO}else{await savePauta(current)}}
  busy=false;$("#genBtn").textContent="Gerar pauta";updateTotal();renderResult();if(openId)renderSheet();
 });
 
+let fmtEscolha=null;
+async function mudarFormato(x,novo,extra,btn){
+ if(busy||!sample||!novo||novo===x.formato)return;
+ const p=current,antes=JSON.parse(JSON.stringify(x)),de=x.formato;
+ btn.disabled=true;btn.textContent="Reescrevendo…";const errEl=$("#fmtErr");errEl.hidden=true;
+ x.formato=novo;["slides","roteiro","arte","telas","legenda","humanizado"].forEach(k=>delete x[k]);antesHumano.delete(x.id);
+ const pedido=`MUDANÇA DE FORMATO: este post era ${de} e agora é ${novo}. Mantenha o mesmo tema, pilar, objetivo e dia, e escreva o conteúdo inteiro do zero pensado para ${novo} (descrição, produção, visual, ganchos, ${novo==="Carrossel"?"slides":novo==="Reels"?"roteiro":novo==="Estático"?"arte":"telas"}, legenda, CTA e hashtags). Não reaproveite a estrutura do ${de}.${extra?" Pedido da Isa: "+extra:""}`;
+ try{const ds=await detailBatch(p,[x],pedido);if(!ds.length)throw {code:"invalid_json"};ds.forEach(d=>mergeDetail(p,{...d,id:x.id}));
+  if(!detailed(x))throw {code:"invalid_json"};
+  await savePauta(p);fmtEscolha=null;renderResult();renderSheet();$("#sheet").scrollTop=0;
+  toast(`Post mudado para ${novo}`+(calDocs&&calDocs[p.id]?" · gere o calendário de novo":""))}
+ catch(err){Object.keys(x).forEach(k=>delete x[k]);Object.assign(x,antes);renderSheet();const e2=$("#fmtErr");if(e2){e2.textContent=errMsg(err);e2.hidden=false}}}
 async function redoPost(x,extra,btn){
  if(busy||!sample)return;btn.disabled=true;btn.textContent="Refazendo…";const errEl=$("#redoErr");errEl.hidden=true;
  try{const ds=await detailBatch(current,[x],extra||"Escreva uma versão nova e diferente da anterior.");ds.forEach(d=>mergeDetail(current,{...d,id:x.id}));await savePauta(current);renderResult();renderSheet();toast("Post refeito")}
@@ -779,35 +1267,710 @@ async function redoPost(x,extra,btn){
 
 /* ---------- Storage ---------- */
 async function savePauta(p){if(!db||p.exemplo)return;try{const data=JSON.parse(JSON.stringify(p));data.atualizadoEm=new Date().toISOString();await db.collection("pautas").doc(p.id).set(data)}catch(e){toast("Não foi possível salvar a pauta")}}
-async function saveCliente(b){if(!db||!b.perfil)return;const id=slugC(b.cliente);const data={nome:b.cliente,arroba:b.arroba||"",nicho:b.nicho||"",sobre:b.sobre||"",perfil:b.perfil,briefing:{tom:b.tom||"",publico:b.publico||"",evitar:b.evitar||"",temas:b.temas||[],semana:b.semana||[]},atualizadoEm:new Date().toISOString()};
- clientes[id]=data;try{await db.collection("clientes").doc(id).set(data)}catch(e){}}
+async function saveCliente(b){if(!db||!b.perfil)return;const id=slugC(b.cliente);const data={nome:b.cliente,arroba:b.arroba||"",nicho:b.nicho||"",sobre:b.sobre||"",perfil:b.perfil,briefing:{tom:b.tom||"",publico:b.publico||"",evitar:b.evitar||"",temas:b.temas||[],semana:b.semana||[],freq:b.freq||"semana",intervalo:b.intervalo||2},atualizadoEm:new Date().toISOString()};
+ const prev=clientes[id]||{};const full={...prev,...data,nome:prev.nome||data.nome};
+ clientes[id]=full;try{await db.collection("clientes").doc(id).set(full)}catch(e){}}
 async function deletePauta(p){if(!db)return;try{await db.collection("pautas").doc(p.id).delete();toast("Pauta excluída");current=null;renderResult()}catch(e){toast("Não foi possível excluir")}}
 function renderSaved(){
  const box=$("#savedList");
  if(!db){box.innerHTML=`<div class="panel empty-state" style="grid-column:1/-1"><h3>Pautas salvas aparecem aqui</h3><p>Abra esta página no Claude, com sua conta, para salvar e ver o histórico.</p></div>`;return}
  if(!saved.length){box.innerHTML=`<div class="panel empty-state" style="grid-column:1/-1"><h3>Nenhuma pauta salva ainda</h3><p>Gere a primeira em Nova pauta. Ela fica guardada aqui por cliente e mês.</p></div>`;return}
  box.innerHTML=saved.map(p=>{const c=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(x=>x[1]);
-  return `<button type="button" class="panel sv" data-open="${esc(p.id)}"><span class="m">${MESES[p.mes]} ${p.ano}</span><h3>${esc(p.cliente)}</h3><span class="m">${p.posts.length} posts · ${esc(p.objetivo)}</span><span class="mini">${c.map(([f,n])=>Array.from({length:n},()=>`<i class="dot" style="background:${FCOLOR[f]}" title="${f}"></i>`).join("")).join("")}</span></button>`}).join("");
+  return `<button type="button" class="panel sv" data-open="${esc(p.id)}"><span class="tags"><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${statusChip(p)}</span><h3>${esc(p.cliente)}</h3><span class="m">${p.posts.length} posts · ${esc(p.objetivo)}</span><span class="mini">${c.map(([f,n])=>Array.from({length:n},()=>`<i class="dot" style="background:${FCOLOR[f]}" title="${f}"></i>`).join("")).join("")}</span></button>`}).join("");
  box.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{const p=saved.find(s=>s.id===b.dataset.open);if(p){current=JSON.parse(JSON.stringify(p));filtroFormato="Todos";filtroPilar=null;renderResult();showView("nova")}})}
-function updateClientes(){const names=[...new Set([...saved.map(s=>s.cliente),...Object.values(clientes).map(c=>c.nome)])].sort((a,b)=>a.localeCompare(b,"pt"));$("#clientesList").innerHTML=names.map(n=>`<option value="${esc(n)}"></option>`).join("")}
+let qpTodos=false;
+function demOk(c){const st=c&&c.demandas&&c.demandas.status;return !st||st==="ativo"}
+function renderQp(){const box=$("#qpClientes");if(!box)return;
+ const comPauta=new Set(saved.map(p=>slugC(p.cliente)));
+ const lista=Object.entries(clientes).filter(([id,c])=>c&&c.nome&&c.demandas).map(([id,c])=>({id,c,ativo:demOk(c)}));
+ if(!lista.length){box.hidden=true;return}
+ const vis=lista.filter(x=>qpTodos||x.ativo||comPauta.has(x.id)).sort((a,b)=>a.c.nome.localeCompare(b.c.nome,"pt"));
+ const ocultos=lista.length-vis.length,atual=slugC($("#fCliente").value.trim());
+ box.hidden=false;
+ box.innerHTML=`<span class="qp-t"><span>Clientes do Demandas</span>${ocultos||qpTodos?`<button type="button" id="qpMais">${qpTodos?"Só ativos":"Ver todos ("+lista.length+")"}</button>`:""}</span>`+
+  vis.map(x=>`<button type="button" class="chip" data-qp="${esc(x.id)}" aria-pressed="${x.id===atual}" title="${esc(x.c.nome+(x.c.demandas.mae?" · submarca de "+x.c.demandas.mae:""))}">${comPauta.has(x.id)?`<i class="ok" aria-label="tem pauta"></i>`:""}<span>${esc(x.c.nome)}</span>${x.c.demandas.mae?`<small>${esc(x.c.demandas.mae)}</small>`:""}</button>`).join("");
+ const m=$("#qpMais");if(m)m.onclick=()=>{qpTodos=!qpTodos;renderQp()};
+ box.querySelectorAll("[data-qp]").forEach(b=>b.onclick=()=>{const c=clientes[b.dataset.qp];if(!c)return;
+  const antes=slugC($("#fCliente").value.trim());$("#fCliente").value=c.nome;
+  if(antes!==b.dataset.qp){["#fArroba","#fNicho"].forEach(k=>$(k).value="")}
+  preencherCliente();renderQp()})}
+function updateClientes(){renderQp();const names=[...new Set([...saved.map(s=>s.cliente),...Object.values(clientes).map(c=>c.nome)])].sort((a,b)=>a.localeCompare(b,"pt"));$("#clientesList").innerHTML=names.map(n=>`<option value="${esc(n)}"></option>`).join("")}
+
+/* ---------- Status ---------- */
+const STATUS={rascunho:["Rascunho","st-neutro"],liberada:["Enviada ao cliente","st-info"],aprovada:["Aprovada","st-ok"],revisao:["Pediu revisão","st-warn"],reprovada:["Reprovada","st-bad"]};
+function statusChip(p){const s=STATUS[p.status||"rascunho"]||STATUS.rascunho;return `<span class="chip-st ${s[1]}">${s[0]}</span>`}
+async function setStatus(p,st,nota){const x=saved.find(y=>y.id===p.id)||p;x.status=st;x.statusNota=nota||"";x.statusEm=new Date().toISOString();await savePauta(x);if(current&&current.id===x.id){current.status=st;current.statusNota=x.statusNota}}
+
+/* ---------- Client folders ---------- */
+let pastaAberta=null, cfg={}, cfgOk=false, acessosOk=false, editCores=null;
+function pastas(){
+ const m={};const add=(id,nome)=>{if(!m[id])m[id]={id,nome}};
+ Object.entries(clientes).forEach(([id,c])=>add(id,c.nome));
+ saved.forEach(p=>add(slugC(p.cliente),p.cliente));
+ acessos.forEach(a=>add(a.id,a.cliente));
+ return Object.values(m).map(f=>{const c=clientes[f.id]||{};const ps=saved.filter(p=>slugC(p.cliente)===f.id).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes));
+  return {...f,nome:c.nome||f.nome,dados:c,pautas:ps,acesso:acessos.find(a=>a.id===f.id)||null}}).sort((a,b)=>a.nome.localeCompare(b.nome,"pt"))}
+function pastaTexto(nome){const c=clientes[slugC(nome)];if(!c)return "";let t="";
+ if(c.descricao)t+=`\nDescrição da marca: ${c.descricao}`;if((c.cores||[]).length)t+=`\nCores da marca: ${c.cores.join(", ")}`;return t?t+"\n":""}
+function swatches(cores){return (cores||[]).length?`<span class="sw">${cores.map(h=>`<i style="background:${esc(h)}" title="${esc(h)}"></i>`).join("")}</span>`:""}
+function renderClientes(){
+ const box=$("#viewClientes");
+ if(!db){box.innerHTML=`<div class="panel empty-state"><h3>As pastas dos clientes aparecem aqui</h3><p>Abra esta página no Claude, com sua conta.</p></div>`;return}
+ const todas=pastas();const lista=todas.filter(f=>!f.dados.demandas||demOk(f.dados)||f.pautas.length||f.acesso||f.id===pastaAberta);
+ if(pastaAberta&&lista.some(f=>f.id===pastaAberta))return renderPasta(lista.find(f=>f.id===pastaAberta));
+ pastaAberta=null;editCores=null;
+ box.innerHTML=`<div class="cl-head"><div><h2>Clientes</h2><p class="lead">Uma pasta por marca: dados, cores, link de visualização e histórico de pautas.</p></div></div>
+ <div class="panel card cfg"><h3>Respostas dos clientes</h3><p class="lead">Quando o cliente aprova, pede revisão ou reprova uma pauta, o WhatsApp dele abre com a resposta pronta para este número.</p>
+ <form class="row-in" id="cfgForm"><label class="lbl" for="cfgWa">Seu WhatsApp, com DDD</label><div class="tagin"><input type="text" id="cfgWa" inputmode="tel" placeholder="Ex.: 11 91234-5678" value="${esc(fmtFone(cfg.whatsapp||""))}"><button type="submit" class="btn ghost" id="cfgSave">Salvar</button></div>
+ ${cfg.whatsapp?"":`<p class="note warn">Sem número, os botões de resposta não aparecem para o cliente.</p>`}</form></div>
+ ${lista.length?`<div class="folders">${lista.map(f=>{const ap=f.pautas.filter(p=>p.status==="aprovada").length;
+  return `<button type="button" class="panel folder" data-pasta="${esc(f.id)}"><span class="fo-top"><span class="fo-ic" aria-hidden="true"></span>${f.acesso?`<span class="chip-st st-info">Link ativo</span>`:`<span class="chip-st st-neutro">Sem link</span>`}</span><h3>${esc(f.nome)}</h3>${f.dados.demandas?`<span class="m"><span class="chip-dem">Demandas</span>${f.dados.demandas.mae?" · submarca de "+esc(f.dados.demandas.mae):""}</span>`:""}${f.dados.nicho?`<span class="m">${esc(f.dados.nicho)}</span>`:""}${swatches(f.dados.cores)}<span class="m">${f.pautas.length} ${f.pautas.length===1?"pauta":"pautas"} · ${ap} ${ap===1?"aprovada":"aprovadas"}</span></button>`}).join("")}</div>`
+ :`<div class="panel empty-state"><h3>Nenhum cliente ainda</h3><p>Gere a primeira pauta em Nova pauta. A pasta do cliente é criada sozinha.</p></div>`}`;
+ box.querySelectorAll("[data-pasta]").forEach(b=>b.onclick=()=>{pastaAberta=b.dataset.pasta;renderClientes();window.scrollTo({top:0})});
+ $("#cfgForm").onsubmit=async e=>{e.preventDefault();const n=String($("#cfgWa").value).replace(/\D/g,"");
+  if(n&&n.length<10){toast("Confira o número: DDD e telefone");return}
+  const num=n?(n.length<=11?"55"+n:n):"";if(num)portalSync=true;const b=$("#cfgSave");b.disabled=true;b.textContent="Salvando…";
+  try{await db.collection("config").doc("geral").set({whatsapp:num,atualizadoEm:new Date().toISOString()});cfg={whatsapp:num};
+   if(artifactCap&&num){voltarDepois({view:"clientes",msg:"WhatsApp salvo"});await publishPortal({...PORTAL,_cfg:{whatsapp:num}})}else{toast("WhatsApp salvo");renderClientes()}}
+  catch(err){if(err&&err.code==="conflict")return;toast(erroPublicar(err&&err.code));b.disabled=false;b.textContent="Salvar"}}}
+function fmtFone(n){n=String(n||"").replace(/^55/,"");return n.length===11?`${n.slice(0,2)} ${n.slice(2,7)}-${n.slice(7)}`:n.length===10?`${n.slice(0,2)} ${n.slice(2,6)}-${n.slice(6)}`:n}
+function renderPasta(f){
+ const box=$("#viewClientes"),c=f.dados,a=f.acesso;
+ if(!editCores)editCores=[...(c.cores||[])];
+ box.innerHTML=`<div class="cl-head"><button type="button" class="btn link" id="pastaVoltar">‹ Clientes</button></div>
+ <div class="pasta">
+ <div class="panel card"><p class="eyebrow">Pasta do cliente</p><h2 class="pt-nome">${esc(f.nome)}</h2>
+  <form id="pastaForm" class="pasta-form" autocomplete="off">
+   <div class="row2"><div class="field"><label for="pfNome">Nome da marca</label><input type="text" id="pfNome" value="${esc(f.nome)}"></div>
+   <div class="field"><label for="pfNicho">Nicho</label><input type="text" id="pfNicho" value="${esc(c.nicho||"")}" placeholder="Ex.: cafeteria"></div></div>
+   <div class="field"><label for="pfDesc">Descrição breve</label><textarea id="pfDesc" rows="3" placeholder="O que a marca faz, para quem e o que a diferencia">${esc(c.descricao||(c.perfil&&c.perfil.resumo)||"")}</textarea></div>
+   <div class="field"><span class="lbl">Cores da marca</span><div class="cores" id="pfCores">${editCores.map((h,i)=>`<span class="cor"><i style="background:${esc(h)}"></i><code>${esc(h)}</code><button type="button" data-rmcor="${i}" aria-label="Remover ${esc(h)}">✕</button></span>`).join("")||`<span class="m">Nenhuma cor ainda</span>`}</div>
+    <div class="tagin cor-add"><input type="color" id="pfCorPick" value="#d6237f" aria-label="Escolher cor"><input type="text" id="pfCorHex" placeholder="#d6237f" maxlength="7" aria-label="Código da cor"><button type="button" class="btn ghost" id="pfCorAdd">Adicionar cor</button></div></div>
+   <button type="submit" class="btn lib" id="pfSalvar">Salvar dados</button>
+  </form></div>
+ <div class="panel card"><h3>Link de visualização</h3>${a?`<p class="lead">O cliente abre este link e digita o código. Vê só as pautas que você liberou.</p>
+  <p class="linkbox">${esc(a.url)}</p><div class="kv"><div><b>Código de acesso</b><span class="mono">${esc(a.codigo)}</span></div><div><b>Meses liberados</b><span>${esc((a.meses||[]).join(" · ")||"Nenhum")}</span></div></div>
+  <div class="actions" style="margin-top:.9rem"><button type="button" class="btn ghost" id="cpLink">Copiar link</button><button type="button" class="btn ghost" id="cpMsg">Copiar mensagem</button></div>`
+  :`<p class="lead">Ainda sem link. Abra uma pauta deste cliente e toque em Liberar para o cliente: o link e o código são criados na hora.</p>`}</div>
+ <div class="panel card"><h3>Histórico de pautas</h3>${f.pautas.length?`<div class="hist">${f.pautas.map(p=>`<div class="hrow" data-hid="${esc(p.id)}">
+   <div class="h-info"><span class="tags"><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${statusChip(p)}</span><span class="m">${p.posts.length} posts · ${esc(p.objetivo||"")}</span>${p.statusNota?`<p class="h-nota">“${esc(p.statusNota)}”</p>`:""}</div>
+   <div class="h-act"><button type="button" class="btn ghost" data-abrir="${esc(p.id)}">Abrir</button>
+   <select data-st="${esc(p.id)}" aria-label="Resposta do cliente">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}"${(p.status||"rascunho")===k?" selected":""}>${v[0]}</option>`).join("")}</select></div>
+   <div class="h-nota-in" hidden><input type="text" placeholder="Comentário do cliente (opcional)" value="${esc(p.statusNota||"")}" aria-label="Comentário do cliente"><button type="button" class="btn ghost" data-stsave="${esc(p.id)}">Salvar resposta</button></div></div>`).join("")}</div>`
+  :`<p class="lead">Nenhuma pauta deste cliente ainda.</p>`}</div>
+ <div class="panel card perigo"><h3>Excluir cliente</h3><p class="lead">Apaga a pasta, ${f.pautas.length===1?"a pauta":`as ${f.pautas.length} pautas`} deste cliente e o link de visualização. O link para de abrir na hora. Não dá para desfazer.</p>
+  <button type="button" class="btn danger" id="pastaExcluir">Excluir ${esc(f.nome)}</button></div>
+ </div>`;
+ $("#pastaVoltar").onclick=()=>{pastaAberta=null;editCores=null;rascunho=null;renderClientes();window.scrollTo({top:0})};
+ const addCor=()=>{let h=$("#pfCorHex").value.trim()||$("#pfCorPick").value;if(!h.startsWith("#"))h="#"+h;
+  if(!/^#[0-9a-fA-F]{6}$/.test(h)){toast("Use o formato #RRGGBB");return}if(!editCores.includes(h.toLowerCase()))editCores.push(h.toLowerCase());guardarRascunho();renderPasta(f)};
+ $("#pfCorAdd").onclick=addCor;$("#pfCorHex").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addCor()}});
+ $("#pfCorPick").oninput=e=>{$("#pfCorHex").value=e.target.value};
+ box.querySelectorAll("[data-rmcor]").forEach(b=>b.onclick=()=>{editCores.splice(+b.dataset.rmcor,1);guardarRascunho();renderPasta(f)});
+ restaurarRascunho();
+ $("#pastaForm").onsubmit=async e=>{e.preventDefault();const nome=$("#pfNome").value.trim()||f.nome;const b=$("#pfSalvar");b.disabled=true;b.textContent="Salvando…";
+  const data={...c,nome,nicho:$("#pfNicho").value.trim(),descricao:$("#pfDesc").value.trim(),cores:[...editCores],atualizadoEm:new Date().toISOString()};
+  try{await db.collection("clientes").doc(f.id).set(data);clientes[f.id]=data;rascunho=null;toast("Dados salvos");editCores=null;renderClientes()}catch(err){toast("Não foi possível salvar");b.disabled=false;b.textContent="Salvar dados"}};
+ if(a){$("#cpLink").onclick=()=>copy(a.url);$("#cpMsg").onclick=()=>copy(`Oi! Sua pauta de conteúdo está aqui: ${a.url}\nCódigo de acesso: ${a.codigo}`)}
+ box.querySelectorAll("[data-abrir]").forEach(b=>b.onclick=()=>{const p=saved.find(s=>s.id===b.dataset.abrir);if(p){current=JSON.parse(JSON.stringify(p));filtroFormato="Todos";filtroPilar=null;renderResult();showView("nova")}});
+ box.querySelectorAll("[data-st]").forEach(sel=>sel.onchange=()=>{const row=sel.closest(".hrow");row.querySelector(".h-nota-in").hidden=false;row.querySelector(".h-nota-in input").focus()});
+ box.querySelectorAll("[data-stsave]").forEach(b=>b.onclick=async()=>{const row=b.closest(".hrow"),p=saved.find(s=>s.id===b.dataset.stsave);if(!p)return;
+  b.disabled=true;await setStatus(p,row.querySelector("select").value,row.querySelector(".h-nota-in input").value.trim());toast("Resposta registrada");renderClientes()});
+ const del=$("#pastaExcluir");del.onclick=()=>{if(!del.dataset.armed){del.dataset.armed="1";del.textContent="Toque de novo para excluir";setTimeout(()=>{if(del.isConnected){delete del.dataset.armed;del.textContent=`Excluir ${f.nome}`}},4000);return}excluirCliente(f,del)}}
+/* Unsaved folder edits survive a re-render caused by live data */
+let rascunho=null;
+function guardarRascunho(){const n=$("#pfNome");if(n)rascunho={id:pastaAberta,nome:n.value,nicho:$("#pfNicho").value,desc:$("#pfDesc").value}}
+function restaurarRascunho(){if(rascunho&&rascunho.id===pastaAberta){$("#pfNome").value=rascunho.nome;$("#pfNicho").value=rascunho.nicho;$("#pfDesc").value=rascunho.desc}
+ ["#pfNome","#pfNicho","#pfDesc"].forEach(sel=>$(sel).addEventListener("input",guardarRascunho))}
+async function excluirCliente(f,btn){
+ portalSync=true;btn.disabled=true;btn.textContent="Excluindo…";
+ try{for(const p of f.pautas)await db.collection("pautas").doc(p.id).delete();
+  await db.collection("clientes").doc(f.id).delete().catch(()=>{});
+  if(f.acesso)await db.collection("acessos").doc(f.acesso.id).delete();
+  if(current&&slugC(current.cliente)===f.id)current=null;
+  pastaAberta=null;editCores=null;
+  if(f.acesso&&f.acesso.token&&PORTAL[f.acesso.token]&&artifactCap){const novo={...PORTAL};delete novo[f.acesso.token];voltarDepois({view:"clientes",msg:`${f.nome} excluído`});await publishPortal(novo)}
+  else{toast(`${f.nome} excluído`);renderClientes()}}
+ catch(err){if(err&&err.code==="conflict")return;toast("Não foi possível excluir. Tente de novo.");btn.disabled=false;btn.textContent=`Excluir ${f.nome}`}}
+function voltarDepois(v){try{sessionStorage.setItem("pauta-volta",JSON.stringify(v))}catch(e){}}
+function erroPublicar(c){return c==="rate_limited"?"Muitas publicações seguidas. Espere um minuto.":c==="not_writer"||c==="not_granted"||c==="capability_disabled"?"Esta tela não pode publicar. Abra o app pela sua conta no Claude.":"Não foi possível publicar. Tente de novo."}
+
+/* ---------- Client answer: approve, ask for changes or reject, sent to isadsign's WhatsApp ---------- */
+const RESP={aprovada:["Aprovar","Aprovada","✅"],revisao:["Pedir revisão","Pedido de revisão","✏️"],reprovada:["Reprovar","Reprovada","❌"]};
+let respEscolha=null;
+function respChave(p){return `pauta-resp-${TOKEN}-${p.ano}-${p.mes}`}
+function respSalva(p){try{return JSON.parse(localStorage.getItem(respChave(p))||"null")}catch(e){return null}}
+function respostaHTML(p){
+ const wa=PORTAL._cfg&&PORTAL._cfg.whatsapp;if(!wa)return "";
+ const feita=respSalva(p);
+ return `<div class="panel card resp" id="respCard"><h3>O que você achou desta pauta?</h3>
+ ${feita?`<p class="lead">Você enviou <b>${esc(RESP[feita.tipo][1].toLowerCase())}</b> em ${new Date(feita.em).toLocaleDateString("pt-BR")}. Se mudou de ideia, é só enviar de novo.</p>`:`<p class="lead">Sua resposta vai direto para o WhatsApp da isadsign.</p>`}
+ <div class="resp-bt" role="group" aria-label="Sua resposta">${Object.entries(RESP).map(([k,v])=>`<button type="button" class="btn resp-${k}" data-resp="${k}" aria-pressed="${respEscolha===k}">${v[0]}</button>`).join("")}</div>
+ <div class="resp-env" ${respEscolha?"":"hidden"}><label class="lbl" for="respTxt">${respEscolha==="aprovada"?"Comentários (opcional)":"Comentários: o que você quer mudar?"}</label>
+ <textarea id="respTxt" rows="3" placeholder="${respEscolha==="aprovada"?"Ex.: amei o post do dia 10!":"Ex.: trocar o tema do dia 20 por lançamento do produto novo"}"></textarea>
+ <a class="btn lib" id="respEnviar" target="_blank" rel="noopener" href="#">Enviar pelo WhatsApp</a>
+ <p class="note">O WhatsApp abre com a mensagem pronta. Toque em enviar por lá.</p></div></div>`}
+function bindResposta(p){
+ const card=$("#respCard");if(!card)return;
+ card.querySelectorAll("[data-resp]").forEach(b=>b.onclick=()=>{const keep=$("#respTxt")?$("#respTxt").value:"";respEscolha=b.dataset.resp;
+  card.outerHTML=respostaHTML(p);bindResposta(p);$("#respTxt").value=keep;$("#respTxt").focus()});
+ const env=$("#respEnviar");if(!env||!respEscolha)return;
+ const link=()=>{const t=($("#respTxt").value||"").trim();const v=RESP[respEscolha];
+  const msg=`${v[2]} ${v[1]}: pauta de ${MESES[p.mes]} ${p.ano}\nCliente: ${p.cliente}${t?`\nComentários: ${t}`:""}\n\n(enviado pela página da pauta)`;
+  return `https://wa.me/${PORTAL._cfg.whatsapp}?text=${encodeURIComponent(msg)}`};
+ env.href=link();$("#respTxt").addEventListener("input",()=>{env.href=link()});
+ env.addEventListener("click",()=>{env.href=link();try{localStorage.setItem(respChave(p),JSON.stringify({tipo:respEscolha,em:new Date().toISOString()}))}catch(e){}
+  setTimeout(()=>{respEscolha=null;const c=$("#respCard");if(c){c.outerHTML=respostaHTML(p);bindResposta(p)}},400)})}
+
+/* ---------- Export: clickable HTML and PDF ---------- */
+function nomeArquivo(p){return `pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}`}
+async function baixar(nome,gerar,btn){
+ const txt=btn.textContent;btn.disabled=true;btn.textContent="Gerando…";
+ try{await downloads.save({filename:nome,data:await gerar()})}
+ catch(err){const c=err&&err.code;if(c!=="declined"&&c!=="cancelled")toast(c==="unavailable"||c==="not_granted"?"Baixar não está disponível nesta tela":"Não foi possível gerar o arquivo")}
+ btn.disabled=false;btn.textContent=txt}
+/* Standalone page: calendar days and the index link to each post; works offline in any browser */
+function pautaHTML(p){
+ const ps=sorted(p),n=daysIn(p.mes,p.ano),first=dow(1,p.mes,p.ano),mes=MESES[p.mes],e=p.estrategia||{},pf=p.perfil||{};
+ const hol={};(e.datas||[]).forEach(d=>hol[d.dia]=d.nome);const byDay={};ps.forEach(x=>{(byDay[x.dia]=byDay[x.dia]||[]).push(x)});
+ let cal=DIAS_C.map(d=>`<div class="dw">${d}</div>`).join("");for(let i=0;i<first;i++)cal+=`<div></div>`;
+ for(let d=1;d<=n;d++)cal+=`<div class="d"><b>${d}</b>${hol[d]?`<small>${esc(hol[d])}</small>`:""}${(byDay[d]||[]).map(x=>`<a class="pl f-${slug(x.formato)}" href="#${esc(x.id)}">${esc(x.formato)}</a>`).join("")}</div>`;
+ const li=a=>(a||[]).map(x=>`<li>${esc(x)}</li>`).join("");
+ const post=x=>`<article class="post" id="${esc(x.id)}"><p class="ey"><span class="dot f-${slug(x.formato)}"></span>${esc(x.formato)} · ${DIAS[dow(x.dia,p.mes,p.ano)]}, ${x.dia} de ${mes.toLowerCase()}${x.pilar?" · "+esc(x.pilar):""}</p><h3>${esc(x.titulo||x.tema)}</h3>
+ ${x.descricao?`<p>${esc(x.descricao)}</p>`:""}<dl>${x.objetivo?`<dt>Objetivo</dt><dd>${esc(x.objetivo)}</dd>`:""}${x.horario?`<dt>Quando vai ao ar</dt><dd>${esc(x.horario)}</dd>`:""}${x.metrica?`<dt>Como medir</dt><dd>${esc(x.metrica)}</dd>`:""}</dl>
+ ${(x.producao||[]).length?`<h4>O que produzir</h4><ul class="ck">${li(x.producao)}</ul>`:""}${x.visual?`<h4>Visual</h4><p>${esc(x.visual)}</p>`:""}${(x.ganchos||[]).length?`<h4>Frases de abertura</h4><ul>${li(x.ganchos)}</ul>`:""}
+ ${(x.slides||[]).length?`<h4>Slides</h4><ol>${x.slides.map(s=>`<li><b>${esc(s.titulo)}</b> ${esc(s.texto)}</li>`).join("")}</ol>`:""}
+ ${(x.roteiro||[]).length?`<h4>Roteiro</h4><ol class="rt">${x.roteiro.map(r=>`<li><span>${esc(r.tempo)}</span> ${esc(r.fala)}<br><small>Cena: ${esc(r.cena)}${r.texto_tela?` · Na tela: ${esc(r.texto_tela)}`:""}</small></li>`).join("")}</ol>`:""}
+ ${x.arte?`<h4>Arte</h4><p><b>${esc(x.arte.frase)}</b><br>${esc(x.arte.direcao)}</p>`:""}${(x.telas||[]).length?`<h4>Telas dos Stories</h4><ol>${x.telas.map(t=>`<li>${esc(t.texto)}${t.recurso?` <small>(${esc(t.recurso)})</small>`:""}</li>`).join("")}</ol>`:""}
+ ${x.legenda?`<h4>Legenda</h4><pre>${esc(x.legenda)}${(x.hashtags||[]).length?"\n\n"+esc(x.hashtags.join(" ")):""}</pre>`:""}${x.cta?`<h4>Chamada para ação</h4><p>${esc(x.cta)}</p>`:""}<p class="top"><a href="#topo">↑ Voltar ao calendário</a></p></article>`;
+ return `<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Pauta ${esc(p.cliente)} · ${mes} ${p.ano}</title><style>
+:root{--bg:#f5f5f7;--sf:#fff;--sf2:#f0f0f3;--fg:#1d1d1f;--fg2:#6e6e73;--ln:rgba(0,0,0,.1);--ac:#d6237f;--car:#d6237f;--reel:#5856d6;--est:#c76a00;--sto:#248a3d}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--sf:#1c1c1e;--sf2:#2c2c2e;--fg:#f5f5f7;--fg2:#98989d;--ln:rgba(255,255,255,.12);--ac:#ff4fa3;--car:#ff4fa3;--reel:#7d7aff;--est:#ffb340;--sto:#4cd964;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;overflow-wrap:anywhere}
+main{max-width:58rem;margin:0 auto;padding:2rem max(16px,env(safe-area-inset-left)) 3rem}h1{font-size:clamp(1.8rem,5vw,2.6rem);line-height:1.1;margin:.2rem 0 .5rem;letter-spacing:-.03em}
+.ey{color:var(--ac);font-weight:600;font-size:.85rem;margin:0;display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}.sub{color:var(--fg2);margin:0}
+section,.post{background:var(--sf);border-radius:1.2rem;padding:1.3rem 1.4rem;margin-top:1.1rem}h2{font-size:1.25rem;margin:0 0 .6rem}h3{font-size:1.2rem;margin:.3rem 0 .6rem;line-height:1.3}h4{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--fg2);margin:1rem 0 .3rem}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.3rem}.dw{font-size:.7rem;color:var(--fg2);text-align:center;font-weight:600;text-transform:uppercase}.d{background:var(--sf2);border-radius:.55rem;min-height:4.6rem;padding:.3rem;display:flex;flex-direction:column;gap:.2rem;min-width:0}.d b{font-size:.8rem}.d small{font-size:.65rem;color:var(--ac);line-height:1.2}
+.pl{display:block;border-radius:.35rem;padding:.15rem .3rem;font-size:.68rem;font-weight:600;color:#fff;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.f-carrossel{background:var(--car)}.f-reels{background:var(--reel)}.f-estatico{background:var(--est)}.f-stories{background:var(--sto)}.dot{width:.5rem;height:.5rem;border-radius:50%;display:inline-block}
+.idx{list-style:none;padding:0;margin:0}.idx li{border-top:1px solid var(--ln)}.idx a{display:flex;gap:.6rem;padding:.55rem 0;color:inherit;text-decoration:none}.idx a span{color:var(--fg2);min-width:4.5rem;font-variant-numeric:tabular-nums}.idx a:hover b{color:var(--ac)}
+dl{display:grid;grid-template-columns:minmax(0,9rem) minmax(0,1fr);gap:.3rem .8rem;margin:.6rem 0}dt{color:var(--fg2);font-size:.85rem}dd{margin:0}
+pre{white-space:pre-wrap;font:inherit;background:var(--sf2);border-radius:.6rem;padding:.8rem;margin:0}.rt span{color:var(--ac);font-weight:600}small{color:var(--fg2)}.top a{color:var(--ac);font-size:.9rem}
+@media (max-width:560px){.pl{font-size:0;height:.5rem;padding:0}.d small{display:none}.d{min-height:3.2rem}dl{grid-template-columns:minmax(0,1fr)}}
+@media print{body{background:#fff}section,.post{break-inside:avoid-page;border:1px solid #ddd}}
+</style></head><body><main id="topo"><p class="ey">${esc(p.arroba||p.nicho||"")} · ${mes} ${p.ano}</p><h1>${esc(p.cliente)}: pauta de ${mes.toLowerCase()}</h1><p class="sub">${e.resumo?esc(e.resumo):""}</p>
+<section><h2>Calendário</h2><div class="cal">${cal}</div></section>
+<section><h2>Posts do mês</h2><ol class="idx">${ps.map(x=>`<li><a href="#${esc(x.id)}"><span>${x.dia}/${p.mes+1} ${DIAS_C[dow(x.dia,p.mes,p.ano)]}</span><b>${esc(x.titulo||x.tema)}</b></a></li>`).join("")}</ol></section>
+${(e.pilares||[]).length?`<section><h2>Estratégia</h2><ul>${e.pilares.map(pl=>`<li><b>${esc(pl.nome)} (${+pl.pct||0}%)</b>: ${esc(pl.descricao)}</li>`).join("")}</ul>${e.frequencia?`<p><b>Frequência:</b> ${esc(e.frequencia)}</p>`:""}</section>`:""}
+${ps.map(post).join("")}
+<p class="sub" style="margin-top:2rem;text-align:center">Pauta feita pela isadsign · @isadsign.co</p></main>`}
+/* PDF with a clickable index: each line jumps to its post, each post links back */
+let jspdfLib=null;
+function loadJsPdf(){if(jspdfLib)return jspdfLib;jspdfLib=new Promise((res,rej)=>{const s=document.createElement("script");s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";s.onload=()=>window.jspdf?res(window.jspdf.jsPDF):rej(new Error("jspdf"));s.onerror=()=>{jspdfLib=null;rej(new Error("jspdf"))};document.head.appendChild(s)});return jspdfLib}
+const latin=t=>String(t==null?"":t).replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/[–—]/g,"-").replace(/…/g,"...").replace(/[•·]/g,"·").replace(/[^\x09\x0A\x0D\x20-\xFF]/g,"").replace(/[ \t]+\n/g,"\n");
+async function pautaPDF(p){
+ const jsPDF=await loadJsPdf();const doc=new jsPDF({unit:"pt",format:"a4"});
+ const W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),M=48,CW=W-2*M,ROSA=[214,35,127],CINZA=[110,110,115];
+ const ps=sorted(p),mes=MESES[p.mes];let y=M;
+ const linhas=(t,size,cor,bold,gap)=>{doc.setFont("helvetica",bold?"bold":"normal");doc.setFontSize(size);doc.setTextColor(...(cor||[29,29,31]));
+  doc.splitTextToSize(latin(t),CW).forEach(l=>{if(y+size>H-M){doc.addPage();y=M}doc.text(l,M,y+size);y+=size*1.35});y+=gap||0};
+ const rotulo=t=>{if(y+40>H-M){doc.addPage();y=M}y+=6;linhas(t.toUpperCase(),8.5,CINZA,true,2)};
+ /* Reserve the index pages first, fill them once every post's page is known */
+ const porPag=Math.floor((H-2*M-150)/20),nIdx=Math.max(1,Math.ceil(ps.length/porPag));
+ for(let i=1;i<nIdx;i++)doc.addPage();
+ const inicio={};
+ ps.forEach(x=>{doc.addPage();y=M;inicio[x.id]=doc.internal.getNumberOfPages();
+  doc.setFont("helvetica","normal");doc.setFontSize(9);doc.setTextColor(...ROSA);doc.textWithLink(latin("< Voltar ao índice"),M,y+9,{pageNumber:1});y+=26;
+  linhas(`${x.formato} · ${DIAS[dow(x.dia,p.mes,p.ano)]}, ${x.dia} de ${mes.toLowerCase()}${x.pilar?" · "+x.pilar:""}`,10,ROSA,true,2);
+  linhas(x.titulo||x.tema,17,null,true,6);
+  if(x.descricao)linhas(x.descricao,10.5,null,false,4);
+  if(x.objetivo){rotulo("Objetivo");linhas(x.objetivo,10.5)}if(x.horario){rotulo("Quando vai ao ar");linhas(x.horario,10.5)}if(x.metrica){rotulo("Como medir");linhas(x.metrica,10.5)}
+  if((x.producao||[]).length){rotulo("O que produzir");x.producao.forEach(t=>linhas("[ ] "+t,10.5))}
+  if(x.visual){rotulo("Visual");linhas(x.visual,10.5)}
+  if((x.ganchos||[]).length){rotulo("Frases de abertura");x.ganchos.forEach(g=>linhas("- "+g,10.5))}
+  if((x.slides||[]).length){rotulo("Slides");x.slides.forEach((s,k)=>{linhas(/^\d/.test(s.titulo)?s.titulo:`${k+1}. ${s.titulo}`,10.5,null,true);linhas(s.texto,10.5,null,false,2)})}
+  if((x.roteiro||[]).length){rotulo("Roteiro");x.roteiro.forEach(r=>{linhas(`${r.tempo}  ${r.fala}`,10.5,null,true);linhas(`Cena: ${r.cena}${r.texto_tela?" · Na tela: "+r.texto_tela:""}`,9.5,CINZA,false,2)})}
+  if(x.arte){rotulo("Arte");linhas(x.arte.frase,10.5,null,true);linhas(x.arte.direcao,10.5)}
+  if((x.telas||[]).length){rotulo("Telas dos Stories");x.telas.forEach((t,k)=>linhas(`${k+1}. ${t.texto}${t.recurso?" ("+t.recurso+")":""}`,10.5))}
+  if(x.legenda){rotulo("Legenda");linhas(x.legenda+((x.hashtags||[]).length?"\n\n"+x.hashtags.join(" "):""),10.5)}
+  if(x.cta){rotulo("Chamada para ação");linhas(x.cta,10.5)}});
+ doc.setPage(1);y=M;
+ linhas(`${p.arroba||p.nicho||""}  ·  ${mes} ${p.ano}`,10,ROSA,true,4);linhas(`${p.cliente}: pauta de ${mes.toLowerCase()}`,22,null,true,6);
+ if(p.estrategia&&p.estrategia.resumo)linhas(p.estrategia.resumo,11,CINZA,false,10);
+ linhas("Posts do mês  (toque para abrir)",12,null,true,6);
+ ps.forEach((x,i)=>{const pg=1+Math.floor(i/porPag);if(i&&i%porPag===0){doc.setPage(pg);y=M}
+  doc.setFont("helvetica","normal");doc.setFontSize(10.5);doc.setTextColor(...CINZA);doc.text(latin(`${String(x.dia).padStart(2,"0")}/${String(p.mes+1).padStart(2,"0")}  ${DIAS_C[dow(x.dia,p.mes,p.ano)]}`),M,y+11);
+  doc.setTextColor(...ROSA);const t=doc.splitTextToSize(latin(`${x.formato}: ${x.titulo||x.tema}`),CW-90)[0];doc.textWithLink(t,M+90,y+11,{pageNumber:inicio[x.id]});
+  doc.setTextColor(...CINZA);doc.text(String(inicio[x.id]),W-M,y+11,{align:"right"});y+=20});
+ const total=doc.internal.getNumberOfPages();for(let i=1;i<=total;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(...CINZA);doc.text(latin(`Pauta ${p.cliente} · ${mes} ${p.ano} · isadsign`),M,H-24);doc.text(`${i}/${total}`,W-M,H-24,{align:"right"})}
+ return doc.output("blob")}
+
+/* ---------- Client access ----------
+   Each client opens this same page at APP_URL#<token> and types their own code. Their pautas sit in the
+   #portal block encrypted with that code (PBKDF2-SHA256 + AES-GCM), so a client can read only their own.
+   The acessos collection (owner only) keeps token, code and the same payload; the portal is rebuilt from it. */
+const APP_URL="https://claude.ai/artifact/WFtLQrFVMhE7mU7Wr1K7Ut";
+const RESET=':root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}';
+const ITER=310000, ALFABETO="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+let PORTAL={};try{PORTAL=JSON.parse($("#portal").textContent)||{}}catch(e){}
+const TOKEN=decodeURIComponent((location.hash||"").slice(1));
+let modoCliente=!!TOKEN, clientePautas=[], dono=false, artifactCap=null, portalSync=false;
+const b64=buf=>btoa(String.fromCharCode(...new Uint8Array(buf)));
+const ub=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const normCod=c=>String(c||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+function novoCodigo(){const s=[...crypto.getRandomValues(new Uint8Array(8))].map(n=>ALFABETO[n%ALFABETO.length]).join("");return s.slice(0,4)+"-"+s.slice(4)}
+function novoToken(id){return `${id}-${[...crypto.getRandomValues(new Uint8Array(6))].map(n=>(n%36).toString(36)).join("")}`}
+async function chave(codigo,salt,uso){const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(normCod(codigo)),"PBKDF2",false,["deriveKey"]);
+ return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:ITER,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,[uso])}
+async function trancar(cliente,codigo,pautas){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));
+ const data=await crypto.subtle.encrypt({name:"AES-GCM",iv},await chave(codigo,salt,"encrypt"),new TextEncoder().encode(JSON.stringify({pautas})));
+ return {v:1,cliente,iter:ITER,salt:b64(salt),iv:b64(iv),data:b64(data)}}
+async function abrir(a,codigo){const salt=ub(a.salt);const base=await crypto.subtle.importKey("raw",new TextEncoder().encode(normCod(codigo)),"PBKDF2",false,["deriveKey"]);
+ const key=await crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:a.iter||ITER,hash:"SHA-256"},base,{name:"AES-GCM",length:256},false,["decrypt"]);
+ return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub(a.iv)},key,ub(a.data))))}
+/* What the client sees: internal briefing notes stay out */
+function limpar(p){const {exemplo,briefing,criadoEm,atualizadoEm,...resto}=JSON.parse(JSON.stringify(p));return {...resto,briefing:{temas:(briefing&&briefing.temas)||[]}}}
+
+async function liberar(p,btn){
+ portalSync=true;btn.disabled=true;btn.textContent="Liberando…";
+ try{
+  const id=slugC(p.cliente),prev=acessos.find(a=>a.id===id);
+  const a=prev?{cliente:prev.cliente,token:prev.token,codigo:prev.codigo}:{cliente:p.cliente,token:novoToken(id),codigo:novoCodigo()};
+  let lista=[];if(prev&&prev.payload){try{lista=(await abrir(prev.payload,prev.codigo)).pautas||[]}catch(e){lista=[]}}
+  lista=lista.filter(x=>!(x.mes===p.mes&&x.ano===p.ano));lista.push(limpar(p));lista.sort((x,y)=>(y.ano-x.ano)||(y.mes-x.mes));
+  a.payload=await trancar(a.cliente,a.codigo,lista);a.meses=lista.map(x=>`${MESES[x.mes]} ${x.ano}`);a.url=`${APP_URL}#${a.token}`;a.atualizadoEm=new Date().toISOString();
+  await db.collection("acessos").doc(id).set(a);
+  if(p.status!=="aprovada"){p.status="liberada";p.statusEm=new Date().toISOString();await savePauta(p)}
+  voltarDepois({view:"clientes",pasta:id,msg:`Pauta liberada para ${a.cliente}`});
+  await publishPortal({...PORTAL,[a.token]:a.payload});
+ }catch(err){const c=err&&err.code;if(c==="conflict")return;
+  toast(erroPublicar(c));
+  btn.disabled=false;btn.textContent="Liberar para o cliente"}}
+/* Rebuild this page from its own source with the new portal block and publish it as the next version */
+async function publishPortal(data){
+ portalSync=true;
+ if(cfg.whatsapp)data={...data,_cfg:{whatsapp:cfg.whatsapp}};
+ const json=JSON.stringify(data).replace(/</g,"\\u003c");
+ const html=`<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>${RESET}</style></head><body><title>Pauta isadsign</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style id="css">${$("#css").textContent}</style>
+
+<template id="markup">${MARKUP.innerHTML}</template>
+<script type="application/json" id="portal">${json}<\/script>
+<script id="src">${document.getElementById("src").textContent}<\/script>
+`+"</bo"+"dy></ht"+"ml>"; /* split so the closing tags never appear literally inside this script */
+ await artifactCap.publish(html)}
+/* After Claude republishes the page from the repo the portal block can come back empty: put back what acessos holds. Only adds or updates, never removes. */
+function sincronizarPortal(){
+ if(portalSync||!dono||!artifactCap||busy||!acessosOk||!cfgOk)return;
+ const novo={...PORTAL};let muda=false;
+ if(cfg.whatsapp&&(!PORTAL._cfg||PORTAL._cfg.whatsapp!==cfg.whatsapp)){novo._cfg={whatsapp:cfg.whatsapp};muda=true}
+ /* Compare the ciphertext itself: the database may return the payload's keys in another order */
+ acessos.forEach(a=>{const cur=PORTAL[a.token];if(a.token&&a.payload&&a.payload.data&&(!cur||cur.data!==a.payload.data||cur.iv!==a.payload.iv)){novo[a.token]=a.payload;muda=true}});
+ if(!muda)return;portalSync=true;publishPortal(novo).catch(()=>{})}
+
+/* Client view */
+const LSC="pauta-codigo-"+TOKEN;
+const lsGet=()=>{try{return localStorage.getItem(LSC)}catch(e){return null}};
+const lsSet=v=>{try{v?localStorage.setItem(LSC,v):localStorage.removeItem(LSC)}catch(e){}};
+function startCliente(){
+ document.body.classList.add("cliente");
+ const a=PORTAL[TOKEN];
+ if(!a){$("#result").innerHTML=`<section class="panel gate"><p class="eyebrow">Pauta isadsign</p><h2>Link não encontrado</h2><p>Confira se você abriu o link inteiro que a isadsign enviou.</p></section>`;return}
+ const salvo=lsGet();if(!salvo)return gateCliente();
+ abrir(a,salvo).then(d=>entrarCliente(d),()=>{lsSet(null);gateCliente()})}
+function gateCliente(err){
+ $("#sairBtn").hidden=true;
+ $("#result").innerHTML=`<section class="panel gate"><p class="eyebrow">Sua pauta de conteúdo</p><h2>${esc(PORTAL[TOKEN].cliente)}</h2><p>Digite o código de acesso que a isadsign enviou para você.</p>
+ <form id="gateForm" autocomplete="off"><label for="codigo" class="lbl">Código de acesso</label><input type="text" id="codigo" autocapitalize="characters" spellcheck="false" placeholder="XXXX-XXXX" maxlength="12" required>
+ <label class="remember"><input type="checkbox" id="lembrar" checked> Lembrar neste aparelho</label>
+ ${err?`<p class="note err" role="alert">${esc(err)}</p>`:""}<button type="submit" class="btn primary" id="entrarBtn">Ver minha pauta</button></form></section>`;
+ const inp=$("#codigo");
+ inp.addEventListener("input",()=>{const v=normCod(inp.value).slice(0,8);inp.value=v.length>4?v.slice(0,4)+"-"+v.slice(4):v});
+ $("#gateForm").addEventListener("submit",async e=>{e.preventDefault();const b=$("#entrarBtn");b.disabled=true;b.textContent="Abrindo…";
+  let d;try{d=await abrir(PORTAL[TOKEN],inp.value)}
+  catch(_){gateCliente("Código incorreto. Confira as letras e os números e tente de novo.");$("#codigo").focus();return}
+  if($("#lembrar").checked)lsSet(normCod(inp.value));entrarCliente(d)});
+ setTimeout(()=>inp.focus(),50)}
+function entrarCliente(d){
+ clientePautas=(d.pautas||[]).filter(x=>x&&Array.isArray(x.posts)).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes));
+ $("#sairBtn").hidden=false;
+ if(!clientePautas.length){$("#result").innerHTML=`<section class="panel gate"><h2>Nenhuma pauta ainda</h2><p>A pauta do mês aparece aqui assim que estiver pronta.</p></section>`;return}
+ const n=new Date();current=clientePautas.find(x=>x.ano===n.getFullYear()&&x.mes===n.getMonth())||clientePautas[0];
+ filtroFormato="Todos";filtroPilar=null;renderResult();
+ if(!downloads&&window.claude&&window.claude.use)window.claude.use("downloads").then(d=>{if(d){downloads=d;if(current)renderResult()}}).catch(()=>{})}
+$("#sairBtn").onclick=()=>{lsSet(null);clientePautas=[];gateCliente()};
+
+function calRuntime(){
+  var D=JSON.parse(document.getElementById('isa-data').textContent);
+  var MESES=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  var SEM=['dom','seg','ter','qua','qui','sex','sáb'];
+  var FMT={carrossel:{n:'Carrossel',s:'CAR'},reels:{n:'Reels',s:'REL'},estatico:{n:'Estático',s:'EST'},stories:{n:'Stories',s:'STO'}};
+  function e(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  var mes=+D.mes||0, ano=+D.ano||2026, nd=new Date(ano,mes+1,0).getDate();
+  var posts=(D.posts||[]).filter(function(p){return p.dia>=1&&p.dia<=nd;}).slice().sort(function(a,b){return a.dia-b.dia||String(a.hora||'').localeCompare(String(b.hora||''));});
+  posts.forEach(function(p,i){p._i=i;});
+  var C=D.cores||{}; var cf=C.fundo||'#222',ct=C.texto||'#eee',cd=C.destaque||'#e9349e',ca=C.apoio||'#999';
+  var FONT={serif:"'DM Serif Display',Georgia,serif",sans:"'Archivo',system-ui,sans-serif",script:"'Caveat',cursive"}[D.fonte]||"'Archivo',system-ui,sans-serif";
+  if(D.fonteNome&&/^[\w\s-]{2,40}$/.test(D.fonteNome))FONT="'"+String(D.fonteNome).trim()+"',"+FONT;
+  var at=String(D.arroba||'').replace(/^@/,'').trim();
+  var cli=D.cliente||'Cliente';
+  function lum(h){h=String(h).replace('#','');if(h.length===3)h=h.split('').map(function(x){return x+x;}).join('');var n=parseInt(h,16);if(isNaN(n))return .5;var r=[(n>>16)&255,(n>>8)&255,n&255].map(function(v){v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});return .2126*r[0]+.7152*r[1]+.0722*r[2];}
+  function con(a,b){var x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05);}
+  function fgFor(bg){var o=[ct,cf,cd,ca].filter(function(c){return c.toLowerCase()!==bg.toLowerCase();});o.sort(function(a,b){return con(bg,b)-con(bg,a);});return o[0];}
+  function lines(p){return String(p.conteudo||'').split('\n').map(function(s){return s.trim();}).filter(Boolean);}
+  function art(p,txt,big){
+    var bg=[cf,cd,ca][p._i%3], fg=fgFor(bg), ac=(bg===cd?fg:cd);
+    var ic='';
+    if(p.formato==='carrossel')ic='<span class="a-dots"><i></i><i></i><i></i></span>';
+    if(p.formato==='reels')ic='<span class="a-play"></span>';
+    if(p.formato==='stories')ic='<span class="a-bars"><i></i><i></i><i></i></span>';
+    return '<div class="art'+(big?' big':'')+(p.formato==='stories'||p.formato==='reels'?' tall':'')+'" style="background:'+e(bg)+';color:'+e(fg)+';--ac:'+e(ac)+'">'+ic+
+      '<span class="a-at">@'+e(at)+'</span><span class="a-tx" style="font-family:'+FONT.replace(/"/g,'')+'">'+e(txt)+'</span><span class="a-ln"></span></div>';
+  }
+  function head(lbl){return '<div class="sh"><span>@isadsign.co</span><span class="sh-l">'+e(lbl)+'</span><span>@isadsign.co</span></div>';}
+  function pill(f,short){var x=FMT[f]||FMT.estatico;return '<span class="fp f-'+e(f)+'"><span class="fl">'+x.n+'</span><span class="fs">'+x.s+'</span></span>';}
+  function dt(p){var w=new Date(ano,mes,p.dia).getDay();return String(p.dia).padStart(2,'0')+'/'+String(mes+1).padStart(2,'0')+' · '+SEM[w]+(p.hora?' · '+p.hora:'');}
+  var star='<svg class="star" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 0 C55 38 62 45 100 50 C62 55 55 62 50 100 C45 62 38 55 0 50 C38 45 45 38 50 0Z" fill="#F3E8CC"/></svg>';
+  var cnt={carrossel:0,reels:0,estatico:0,stories:0};posts.forEach(function(p){if(cnt[p.formato]!=null)cnt[p.formato]++;});
+  var pil=(D.pilares||[]).filter(function(x){return x&&x.nome;});
+  var h='';
+  /* capa */
+  h+='<section class="sec capa" id="capa">'+head('calendário de conteúdo')+'<h1 class="mes">'+e(MESES[mes])+'</h1>'+
+    '<div class="capa-row"><div class="capa-l"><span class="pill pk big"><em>'+e(cli)+'</em></span><p class="capa-sub">pauta de '+e(MESES[mes])+' de '+ano+'<br>'+posts.length+' posts planejados'+(D.nicho?' · '+e(D.nicho):'')+'</p></div>'+
+    '<div class="frame">'+star+'<div class="feed">';
+  for(var k=0;k<6;k++){var pp=posts[k];h+=pp?art(pp,pp.titulo):'<div class="art ghost"></div>';}
+  h+='</div><span class="pill ol">@'+e(at)+'</span></div></div></section>';
+  /* estratégia */
+  h+='<section class="sec" id="estrategia">'+head('estratégia')+'<div class="ttl"><h2 class="t">estratégia</h2><span class="pill pk"><em>do mês</em></span></div>'+
+    '<div class="stats"><div><b>'+posts.length+'</b><span>posts no total</span></div><div><b>'+cnt.estatico+'</b><span>estáticos</span></div><div><b>'+cnt.carrossel+'</b><span>carrosséis</span></div><div><b>'+cnt.reels+'</b><span>reels</span></div>'+(cnt.stories?'<div><b>'+cnt.stories+'</b><span>stories</span></div>':'')+'</div>';
+  if(pil.length){h+='<h3 class="sub">pilares <small>toque para ver os posts</small></h3><div class="pils">';pil.forEach(function(x){var n=posts.filter(function(p){return p.pilar===x.nome;}).length;h+='<button class="pilb" data-pil="'+e(x.nome)+'"><b>'+e(x.nome)+'</b><span>'+e(x.desc||'')+'</span><i>'+n+' post'+(n===1?'':'s')+'</i></button>';});h+='</div>';}
+  h+='<h3 class="sub">linha visual de '+e(cli)+'</h3><div class="lv"><div class="sw">'+[cf,ct,cd,ca].map(function(c){return '<span style="background:'+e(c)+'"></span>';}).join('')+'</div><p>'+e(D.linhaVisual||'')+'</p></div></section>';
+  /* calendário */
+  var first=new Date(ano,mes,1).getDay();
+  h+='<section class="sec" id="calendario">'+head('calendário')+'<div class="ttl"><h2 class="t">calendário</h2><span class="pill pk"><em>'+e(MESES[mes])+' '+ano+'</em></span></div>'+
+    '<div class="leg">'+['carrossel','reels','estatico','stories'].filter(function(f){return cnt[f];}).map(function(f){return pill(f);}).join('')+'<span class="leg-hr">com horário de postagem · Brasília</span></div><div class="calw"><div class="cal">'+
+    SEM.map(function(s){return '<div class="wd">'+s+'</div>';}).join('');
+  for(var b=0;b<first;b++)h+='<div class="day vz"></div>';
+  for(var d=1;d<=nd;d++){var dp=posts.filter(function(p){return p.dia===d;});
+    h+='<div class="day'+(dp.length?' has':'')+'"><span class="dn">'+d+'</span>'+dp.map(function(p){return '<button class="dpb" data-i="'+p._i+'" aria-label="'+e((FMT[p.formato]||FMT.estatico).n+' do dia '+d+(p.hora?' às '+p.hora:'')+': '+p.titulo)+'">'+pill(p.formato)+(p.hora?'<span class="hr">'+e(p.hora)+'</span>':'')+'</button>';}).join('')+'</div>';}
+  h+='</div></div></section>';
+  /* posts */
+  h+='<section class="sec" id="posts">'+head('posts')+'<div class="ttl"><h2 class="t">posts</h2><span class="pill pk"><em>'+posts.length+' conteúdos</em></span></div>'+
+    '<div class="flt" id="fF"><button class="chip on" data-f="">todos</button>'+['carrossel','reels','estatico','stories'].filter(function(f){return cnt[f];}).map(function(f){return '<button class="chip" data-f="'+f+'">'+FMT[f].n.toLowerCase()+'</button>';}).join('')+'</div>'+
+    (pil.length?'<div class="flt" id="fP"><button class="chip on" data-p="">todos os pilares</button>'+pil.map(function(x){return '<button class="chip" data-p="'+e(x.nome)+'">'+e(x.nome)+'</button>';}).join('')+'</div>':'')+
+    '<div class="grid" id="grid">'+posts.map(function(p){return '<button class="card" data-i="'+p._i+'" data-fmt="'+e(p.formato)+'" data-pil="'+e(p.pilar||'')+'">'+art(p,p.titulo)+'<span class="cm"><span class="cd">'+dt(p)+'</span>'+pill(p.formato)+'</span><b class="ct">'+e(p.titulo)+'</b>'+(p.pilar?'<span class="cp">'+e(p.pilar)+'</span>':'')+'</button>';}).join('')+'</div>'+
+    '<p class="none" id="none" hidden>Nenhum post com esses filtros.</p></section>';
+  /* etapas */
+  var et=[['Aprovação','Você revisa a pauta e aprova ou pede trocas de tema.'],['Criação','Até 3 dias para produzir as artes e roteiros aprovados.'],['Ajustes','Rodada de ajustes finos nas artes e legendas.'],['Pagamento','100% antes do envio dos arquivos finais.'],['Entrega','Tudo organizado em uma pasta no Drive.']];
+  h+='<section class="sec" id="etapas">'+head('etapas')+'<div class="ttl"><h2 class="t">próximos passos</h2></div><ol class="steps">'+et.map(function(s,i){return '<li><span class="sn">'+(i+1)+'</span><b>'+s[0]+'</b><span>'+s[1]+'</span></li>';}).join('')+'</ol></section>';
+  /* fechamento */
+  var wpp=String(D.whatsapp||'5519971633589').replace(/\D/g,'');
+  var msg=encodeURIComponent('Oi Isa! Vi o calendário de '+MESES[mes]+' de '+cli+' e quero aprovar.');
+  h+='<section class="sec fim" id="fim">'+head('até breve')+'<h2 class="t gost">Gostou?</h2><span class="pill pk big"><em>vamos aprovar.</em></span>'+
+    '<div class="fim-a"><a class="btn pk" href="https://wa.me/'+wpp+'?text='+msg+'" target="_blank" rel="noopener">Aprovar pelo WhatsApp</a>'+(at?'<a class="btn ol" href="https://instagram.com/'+e(at)+'" target="_blank" rel="noopener">ver @'+e(at)+'</a>':'')+'</div>'+
+    '<p class="bye">Até breve!!</p></section>';
+  document.getElementById('app').innerHTML=h;
+  /* rodapé + modal */
+  var f=document.createElement('footer');f.className='foot';f.innerHTML='<a href="https://instagram.com/isadsign.co" target="_blank" rel="noopener">@isadsign.co</a><span>Até breve!!</span>';document.body.appendChild(f);
+  var m=document.createElement('div');m.className='mod';m.hidden=true;m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.innerHTML='<div class="mod-bg" data-close></div><div class="mod-p" id="mp"></div>';document.body.appendChild(m);
+  var cur=-1,sl=0;
+  function open(i){cur=i;sl=0;draw();m.hidden=false;document.body.style.overflow='hidden';var c=m.querySelector('.mx');if(c)c.focus();}
+  function close(){m.hidden=true;document.body.style.overflow='';cur=-1;}
+  function draw(){
+    var p=posts[cur];if(!p)return;var L=lines(p),x='';
+    var view='';
+    if(p.formato==='carrossel'){var s=L.length?L:[p.titulo];if(sl>=s.length)sl=s.length-1;view=art(p,s[sl],true)+'<div class="nav"><button class="nb" data-sl="-1" aria-label="Slide anterior"'+(sl===0?' disabled':'')+'>‹</button><span>'+(sl+1)+' / '+s.length+'</span><button class="nb" data-sl="1" aria-label="Próximo slide"'+(sl>=s.length-1?' disabled':'')+'>›</button></div>';}
+    else view=art(p,p.titulo,true);
+    x+='<button class="mx" data-close aria-label="Fechar">×</button><div class="mg"><div class="mv">'+view+'</div><div class="mi">';
+    x+='<div class="cm"><span class="cd">'+dt(p)+'</span>'+pill(p.formato)+(p.pilar?'<span class="cp">'+e(p.pilar)+'</span>':'')+'</div><h3>'+e(p.titulo)+'</h3>'+(p.hora?'<p class="quando">postar às <b>'+e(p.hora)+'</b></p>':'');
+    if(p.objetivo)x+='<p class="obj"><em>'+e(p.objetivo)+'</em></p>';
+    if(p.formato==='reels'){x+='<h4>roteiro</h4><table class="rt"><tbody>'+L.map(function(l){var a=l.split('|');var t=a.length>1?a.shift().trim():'';return '<tr><td>'+e(t)+'</td><td>'+e(a.join('|').trim())+'</td></tr>';}).join('')+'</tbody></table>';}
+    else if(p.formato==='carrossel'){x+='<h4>slides</h4><ol class="sl">'+L.map(function(l,i){return '<li'+(i===sl?' class="on"':'')+'><button data-go="'+i+'">'+e(l)+'</button></li>';}).join('')+'</ol>';}
+    else if(p.conteudo)x+='<h4>direção de arte</h4><p class="dir">'+e(p.conteudo)+'</p>';
+    if(p.legenda)x+='<div class="lg"><div class="lgh"><h4>legenda</h4><button class="cpb" data-copy>copiar</button></div><p class="lgt">'+e(p.legenda)+'</p></div>';
+    if(p.cta)x+='<h4>cta</h4><p>'+e(p.cta)+'</p>';
+    if(p.hashtags)x+='<p class="hs">'+e(p.hashtags)+'</p>';
+    x+='</div></div><div class="mf"><button class="btn ol" data-mv="-1"'+(cur===0?' disabled':'')+'>‹ anterior</button><button class="btn ol" data-mv="1"'+(cur>=posts.length-1?' disabled':'')+'>próximo ›</button></div>';
+    document.getElementById('mp').innerHTML=x;
+  }
+  document.addEventListener('click',function(ev){
+    var t=ev.target.closest('[data-i],[data-close],[data-sl],[data-go],[data-mv],[data-copy],[data-f],[data-p],[data-pil]');if(!t)return;
+    if(t.hasAttribute('data-close'))return close();
+    if(t.hasAttribute('data-sl')){sl+=+t.getAttribute('data-sl');return draw();}
+    if(t.hasAttribute('data-go')){sl=+t.getAttribute('data-go');return draw();}
+    if(t.hasAttribute('data-mv')){cur+=+t.getAttribute('data-mv');sl=0;return draw();}
+    if(t.hasAttribute('data-copy')){var tx=posts[cur].legenda+(posts[cur].hashtags?'\n\n'+posts[cur].hashtags:'');var ok=function(){t.textContent='copiado!';setTimeout(function(){t.textContent='copiar';},1600);};
+      var fb=function(){var el=m.querySelector('.lgt');var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);t.textContent='selecionado';};
+      try{navigator.clipboard.writeText(tx).then(ok,fb);}catch(_){fb();}return;}
+    if(t.hasAttribute('data-f')){fF=t.getAttribute('data-f');setOn('#fF','data-f',fF);return filt();}
+    if(t.hasAttribute('data-p')){fP=t.getAttribute('data-p');setOn('#fP','data-p',fP);return filt();}
+    if(t.hasAttribute('data-pil')&&t.classList.contains('pilb')){fP=t.getAttribute('data-pil');fF='';setOn('#fP','data-p',fP);setOn('#fF','data-f','');filt();document.getElementById('posts').scrollIntoView({behavior:'smooth'});return;}
+    if(t.hasAttribute('data-i'))open(+t.getAttribute('data-i'));
+  });
+  var fF='',fP='';
+  function setOn(sel,attr,v){var w=document.querySelector(sel);if(!w)return;[].forEach.call(w.children,function(c){c.classList.toggle('on',c.getAttribute(attr)===v);});}
+  function filt(){var n=0;[].forEach.call(document.querySelectorAll('.card'),function(c){var ok=(!fF||c.dataset.fmt===fF)&&(!fP||c.dataset.pil===fP);c.hidden=!ok;if(ok)n++;});document.getElementById('none').hidden=n>0;}
+  document.addEventListener('keydown',function(ev){if(m.hidden)return;if(ev.key==='Escape')close();if(ev.key==='ArrowRight'&&posts[cur]&&posts[cur].formato==='carrossel'){var s=lines(posts[cur]);if(sl<s.length-1){sl++;draw();}}if(ev.key==='ArrowLeft'&&sl>0){sl--;draw();}});
+  try{new IntersectionObserver(function(en){en.forEach(function(x){document.body.classList.toggle('end',x.isIntersecting);});},{threshold:.25}).observe(document.getElementById('fim'));}catch(_){}
+}
+const CAL_CSS=[
+":root{--g:#282828;--c:#F3E8CC;--p:#E9349E;--l:#9ABC05;--y:#FCDD6C;--b:#ACA492;--ln:rgba(243,232,204,.28);color-scheme:dark}",
+"*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--g);color:var(--c);font:16px/1.45 'Archivo',system-ui,sans-serif;padding-bottom:56px}",
+"button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}a{color:inherit}",
+":focus-visible{outline:2px solid var(--p);outline-offset:3px}",
+".bar{position:fixed;top:14px;bottom:62px;width:10px;border-radius:10px;background:var(--c);z-index:5;transition:background .5s}.bar.l{left:8px}.bar.r{right:8px}body.end .bar{background:var(--p)}",
+"#app{max-width:1180px;margin:0 auto;padding-inline:clamp(30px,5vw,64px)}",
+".sec{padding-block:28px 72px;border-bottom:1px solid rgba(243,232,204,.1)}.sec:last-child{border-bottom:0}",
+".sh{display:flex;justify-content:space-between;gap:12px;font-size:12px;letter-spacing:.05em;color:var(--b);margin-bottom:40px}.sh-l{text-transform:uppercase;letter-spacing:.14em}",
+".pill{display:inline-flex;align-items:center;border-radius:999px;padding:.38em 1.05em;font-weight:800;line-height:1.1}.pill em{font-style:italic}.pill.pk{background:var(--p);color:var(--c)}.pill.ol{border:1.5px solid var(--c)}.pill.big{font-size:clamp(20px,3.2vw,36px);font-weight:900}",
+".mes{margin:0;font-weight:900;font-style:italic;text-transform:uppercase;color:var(--l);font-size:clamp(54px,14vw,200px);line-height:.88;letter-spacing:-.045em;overflow-wrap:anywhere}",
+".capa-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:32px;align-items:end;margin-top:28px}",
+".capa-l{display:flex;flex-direction:column;align-items:flex-start;gap:18px}.capa-sub{margin:0;color:var(--b);font-size:17px;line-height:1.4}",
+".frame{position:relative;border:1.5px solid var(--c);border-radius:30px;padding:16px 16px 18px;display:flex;flex-direction:column;align-items:center;gap:14px}",
+".star{position:absolute;width:62px;height:62px;top:-26px;right:-18px}",
+".feed{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;width:100%}",
+".art{position:relative;aspect-ratio:4/5;border-radius:10px;overflow:hidden;container-type:inline-size;display:flex;flex-direction:column;justify-content:flex-end;padding:9%;text-align:left;width:100%;max-width:100%}",
+".art.ghost{background:rgba(243,232,204,.08)}",
+".a-at{position:absolute;top:7cqi;left:9cqi;font-size:clamp(6px,6cqi,15px);opacity:.75;font-family:'Archivo',sans-serif}",
+".a-tx{font-size:clamp(9px,11cqi,46px);line-height:1.02;letter-spacing:-.01em;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}",
+".a-ln{display:block;width:28%;height:max(2px,1.6cqi);background:var(--ac);margin-top:7cqi;border-radius:2px}",
+".a-dots{position:absolute;bottom:6cqi;right:9cqi;display:flex;gap:3cqi}.a-dots i{width:3.5cqi;height:3.5cqi;border-radius:50%;background:currentColor;opacity:.4}.a-dots i:first-child{opacity:1}",
+".a-play{position:absolute;top:7cqi;right:9cqi;width:0;height:0;border-left:8cqi solid currentColor;border-top:5cqi solid transparent;border-bottom:5cqi solid transparent;opacity:.85}",
+".a-bars{position:absolute;top:3cqi;left:5cqi;right:5cqi;display:flex;gap:2cqi}.a-bars i{flex:1;height:1.2cqi;background:currentColor;opacity:.35;border-radius:2px}.a-bars i:first-child{opacity:1}",
+".art.big .a-tx{-webkit-line-clamp:9}",
+".ttl{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:32px}",
+".t{margin:0;font-weight:900;font-size:clamp(44px,7.5vw,96px);line-height:.9;letter-spacing:-.04em;text-wrap:balance}",
+".stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:44px}",
+".stats div{border:1px solid var(--ln);border-radius:20px;padding:18px 20px;display:flex;flex-direction:column;gap:6px}.stats b{font-weight:900;font-size:clamp(40px,6vw,64px);line-height:.9;letter-spacing:-.03em;font-variant-numeric:tabular-nums}.stats div:first-child b{color:var(--p)}.stats span{color:var(--b);font-size:14px}",
+".sub{font-weight:800;font-size:20px;margin:0 0 14px;letter-spacing:-.01em}.sub small{font-weight:300;font-style:italic;color:var(--b);font-size:14px;margin-left:8px}",
+".pils{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-bottom:44px}",
+".pilb{text-align:left;border:1px solid var(--ln);border-radius:20px;padding:18px 20px;display:flex;flex-direction:column;gap:6px;transition:border-color .2s,background .2s}.pilb:hover{border-color:var(--p);background:rgba(233,52,158,.08)}.pilb b{font-weight:900;font-size:21px;letter-spacing:-.02em}.pilb span{color:var(--b);font-size:14px}.pilb i{font-style:italic;color:var(--p);font-weight:800;font-size:13px;margin-top:4px}",
+".lv{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}.lv p{margin:0;max-width:62ch;color:var(--c);flex:1;min-width:220px}.sw{display:flex}.sw span{width:46px;height:46px;border-radius:50%;border:1.5px solid var(--g);margin-right:-10px;box-shadow:0 0 0 1px var(--ln)}",
+".leg{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}",
+".fp{display:inline-flex;align-items:center;justify-content:center;border-radius:999px;font-weight:800;font-size:12px;padding:4px 11px;line-height:1.1;white-space:nowrap}.fp .fs{display:none}",
+".f-carrossel{background:var(--p);color:var(--c)}.f-reels{background:var(--l);color:var(--g)}.f-estatico{background:var(--c);color:var(--g)}.f-stories{border:1px solid var(--c);color:var(--c)}",
+".cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}",
+".wd{text-transform:uppercase;font-size:12px;letter-spacing:.1em;color:var(--b);text-align:center;padding-bottom:4px}",
+".day{border:1px solid var(--ln);border-radius:16px;min-height:104px;padding:9px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-width:0}.day.vz{border-color:transparent}",
+".dn{font-weight:800;font-size:15px;font-variant-numeric:tabular-nums;color:var(--b)}.day.has .dn{color:var(--c)}.day.has{border-color:rgba(243,232,204,.6)}",
+".dpb{display:block;max-width:100%}.dpb:hover .fp{transform:translateY(-1px);filter:brightness(1.08)}",
+".flt{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}",
+".chip{border:1.5px solid var(--ln);border-radius:999px;padding:6px 14px;font-weight:800;font-size:14px}.chip:hover{border-color:var(--c)}.chip.on{background:var(--c);color:var(--g);border-color:var(--c)}",
+".grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:22px;margin-top:22px}",
+".card{text-align:left;display:flex;flex-direction:column;gap:10px;border-radius:20px;padding:10px;border:1px solid transparent;transition:border-color .2s}.card:hover{border-color:var(--ln)}",
+".cm{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.cd{font-size:13px;color:var(--b);font-variant-numeric:tabular-nums}.ct{font-weight:800;font-size:17px;line-height:1.2;letter-spacing:-.01em}.cp{font-size:13px;font-style:italic;color:var(--p);font-weight:500}",
+".none{color:var(--b)}",
+".steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}",
+".steps li{border:1px solid var(--ln);border-radius:20px;padding:20px;display:flex;flex-direction:column;gap:8px}.sn{width:34px;height:34px;border-radius:50%;background:var(--p);display:grid;place-items:center;font-weight:900}.steps b{font-weight:900;font-size:22px;letter-spacing:-.02em}.steps li>span:last-child{color:var(--b);font-size:14px}",
+".fim{display:flex;flex-direction:column;align-items:flex-start;gap:20px}.gost{font-size:clamp(64px,13vw,170px)}",
+".fim-a{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}",
+".btn{display:inline-flex;align-items:center;border-radius:999px;padding:12px 22px;font-weight:800;text-decoration:none;border:1.5px solid var(--c)}.btn.pk{background:var(--p);border-color:var(--p)}.btn.ol:hover{background:rgba(243,232,204,.08)}.btn:disabled{opacity:.35;cursor:default}",
+".bye{margin:24px 0 0;color:var(--p);font-weight:900;font-style:italic;font-size:clamp(36px,6vw,64px);letter-spacing:-.03em;line-height:1}",
+".foot{position:fixed;left:0;right:0;bottom:0;z-index:6;display:flex;justify-content:space-between;align-items:center;padding:12px 28px calc(12px + env(safe-area-inset-bottom,0px));background:var(--g);border-top:1px solid rgba(243,232,204,.14);font-weight:800;font-size:14px}.foot a{text-decoration:none}.foot span{color:var(--p);font-style:italic}",
+".mod{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:16px}.mod[hidden]{display:none}",
+".mod-bg{position:absolute;inset:0;background:rgba(20,20,20,.86)}",
+".mod-p{position:relative;background:var(--g);border:1.5px solid var(--c);border-radius:28px;width:min(940px,100%);max-height:calc(100% - 8px);overflow:auto;padding:26px}",
+".mx{position:absolute;top:10px;right:14px;font-size:30px;line-height:1;width:42px;height:42px;border-radius:50%}.mx:hover{color:var(--p)}",
+".mg{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:28px}",
+".mv{display:flex;flex-direction:column;gap:12px}.art.big{border-radius:16px}",
+".nav{display:flex;align-items:center;justify-content:center;gap:16px;font-variant-numeric:tabular-nums;color:var(--b)}.nb{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--c);font-size:22px;line-height:1}.nb:disabled{opacity:.3;cursor:default}",
+".mi{min-width:0;display:flex;flex-direction:column;gap:6px}.mi h3{margin:6px 0 2px;font-weight:900;font-size:clamp(24px,3vw,32px);line-height:1.05;letter-spacing:-.02em;text-wrap:balance}",
+".mi h4{margin:14px 0 2px;font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--b);font-weight:500}.mi p{margin:0}",
+".obj{color:var(--p);font-size:17px;font-weight:500}",
+".rt{width:100%;border-collapse:collapse;font-size:14px}.rt td{border-top:1px solid rgba(243,232,204,.14);padding:7px 6px;vertical-align:top}.rt td:first-child{white-space:nowrap;color:var(--l);font-weight:800;font-variant-numeric:tabular-nums;width:1%}",
+".sl{margin:0;padding-left:22px;font-size:14px}.sl li{padding:2px 0;color:var(--b)}.sl li.on{color:var(--c);font-weight:800}.sl button{text-align:left}",
+".dir{font-size:15px}",
+".lg{background:rgba(243,232,204,.06);border-radius:16px;padding:12px 14px;margin-top:10px}.lgh{display:flex;justify-content:space-between;align-items:center}.lgh h4{margin:0}.cpb{border:1.5px solid var(--c);border-radius:999px;padding:3px 12px;font-size:12px;font-weight:800}.lgt{white-space:pre-wrap;font-size:14px;margin-top:6px!important}",
+".hs{color:var(--p);font-size:13px;margin-top:8px!important;overflow-wrap:anywhere}",
+".mf{display:flex;justify-content:space-between;gap:10px;margin-top:22px}",
+".dpb{display:flex;flex-direction:column;align-items:flex-start;gap:3px}.dpb .hr{font-size:12px;font-weight:800;color:var(--y);font-variant-numeric:tabular-nums;line-height:1;padding-left:2px}.leg-hr{align-self:center;font-size:13px;color:var(--b);font-style:italic;margin-left:4px}.quando{margin:0 0 4px!important;color:var(--y);font-weight:500;font-size:16px}.quando b{font-weight:900;font-variant-numeric:tabular-nums}.dir{white-space:pre-line}",
+"@media (min-width:1800px){#app{max-width:1500px}body{font-size:18px}.day{min-height:128px}.fp{font-size:14px}.dpb .hr{font-size:14px}}",
+"@media (min-width:2600px){#app{max-width:2100px}body{font-size:22px}.day{min-height:170px}.fp{font-size:17px}.dpb .hr{font-size:17px}.ct{font-size:21px}.cd{font-size:16px}}",
+"@media (max-width:760px){.capa-row{grid-template-columns:1fr}.frame{max-width:380px;width:100%}.mg{grid-template-columns:1fr}.mv{max-width:300px;width:100%;margin:0 auto}.mod-p{padding:20px 16px}}",
+"@media (max-width:640px){.cal{gap:4px}.day{min-height:62px;padding:5px 3px;border-radius:10px;align-items:center;gap:3px}.dn{font-size:12px}.wd{font-size:10px;letter-spacing:.02em}.fp{font-size:9px;padding:2px 5px}.fp .fl{display:none}.fp .fs{display:inline}.dpb{align-items:center}.dpb .hr{font-size:9px;padding-left:0}.leg-hr{flex-basis:100%;margin:2px 0 0}.leg .fp .fl,.cm .fp .fl{display:inline}.leg .fp .fs,.cm .fp .fs{display:none}.leg .fp,.cm .fp{font-size:12px;padding:4px 11px}.sh{margin-bottom:28px;font-size:11px}.sh-l{display:none}.bar{width:7px;left:auto}.bar.l{left:5px}.bar.r{right:5px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{padding:4px}.ct{font-size:15px}.foot{padding-inline:20px}}",
+"@media (prefers-reduced-motion:reduce){*{transition:none!important}html{scroll-behavior:auto}}"
+].join('\n');
+
+/* ---------- Calendário do cliente: gerado a partir da pauta aprovada ----------
+   Mesmo calendário do "Calendário isadsign" (calRuntime + CAL_CSS), agora com horário de postagem.
+   Salva em calendarios/<pautaId> + calpartes/<pautaId>_<i> e pede a tarefa "Calendários da pauta → Demandas". */
+const SYNC_CAL="trig_01MkJcTudma5iiuEufrM9s8t", CAL_PARTE=80000, WPP_PADRAO="5519971633589";
+const HORA_PADRAO={Carrossel:"12:00",Reels:"18:00","Estático":"11:30",Stories:"09:00"};
+const FMT_CAL={Carrossel:"carrossel",Reels:"reels","Estático":"estatico",Stories:"stories"};
+let mcpNs=null, calDocs={}, calSheet=null, calEnviando={}, calErro={};
+const pad2=n=>String(n).padStart(2,"0");
+function horaValida(h){return /^([01]\d|2[0-3]):[0-5]\d$/.test(String(h||""))}
+/* "Terça às 8h", "Sexta, dia 27, às 7h", "18h30", "19:00" → "HH:MM" */
+function horaDoTexto(t){const s=String(t||"");
+ const m=s.match(/[àa]s\s*(\d{1,2})(?:\s*[:h]\s*(\d{2}))?/i)||s.match(/\b(\d{1,2})\s*[:h]\s*(\d{2})\b/i)||s.match(/\b(\d{1,2})\s*h\b/i);
+ if(!m)return "";const h=+m[1],mi=m[2]?+m[2]:0;return h<24&&mi<60?pad2(h)+":"+pad2(mi):""}
+function horaDoPost(x){return horaValida(x.hora)?x.hora:horaDoTexto(x.horario)}
+function lum(h){h=String(h||"").replace("#","");if(h.length===3)h=h.split("").map(c=>c+c).join("");const n=parseInt(h,16);if(isNaN(n)||h.length!==6)return null;
+ return [(n>>16)&255,(n>>8)&255,n&255].map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)}).reduce((a,v,i)=>a+v*[.2126,.7152,.0722][i],0)}
+function contraste(a,b){const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+function coresCal(lista){
+ const cs=(lista||[]).map(c=>String(c||"").trim()).filter(c=>/^#[0-9a-f]{6}$/i.test(c)||/^#[0-9a-f]{3}$/i.test(c));
+ if(!cs.length)return {fundo:"#1f1f1f",texto:"#f5f5f5",destaque:"#e9349e",apoio:"#888888"};
+ const fundo=cs[0];let texto=cs.slice(1).sort((a,b)=>contraste(fundo,b)-contraste(fundo,a))[0];
+ if(!texto||contraste(fundo,texto)<3)texto=lum(fundo)>.4?"#1d1d1f":"#f5f5f5";
+ const resto=cs.slice(1).filter(c=>c!==texto);
+ return {fundo,texto,destaque:resto[0]||cs[1]||"#e9349e",apoio:resto[1]||resto[0]||cs[2]||"#888888"}}
+function linhasPost(x){const L=[];
+ if(x.formato==="Carrossel"&&(x.slides||[]).length)(x.slides||[]).forEach(s=>{const t=String(s.titulo||"").trim().replace(/^\d+\s*[.)\-–]\s*/,""),tx=String(s.texto||"").trim();L.push(t&&tx?t+" — "+tx:(t||tx))});
+ else if(x.formato==="Reels"&&(x.roteiro||[]).length)(x.roteiro||[]).forEach(r=>{let c=String(r.cena||"").trim();if(r.texto_tela)c+=(c?" · ":"")+"texto na tela: "+r.texto_tela;if(r.fala)c+=(c?" · ":"")+"fala: “"+r.fala+"”";L.push((r.tempo||"")+" | "+c)});
+ else if(x.formato==="Estático"&&x.arte){if(x.arte.frase)L.push("Frase da arte: "+x.arte.frase);if(x.arte.direcao)L.push(x.arte.direcao);if(x.visual)L.push(x.visual)}
+ else if(x.formato==="Stories"&&(x.telas||[]).length)(x.telas||[]).forEach((t,i)=>L.push("Tela "+(i+1)+": "+(t.texto||"")+(t.recurso&&t.recurso!=="nenhum"?" ("+t.recurso+")":"")));
+ if(!L.length&&x.descricao)L.push(x.descricao);
+ return L.filter(Boolean).map(l=>l.replace(/\s*\n\s*/g," ")).join("\n")}
+/* Pauta → dados do calendário (mesmo formato salvo pelo Calendário isadsign, com "hora" em cada post) */
+function dadosCalendario(p,horas){
+ const cli=clientes[slugC(p.cliente)]||{},pf=p.perfil||{},e=p.estrategia||{};
+ return {cliente:p.cliente,arroba:String(p.arroba||cli.arroba||"").replace(/^@/,""),nicho:p.nicho||cli.nicho||"",mes:p.mes,ano:p.ano,
+  whatsapp:String(cfg.whatsapp||WPP_PADRAO).replace(/\D/g,"")||WPP_PADRAO,cores:coresCal(cli.cores),fonte:"sans",fonteNome:"",
+  linhaVisual:pf.visual||e.resumo||"",
+  pilares:(e.pilares||[]).map(x=>({nome:x.nome,desc:x.descricao||""})),
+  posts:sorted(p).map(x=>({dia:x.dia,hora:horas[x.id]||horaDoPost(x)||HORA_PADRAO[x.formato]||"12:00",formato:FMT_CAL[x.formato]||"estatico",pilar:x.pilar||"",titulo:x.titulo||x.tema||"",
+   objetivo:x.objetivo||"",conteudo:linhasPost(x),legenda:x.legenda||"",cta:x.cta||"",hashtags:Array.isArray(x.hashtags)?x.hashtags.join(" "):String(x.hashtags||"")})),
+  origem:"pauta",pautaId:p.id}}
+function htmlCalendario(D){
+ const data=JSON.stringify(D).replace(/</g,"\\u003c"),title="Calendário "+MESES[D.mes].toLowerCase()+" "+D.ano+" · "+(D.cliente||"cliente");
+ return '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>'+esc(title)+'</title>'+
+  '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,500;0,800;0,900;1,300;1,500;1,800;1,900&family=DM+Serif+Display&family=Caveat:wght@600&display=swap">'+
+  '<style>'+CAL_CSS+'</style></head><body><div class="bar l"></div><div class="bar r"></div><main id="app"></main>'+
+  '<script type="application/json" id="isa-data">'+data+'<\/script><script>('+calRuntime.toString()+')();<\/script></bo'+'dy></ht'+'ml>'}
+function arquivoCal(p){return `${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}.html`}
+function dataLocal(iso){const d=iso?new Date(iso):new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())}
+function quandoBR(iso){if(!iso)return "";const d=new Date(iso);return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)} às ${pad2(d.getHours())}:${pad2(d.getMinutes())}`}
+
+/* Faixa de status do calendário, logo abaixo do topo da pauta */
+function calStatusHTML(p){
+ if(modoCliente||!dono||p.exemplo||p.status!=="aprovada")return "";
+ const c=calDocs[p.id];
+ if(!c)return `<div class="panel calst"><div class="t"><b>Pauta aprovada</b><span>Gere o calendário do cliente: ele lê a pauta inteira, com horário de postagem em cada post, e atualiza o painel Demandas.</span></div><div class="actions"><button class="btn lib" type="button" data-cal="gerar">Gerar calendário</button></div></div>`;
+ const sinc=c.sincronizadoEm&&c.sincronizadoEm>=c.geradoEm;
+ const st=sinc?`<span class="ok">✓ Demandas atualizado ${esc(quandoBR(c.sincronizadoEm))}${c.resultado?" · "+esc(c.resultado):""}</span>`
+  :`<span>${calEnviando[p.id]?esc(calEnviando[p.id]):"Atualizando o Demandas… leva alguns minutos."}</span>`;
+ return `<div class="panel calst"><div class="t"><b>Calendário gerado ${esc(quandoBR(c.geradoEm))} · ${c.total||0} posts com horário</b>${st}</div><div class="actions"><button class="btn lib" type="button" data-cal="ver">Abrir calendário</button>${downloads?`<button class="btn ghost" type="button" data-cal="baixar">Baixar HTML</button>`:""}<button class="btn ghost" type="button" data-cal="gerar">Gerar de novo</button>${!sinc&&(!calEnviando[p.id]||calErro[p.id])?`<button class="btn ghost" type="button" data-cal="sync">Atualizar Demandas agora</button>`:""}</div></div>`}
+function bindCalStatus(p){
+ document.querySelectorAll("[data-cal]").forEach(b=>b.onclick=()=>{const a=b.dataset.cal,c=calDocs[p.id];
+  if(a==="gerar")abrirHorarios(p);
+  else if(a==="ver"&&c)verCalendario(c);
+  else if(a==="baixar"&&c)baixar(c.arquivo||arquivoCal(p),()=>htmlCalendario(c.data),b);
+  else if(a==="sync")pedirSyncCal(p.id)})}
+
+/* Folha 1: conferir/ajustar o horário de cada post antes de gerar */
+function abrirHorarios(p){
+ const horas={},sug={};sorted(p).forEach(x=>{const h=horaDoPost(x);if(h)horas[x.id]=h;else{horas[x.id]=HORA_PADRAO[x.formato]||"12:00";sug[x.id]=1}});
+ calSheet={p,horas,sug,etapa:"horas"};renderCalSheet();
+ const sc=$("#calScrim");sc.hidden=false;document.body.style.overflow="hidden";setTimeout(()=>{const x=$("#calScrim .x");x&&x.focus()},30);
+ if(Object.keys(sug).length&&sample)sugerirHoras(p);}
+async function sugerirHoras(p){
+ const falta=sorted(p).filter(x=>calSheet&&calSheet.sug[x.id]);if(!falta.length)return;
+ calSheet.pensando=true;renderCalSheet();
+ try{
+  const lista=falta.map(x=>`- id ${x.id} · ${DIAS[dow(x.dia,p.mes,p.ano)]} dia ${x.dia} · ${x.formato} · ${x.titulo||x.tema}`).join("\n");
+  const r=await sample.json(`Você é estrategista de Instagram da agência @isadsign.co. Cliente: ${p.cliente} (${p.nicho||"nicho não informado"}). ${p.estrategia&&p.estrategia.frequencia?"Frequência combinada: "+p.estrategia.frequencia+".":""}
+Defina o melhor horário de postagem (fuso de Brasília) para cada post abaixo, pensando no público do nicho, no dia da semana e no formato. Use horários cheios ou de meia hora.
+${lista}
+Responda só com JSON: {"horarios":[{"id":"p1","hora":"18:00"}]}`,{modelTier:"quick",cache:false});
+  (r&&r.horarios||[]).forEach(h=>{if(calSheet&&calSheet.sug[h.id]&&horaValida(h.hora)){calSheet.horas[h.id]=h.hora}})}
+ catch(e){}
+ if(calSheet){calSheet.pensando=false;renderCalSheet()}}
+function fecharCalSheet(){$("#calScrim").hidden=true;document.body.style.overflow="";calSheet=null}
+function renderCalSheet(){
+ const s=calSheet,sh=$("#calSheet");if(!s)return;const p=s.p;
+ if(s.etapa==="ver"){
+  sh.className="sheet wide";
+  sh.innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow">Calendário · ${MESES[s.doc.mes]} ${s.doc.ano}</p><h3 id="calShTitle">${esc(s.doc.cliente)}</h3></div>${downloads?`<button type="button" class="btn ghost sm" id="calDl">Baixar HTML</button>`:""}<button type="button" class="x" aria-label="Fechar">✕</button></div><iframe class="calprev" title="Calendário de ${esc(s.doc.cliente)}"></iframe>`;
+  sh.querySelector("iframe").srcdoc=htmlCalendario(s.doc.data);
+  const dl=$("#calDl");if(dl)dl.onclick=()=>baixar(s.doc.arquivo||"calendario.html",()=>htmlCalendario(s.doc.data),dl);
+  sh.querySelector(".x").onclick=fecharCalSheet;return}
+ sh.className="sheet";
+ const posts=sorted(p),nS=Object.keys(s.sug).length,semTexto=posts.filter(x=>!detailed(x)).length;
+ sh.innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow">Gerar calendário · ${MESES[p.mes]} ${p.ano}</p><h3 id="calShTitle">Horário de cada post</h3><p class="sub" style="margin:.25rem 0 0;color:var(--fg-2);font-size:.875rem">${s.pensando?"Claude está sugerindo os horários que faltam…":nS?`${nS} ${nS===1?"horário foi sugerido":"horários foram sugeridos"} (em rosa). Ajuste se quiser.`:"Horários lidos da pauta. Ajuste se quiser."}</p></div><button type="button" class="x" aria-label="Fechar">✕</button></div>
+ <div class="hr-all"><label for="hrTodos">Mesmo horário para todos</label><input type="time" id="hrTodos" step="900"><button type="button" class="btn ghost sm" id="hrAplicar">Aplicar</button></div>
+ <div class="hrs">${posts.map(x=>`<label class="hr-row${s.sug[x.id]?" sug":""}"><span class="d">${pad2(x.dia)}/${pad2(p.mes+1)}<small>${DIAS_C[dow(x.dia,p.mes,p.ano)]}</small></span><span class="tt"><b>${esc(x.titulo||x.tema)}</b><span><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${x.formato}${x.horario?" · "+esc(x.horario):""}</span></span><input type="time" step="900" data-hr="${x.id}" value="${esc(s.horas[x.id]||"")}" aria-label="Horário do post de ${x.dia}/${p.mes+1}"></label>`).join("")}</div>
+ <div class="sh-foot"><p class="note${semTexto?" err":""}">${semTexto?`${semTexto} ${semTexto===1?"post ainda não tem":"posts ainda não têm"} conteúdo completo; ${semTexto===1?"ele entra":"eles entram"} só com tema e objetivo.`:`${posts.length} posts · o calendário sai na estética de sempre, com o horário de cada post.`}</p><button type="button" class="btn ghost" id="calCancel">Cancelar</button><button type="button" class="btn lib" id="calGo"${s.gerando||s.pensando?" disabled":""}>${s.gerando?"Gerando…":"Gerar calendário"}</button></div>`;
+ sh.querySelector(".x").onclick=fecharCalSheet;$("#calCancel").onclick=fecharCalSheet;
+ sh.querySelectorAll("[data-hr]").forEach(i=>i.onchange=()=>{if(horaValida(i.value)){s.horas[i.dataset.hr]=i.value;delete s.sug[i.dataset.hr];i.closest(".hr-row").classList.remove("sug")}});
+ $("#hrAplicar").onclick=()=>{const v=$("#hrTodos").value;if(!horaValida(v)){toast("Escolha um horário");return}posts.forEach(x=>{s.horas[x.id]=v});s.sug={};renderCalSheet()};
+ $("#calGo").onclick=()=>gerarCalendario()}
+/* Respostas do portal externo (GitHub Pages + Supabase): o workflow "Aprovações do portal" grava a branch "dados"
+   e a tarefa "Aprovações do portal → Pauta isadsign" marca aqui a pauta como aprovada. O app pede essa tarefa ao abrir. */
+const SYNC_APROV="trig_01YXDWVWU18zkh8Vvh74ckVC";
+let statusVistos=null;
+async function pedirAprovacoes(){
+ if(!mcpNs||modoCliente||!dono)return;
+ try{const ult=+(localStorage.getItem("pauta-aprov-pedido")||0);if(Date.now()-ult<10*60*1000)return;localStorage.setItem("pauta-aprov-pedido",String(Date.now()))}catch(e){}
+ try{await mcpNs.callTool("Claude Code Remote","fire_trigger",{trigger_id:SYNC_APROV},{cache:false})}catch(e){}}
+function avisarAprovadas(){
+ const agora={};saved.forEach(p=>{agora[p.id]=p.status||"rascunho"});
+ if(current&&!current.exemplo){const x=saved.find(y=>y.id===current.id);
+  if(x&&(x.status!==current.status||x.statusEm!==current.statusEm)){current.status=x.status;current.statusNota=x.statusNota;current.statusEm=x.statusEm;if(!busy)renderResult()}}
+ if(statusVistos&&!modoCliente){const novas=saved.filter(p=>p.status==="aprovada"&&statusVistos[p.id]&&statusVistos[p.id]!=="aprovada");
+  if(novas.length===1)toast(`${novas[0].cliente} aprovou ${MESES[novas[0].mes].toLowerCase()}. Já dá para gerar o calendário.`);
+  else if(novas.length>1)toast(`${novas.length} pautas aprovadas. Já dá para gerar os calendários.`)}
+ statusVistos=agora}
+function verCalendario(doc){calSheet={etapa:"ver",doc};renderCalSheet();$("#calScrim").hidden=false;document.body.style.overflow="hidden"}
+
+/* Gera, guarda no banco e pede a atualização do Demandas */
+async function gerarCalendario(){
+ const s=calSheet;if(!s||s.gerando)return;const p=s.p;
+ if(!db){toast("Abra a página no Claude para gerar o calendário");return}
+ s.gerando=true;renderCalSheet();
+ try{
+  /* guarda os horários escolhidos na própria pauta */
+  const x0=saved.find(y=>y.id===p.id)||p;x0.posts.forEach(x=>{if(s.horas[x.id])x.hora=s.horas[x.id]});if(current&&current.id===p.id&&current!==x0)current.posts.forEach(x=>{if(s.horas[x.id])x.hora=s.horas[x.id]});
+  await savePauta(x0);
+  const D=dadosCalendario(x0,s.horas),html=htmlCalendario(D),n=Math.max(1,Math.ceil(html.length/CAL_PARTE)),antes=(calDocs[p.id]||{}).partes||0;
+  for(let i=0;i<n;i++)await db.collection("calpartes").doc(p.id+"_"+i).set({html:html.slice(i*CAL_PARTE,(i+1)*CAL_PARTE),cal:p.id,i});
+  for(let i=n;i<antes;i++)await db.collection("calpartes").doc(p.id+"_"+i).delete().catch(()=>{});
+  const cli=clientes[slugC(p.cliente)]||{};
+  const doc={pautaId:p.id,cliente:p.cliente,demandasId:(cli.demandas&&cli.demandas.id)||"",mes:p.mes,ano:p.ano,mesISO:`${p.ano}-${pad2(p.mes+1)}`,
+   arquivo:arquivoCal(p),tamanho:html.length,partes:n,total:D.posts.length,aprovadoEm:dataLocal(p.statusEm),geradoEm:new Date().toISOString(),data:D};
+  await db.collection("calendarios").doc(p.id).set(doc);
+  calDocs[p.id]=doc;calSheet={etapa:"ver",doc};renderCalSheet();
+  toast("Calendário gerado");renderResult();
+  pedirSyncCal(p.id)}
+ catch(e){s.gerando=false;renderCalSheet();toast(e&&e.code==="quota_exceeded"?"O banco da pauta está cheio. Exclua pautas antigas.":"Não foi possível gerar o calendário agora")}}
+async function pedirSyncCal(id){
+ const fim=" A atualização automática roda às 8h37, 13h37 e 19h37.";
+ if(!mcpNs){calErro[id]=false;calEnviando[id]="O Demandas é atualizado na próxima rodada."+fim;renderResult();return}
+ calErro[id]=false;calEnviando[id]="Pedindo a atualização do Demandas…";renderResult();
+ try{await mcpNs.callTool("Claude Code Remote","fire_trigger",{trigger_id:SYNC_CAL},{cache:false});calEnviando[id]="Atualizando o Demandas (aprovados, demandas e propostas)… leva alguns minutos."}
+ catch(e){const c=e&&e.code;calErro[id]=true;calEnviando[id]=(({approval_required:"Precisa da sua permissão para atualizar o Demandas.",not_in_manifest:"A permissão para atualizar o Demandas foi recusada.",needs_reauth:"Reconecte o Claude Code nas configurações do claude.ai."})[c]||"Não deu para pedir agora.")+fim}
+ renderResult()}
+$("#calScrim").addEventListener("click",e=>{if(e.target.id==="calScrim")fecharCalSheet()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&calSheet&&!$("#calScrim").hidden)fecharCalSheet()});
 
 /* ---------- Boot ---------- */
-renderResult();
-(async()=>{
+if(modoCliente)startCliente();
+else (async()=>{
+ renderResult();
  const c=window.claude;
  if(!c||!c.use){setNote("Abra esta página no Claude para gerar pautas.",true);return}
- const [s,d,dl]=await Promise.all([c.use("sample"),c.use("db"),c.use("downloads")]);
- sample=s;db=d;downloads=dl;
+ const [s,d,dl,us,ar]=await Promise.all([c.use("sample"),c.use("db"),c.use("downloads"),c.use("user"),c.use("artifact")]);
+ /* Only the isadsign account sees the generator; anyone else who opens the bare link gets a pointer to their own link */
+ dono=us?await us.canEdit().catch(()=>false):!!d;pedirAprovacoes();
+ if(!dono){document.body.classList.add("cliente");$("#result").innerHTML=`<section class="panel gate"><p class="eyebrow">Pauta isadsign</p><h2>Use o seu link</h2><p>Para ver a sua pauta, abra o link completo que a isadsign enviou para você e digite o seu código de acesso.</p></section>`;return}
+ sample=s;db=d;downloads=dl;artifactCap=ar;
+ c.use("mcp").then(m=>{mcpNs=m||null;pedirAprovacoes()}).catch(()=>{mcpNs=null});
+ try{const v=JSON.parse(sessionStorage.getItem("pauta-volta")||"null");if(v){sessionStorage.removeItem("pauta-volta");pastaAberta=v.pasta||null;showView(v.view||"clientes");if(v.msg)toast(v.msg)}}catch(e){}
  if(!sample)setNote("Gerar pauta funciona quando a página está aberta no Claude.",true);
  else{try{const lim=await sample.limits();imgLimits=lim&&lim.images||null}catch(e){imgLimits=null}}
- if(!imgLimits){$("#fFiles").accept="application/pdf";$("#dropHint").textContent="PDF do cliente (catálogo, apresentação, cardápio). Para prints, abra a página no Claude."}
- else $("#dropHint").textContent=`Prints do Instagram, fotos, catálogo ou apresentação em PDF. Até ${imgLimits.maxCount} imagens. Toque, arraste ou cole aqui.`;
+ paintConteudos();if(!imgLimits){$("#fFiles").accept="application/pdf";$("#fResumo").accept="application/pdf";$("#resumoHint").textContent="Briefing ou apresentação em PDF. Para prints, abra a página no Claude.";$("#dropHint").textContent="PDF do cliente, referências, catálogo ou cardápio. Para prints e artes, abra a página no Claude."}
+ else $("#dropHint").textContent=`Prints do perfil, artes de referência, fotos, catálogo ou PDF. Até ${imgLimits.maxCount} imagens. Toque, arraste ou cole aqui.`;
  updateTotal();renderResult();
  if(db){db.collection("pautas").orderBy("criadoEm","desc").limit(200).onSnapshot(snap=>{
-   saved=snap.docs.map(x=>x.data()).filter(Boolean);updateClientes();
+   saved=snap.docs.map(x=>x.data()).filter(Boolean);avisarAprovadas();updateClientes();
    if(current&&current.exemplo&&saved.length&&!busy){current=JSON.parse(JSON.stringify(saved[0]));renderResult()}
-   if(!$("#viewSalvas").hidden)renderSaved()},()=>{});
-  db.collection("clientes").onSnapshot(snap=>{clientes={};snap.docs.forEach(x=>{const c=x.data();if(c&&c.nome)clientes[x.id]=c});updateClientes();paintPerfilHint()},()=>{})}
+   if(!$("#viewSalvas").hidden)renderSaved();if(!$("#viewClientes").hidden)renderClientes()},()=>{});
+  db.collection("calendarios").onSnapshot(snap=>{calDocs={};snap.docs.forEach(x=>{const c=x.data();if(c&&c.pautaId)calDocs[x.id]=c});if(current&&!busy)renderResult()},()=>{});
+  db.collection("config").onSnapshot(snap=>{const g=snap.docs.find(x=>x.id==="geral");cfg=(g&&g.data())||{};cfgOk=true;if(!$("#viewClientes").hidden)renderClientes();sincronizarPortal()},()=>{cfgOk=true});
+  db.collection("acessos").onSnapshot(snap=>{acessos=snap.docs.map(x=>({...x.data(),id:x.id})).filter(a=>a&&a.cliente&&a.url).sort((a,b)=>a.cliente.localeCompare(b.cliente,"pt"));acessosOk=true;if(!$("#viewClientes").hidden)renderClientes();sincronizarPortal()},()=>{});
+  db.collection("clientes").onSnapshot(snap=>{clientes={};snap.docs.forEach(x=>{const c=x.data();if(c&&c.nome)clientes[x.id]=c});updateClientes();paintPerfilHint();if(!$("#viewClientes").hidden)renderClientes()},()=>{})}
 })();
 })();
 </script>
+</body></html>
