@@ -45,8 +45,11 @@ Para os clientes abrirem, o app precisa estar compartilhado como "qualquer pesso
 Site comum, fora do Claude, onde o cliente vê a pauta e responde, e a resposta fica salva para a isadsign. Endereço: `https://isadsignco.github.io/pauta-isadsign/portal/`.
 
 - **Cliente** (`portal/#<token>`, um link e um código por cliente, sempre os mesmos): digita o código e cai no **perfil**, com as pautas que esperam resposta em destaque, as outras pautas por mês e o resumo da marca. Abre cada pauta (calendário, posts, estratégia), baixa PDF ou HTML, imprime, e responde com **Aprovar**, **Pedir revisão** ou **Reprovar**, com comentários. Para pedir revisão ou reprovar, o comentário é obrigatório.
+- **Links importantes**: na pasta de cada cliente, no painel, você adiciona links com título e função (Drive, Contrato, Referências…), edita, muda a ordem e remove. Eles aparecem no perfil do cliente, com filtro por função. Só aceita links `http(s)`.
 - **Você** recebe um e-mail a cada resposta e vê tudo no **painel** (`portal/painel.html`, com login): respostas novas, publicar pauta, pasta de cada cliente com link, código, pautas e respostas, trocar código, tirar pauta do portal e excluir cliente.
 - As pautas continuam sendo geradas no app do Claude. No app, toque em **Arquivo para o portal** e envie o arquivo no painel, em **Publicar pauta**.
+
+Banco: `supabase/setup.sql` cria tudo numa instalação nova; `supabase/02-links.sql` adiciona os links numa instalação que já existia.
 
 Arquivos: `portal/index.html` (cliente), `portal/painel.html` (painel), `portal/comum.js` e `portal/estilo.css` (compartilhados), `portal/config.js` (chaves públicas), `supabase/setup.sql` (banco).
 

@@ -57,7 +57,9 @@ details summary{cursor:pointer;color:var(--accent);font-size:.875rem}
 (function(){
 const {MESES,RESP,STATUS,$,esc,slug,cfg,sb,toast,copy,statusChip}=window.P;
 const ALFABETO="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-let clientes=[],pautas=[],respostas=[],pasta=null,importada=null,timer=null;
+let clientes=[],pautas=[],respostas=[],links=[],pasta=null,importada=null,timer=null,editLink=null;
+/* Suggested tags for a client's links; any other text works too */
+const TAGS=["Drive","Contrato","Briefing","Referências","Identidade visual","Calendário","Reunião","Pagamento","Relatório","Aprovação"];
 const rand=n=>[...crypto.getRandomValues(new Uint8Array(n))];
 const novoCodigo=()=>{const s=rand(8).map(n=>ALFABETO[n%ALFABETO.length]).join("");return s.slice(0,4)+"-"+s.slice(4)};
 const novoToken=nome=>`${slug(nome).slice(0,60)||"cliente"}-${rand(6).map(n=>(n%36).toString(36)).join("")}`;
@@ -108,6 +110,8 @@ async function carregar(o){o=o||{};
   const [c,p,r]=await Promise.all([db.from("clientes").select("*").order("nome"),db.from("pautas").select("id,token,mes,ano,status,atualizado_em").order("ano",{ascending:false}).order("mes",{ascending:false}),db.from("respostas").select("*").order("criado_em",{ascending:false}).limit(500)]);
   if(c.error||p.error||r.error){toast("Não foi possível carregar. Verifique a conexão.");return}
   clientes=c.data;pautas=p.data;respostas=r.data;
+  /* links is null when the links table does not exist yet (supabase/02-links.sql not run) */
+  const lk=await db.from("links").select("*").order("ordem").order("id");links=lk.error?null:lk.data;
   const aj=await db.from("ajustes").select("*");if(!aj.error){const x=(aj.data||[]).find(y=>y.chave==="aviso_email");aviso=x?x.valor:""}
   if(o.manual)toast("Atualizado");
   const a=document.activeElement,digitando=a&&$("#app").contains(a)&&/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName);
@@ -197,12 +201,13 @@ function renderPasta(c){
    <p class="linkbox">${esc(linkDe(c))}</p>
    <div class="kv2"><div><b>Código de acesso</b><span class="mono">${esc(c.codigo)}</span></div><div><b>Cliente desde</b><span>${new Date(c.criado_em).toLocaleDateString("pt-BR")}</span></div></div>
    <div class="actions"><button type="button" class="btn" id="cpLink">Copiar link</button><button type="button" class="btn" id="cpMsg">Copiar mensagem</button><a class="btn" href="${esc(linkDe(c))}" target="_blank" rel="noopener">Abrir como cliente</a><button type="button" class="btn" id="novoCod">Gerar novo código</button></div></section>
+  ${linksHTML(c)}
   <section class="panel card"><h2>Pautas</h2>${ps.length?`<div class="list">${ps.map(p=>`<div class="row"><div class="info"><span class="tags"><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${statusChip(p.status)}</span><span class="m">Publicada ou atualizada em ${quando(p.atualizado_em)}</span></div>
      <div class="act"><button type="button" class="btn sm danger" data-tirar="${esc(p.id)}">Tirar do portal</button></div></div>`).join("")}</div>`:`<p class="vazio">Nenhuma pauta publicada para este cliente.</p>`}</section>
   <section class="panel card"><h2>Respostas do cliente</h2>${rs.length?`<div class="list">${rs.map(respRow).join("")}</div>`:`<p class="vazio">O cliente ainda não respondeu.</p>`}</section>
   <section class="panel card"><h2>Excluir cliente</h2><p class="lead">Apaga o cliente, ${ps.length===1?"a pauta":`as ${ps.length} pautas`} e as respostas dele. O link para de funcionar na hora. Não dá para desfazer.</p><button type="button" class="btn danger" id="excluir">Excluir ${esc(c.nome)}</button></section>`);
-  ligarResp();
-  $("#voltar").onclick=()=>{pasta=null;render();window.scrollTo({top:0})};
+  ligarResp();ligarLinks(c);
+  $("#voltar").onclick=()=>{pasta=null;editLink=null;render();window.scrollTo({top:0})};
   $("#cpLink").onclick=()=>copy(linkDe(c));$("#cpMsg").onclick=()=>copy(msgDe(c));
   $("#nomeForm").onsubmit=async e=>{e.preventDefault();const nome=$("#nomeIn").value.trim();if(!nome)return;
     const {error}=await sb().from("clientes").update({nome}).eq("token",c.token);if(error)return toast("Não foi possível salvar");c.nome=nome;toast("Nome salvo")};
@@ -212,6 +217,46 @@ function renderPasta(c){
     const {error}=await sb().from("pautas").delete().eq("id",b.dataset.tirar);if(error)return toast("Não foi possível tirar");await carregar();toast("Pauta retirada do portal")}));
   confirmar($("#excluir"),"Toque de novo para excluir",async()=>{
     const {error}=await sb().from("clientes").delete().eq("token",c.token);if(error)return toast("Não foi possível excluir");pasta=null;await carregar();toast(`${c.nome} excluído`)})}
+/* ---------- Important links shown on the client's profile ---------- */
+const hostDe=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return u}};
+const normUrl=u=>{u=String(u||"").trim();if(u&&!/^https?:\/\//i.test(u))u="https://"+u;try{const x=new URL(u);return /^https?:$/.test(x.protocol)?x.href:""}catch(e){return ""}};
+function linksHTML(c){
+  if(links===null)return `<section class="panel card"><h2>Links do cliente</h2><p class="note err">Para usar os links, rode uma vez o arquivo supabase/02-links.sql no SQL Editor do Supabase.</p></section>`;
+  const ls=links.filter(l=>l.token===c.token),e=editLink&&ls.find(l=>l.id===editLink);
+  const tags=[...new Set([...TAGS,...links.map(l=>l.tag).filter(Boolean)])];
+  return `<section class="panel card"><h2>Links do cliente</h2><p class="lead">Aparecem no perfil do cliente, em “Links importantes”. Dê um título, cole o link e escolha a função.</p>
+  ${ls.length?`<div class="list">${ls.map((l,i)=>`<div class="row"><div class="info"><span class="tags">${l.tag?`<span class="tag mes">${esc(l.tag)}</span>`:""}</span><b>${esc(l.titulo)}</b><span class="m" style="word-break:break-all">${esc(l.url)}</span></div>
+   <div class="act"><a class="btn sm" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">Abrir</a><button type="button" class="btn sm" data-sobe="${l.id}" ${i===0?"disabled":""} aria-label="Subir ${esc(l.titulo)}">↑</button><button type="button" class="btn sm" data-desce="${l.id}" ${i===ls.length-1?"disabled":""} aria-label="Descer ${esc(l.titulo)}">↓</button><button type="button" class="btn sm" data-editar="${l.id}">Editar</button><button type="button" class="btn sm danger" data-remover="${l.id}">Remover</button></div></div>`).join("")}</div>`
+   :`<p class="vazio">Nenhum link ainda.</p>`}
+  <form class="importa" id="lkForm" style="margin-top:1rem" autocomplete="off">
+   <h3 style="margin:0;font-size:1rem">${e?"Editar link":"Adicionar link"}</h3>
+   <div class="field"><label class="lbl" for="lkTitulo">Título</label><input type="text" id="lkTitulo" maxlength="120" required placeholder="Ex.: Fotos da sessão de outubro" value="${esc(e?e.titulo:"")}"></div>
+   <div class="field"><label class="lbl" for="lkUrl">Link</label><input type="text" id="lkUrl" inputmode="url" required placeholder="Cole aqui: https://…" value="${esc(e?e.url:"")}"></div>
+   <div class="field"><label class="lbl" for="lkTag">Função</label><input type="text" id="lkTag" list="lkTags" maxlength="40" placeholder="Ex.: Drive, Contrato, Referências" value="${esc(e?e.tag:"")}"><datalist id="lkTags">${tags.map(t=>`<option value="${esc(t)}"></option>`).join("")}</datalist>
+    <div class="tags" style="margin-top:.35rem">${TAGS.map(t=>`<button type="button" class="tag" data-tag="${esc(t)}" style="border:0;cursor:pointer">${esc(t)}</button>`).join("")}</div></div>
+   <p class="note err" id="lkErr" hidden></p>
+   <div class="actions"><button type="submit" class="btn primary" id="lkSalvar">${e?"Salvar alterações":"Adicionar link"}</button>${e?`<button type="button" class="btn" id="lkCancelar">Cancelar</button>`:""}</div></form></section>`}
+function ligarLinks(c){
+  const f=$("#lkForm");if(!f)return;const ls=links.filter(l=>l.token===c.token);
+  f.querySelectorAll("[data-tag]").forEach(b=>b.onclick=()=>{$("#lkTag").value=b.dataset.tag});
+  const canc=$("#lkCancelar");if(canc)canc.onclick=()=>{editLink=null;render()};
+  f.onsubmit=async e=>{e.preventDefault();const err=$("#lkErr");err.hidden=true;
+    const titulo=$("#lkTitulo").value.trim(),url=normUrl($("#lkUrl").value),tag=$("#lkTag").value.trim();
+    if(!url){err.textContent="Esse link não parece válido. Cole o endereço completo, começando com https://";err.hidden=false;$("#lkUrl").focus();return}
+    const b=$("#lkSalvar");b.disabled=true;
+    const q=editLink?sb().from("links").update({titulo,url,tag}).eq("id",editLink):sb().from("links").insert({token:c.token,titulo,url,tag,ordem:ls.reduce((m,l)=>Math.max(m,l.ordem),0)+1});
+    const {error}=await q;if(error){b.disabled=false;err.textContent="Não foi possível salvar o link. Tente de novo.";err.hidden=false;return}
+    toast(editLink?"Link atualizado":"Link adicionado");editLink=null;await carregar()};
+  $("#app").querySelectorAll("[data-editar]").forEach(b=>b.onclick=()=>{editLink=+b.dataset.editar;render();$("#lkTitulo").focus()});
+  $("#app").querySelectorAll("[data-remover]").forEach(b=>confirmar(b,"Toque de novo",async()=>{
+    const {error}=await sb().from("links").delete().eq("id",+b.dataset.remover);if(error)return toast("Não foi possível remover");if(editLink===+b.dataset.remover)editLink=null;await carregar();toast("Link removido")}));
+  /* Reorder: renumber the whole list so ties and gaps never stick */
+  const mover=async(id,d)=>{const arr=[...ls];const i=arr.findIndex(l=>l.id===id),j=i+d;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]];
+    const rs=await Promise.all(arr.map((l,k)=>l.ordem===k+1?null:sb().from("links").update({ordem:k+1}).eq("id",l.id)));
+    if(rs.some(r=>r&&r.error))toast("Não foi possível mudar a ordem");await carregar()};
+  $("#app").querySelectorAll("[data-sobe]").forEach(b=>b.onclick=()=>mover(+b.dataset.sobe,-1));
+  $("#app").querySelectorAll("[data-desce]").forEach(b=>b.onclick=()=>mover(+b.dataset.desce,1))}
+
 function confirmar(btn,txt,fn){const orig=btn.textContent;btn.onclick=()=>{if(!btn.dataset.armed){btn.dataset.armed="1";btn.textContent=txt;setTimeout(()=>{if(btn.isConnected){delete btn.dataset.armed;btn.textContent=orig}},4000);return}btn.disabled=true;fn()}}
 
 iniciar();

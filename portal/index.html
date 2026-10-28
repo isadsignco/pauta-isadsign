@@ -90,6 +90,7 @@ function perfil(){
   $("#app").innerHTML=`<section class="panel head"><div><p class="eyebrow"><span>Seu perfil</span>${ult.arroba?`<span class="tag">${esc(ult.arroba)}</span>`:""}</p>
    <h1>${esc(dados.cliente)}</h1>${ult.nicho?`<p class="sub">${esc(ult.nicho)}</p>`:""}</div>
    <div class="counts"><div class="count"><b>${ps.length}</b><span>${ps.length===1?"pauta":"pautas"}</span></div><div class="count"><b>${pend.length}</b><span>esperando sua resposta</span></div><div class="count"><b>${ap}</b><span>${ap===1?"aprovada":"aprovadas"}</span></div></div></section>
+  ${linksHTML()}
   ${!ps.length?`<section class="panel card"><h2>Nenhuma pauta ainda</h2><p class="lead">A pauta do mês aparece aqui assim que a isadsign liberar.</p></section>`:""}
   ${pend.length?`<section class="panel card"><h2>Esperando sua resposta</h2><p class="lead">Abra a pauta, veja os posts e responda: aprovar, pedir revisão ou reprovar.</p><div class="posts">${pend.map(card).join("")}</div></section>`:""}
   ${ps.length>pend.length?`<section class="panel card"><h2>${pend.length?"Outras pautas":"Suas pautas"}</h2><div class="posts">${ps.filter(x=>x.status!=="enviada").map(card).join("")}</div></section>`:""}
@@ -97,7 +98,20 @@ function perfil(){
    ${(pf.produtos||[]).length?`<div class="fact"><h4>Produtos e serviços</h4>${li(pf.produtos.slice(0,6))}</div>`:""}${pf.publico?`<div class="fact"><h4>Público</h4><p>${esc(pf.publico)}</p></div>`:""}
    ${pf.tom?`<div class="fact"><h4>Tom de voz</h4><p>${esc(pf.tom)}</p></div>`:""}${pf.visual?`<div class="fact"><h4>Identidade visual</h4><p>${esc(pf.visual)}</p></div>`:""}</div></section>`:""}
   <p class="foot">isadsign · @isadsign.co</p>`;
-  $("#app").querySelectorAll("[data-abrir]").forEach(b=>b.onclick=()=>abrirPauta(+b.dataset.abrir))}
+  $("#app").querySelectorAll("[data-abrir]").forEach(b=>b.onclick=()=>abrirPauta(+b.dataset.abrir));
+  ligarLinks()}
+
+/* ---------- Important links the isadsign team left for this client ---------- */
+let filtroLink="Todos";
+const seguro=u=>/^https?:\/\//i.test(String(u||""));
+const hostDe=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return ""}};
+function linksHTML(){
+  const ls=(dados.links||[]).filter(l=>seguro(l.url));if(!ls.length)return "";
+  const tags=[...new Set(ls.map(l=>l.tag).filter(Boolean))];if(!tags.includes(filtroLink))filtroLink="Todos";
+  const vis=ls.filter(l=>filtroLink==="Todos"||l.tag===filtroLink);
+  return `<section class="panel card" id="linksCard"><div class="toolbar"><h2>Links importantes</h2>${tags.length>1?`<div class="seg" role="group" aria-label="Filtrar por função">${["Todos",...tags].map(t=>`<button type="button" data-flink="${esc(t)}" aria-pressed="${filtroLink===t}">${esc(t)}</button>`).join("")}</div>`:""}</div>
+  <div class="links">${vis.map(l=>`<a class="lk" href="${esc(l.url)}" target="_blank" rel="noopener noreferrer">${l.tag?`<span class="tag mes">${esc(l.tag)}</span>`:""}<b>${esc(l.titulo)}</b><span class="m">${esc(hostDe(l.url))} ↗</span></a>`).join("")}</div></section>`}
+function ligarLinks(){$("#app").querySelectorAll("[data-flink]").forEach(b=>b.onclick=()=>{filtroLink=b.dataset.flink;$("#linksCard").outerHTML=linksHTML();ligarLinks()})}
 
 /* ---------- Answer ---------- */
 function respostaHTML(it){
