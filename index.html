@@ -829,9 +829,9 @@ function renderResult(progress){
  if(!p){r.innerHTML=`<div class="panel empty-state"><h3>Nenhuma pauta aberta</h3><p>Preencha o briefing ao lado e toque em Gerar pauta.</p></div>`;return}
  const mesNome=MESES[p.mes];
  const counts=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(c=>c[1]);
- let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow"><span class="eb">${esc(p.arroba||p.nicho||"Pauta")}</span><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${p.exemplo?'<span class="tag">Exemplo</span>':""}${!modoCliente&&!p.exemplo?statusChip(p):""}</p><h2>${esc(p.cliente)} · ${mesNome} ${p.ano}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
+ let html=`<div class="panel"><div class="head"><div class="t"><p class="eyebrow"><span class="eb">${esc(p.arroba||p.nicho||"Pauta")}</span><span class="tag mes">${esc(rotulo(p))}</span>${p.exemplo?'<span class="tag">Exemplo</span>':""}${!modoCliente&&!p.exemplo?statusChip(p):""}</p><h2>${esc(p.cliente)} · ${esc(rotulo(p))}</h2><p class="sub">Objetivo: ${esc(p.objetivo)}${p.nicho?" · "+esc(p.nicho):""}</p></div>
  <div class="actions">${!modoCliente&&dono&&artifactCap&&db&&!p.exemplo&&!busy&&p.posts.length?`<button class="btn lib" id="libBtn" type="button">Liberar para o cliente</button>`:""}${downloads&&p.posts.length&&!busy?`<button class="btn ghost" id="dlPdf" type="button">Baixar PDF</button><button class="btn ghost" id="dlHtml" type="button">Baixar HTML</button>`:""}${!modoCliente&&downloads&&!p.exemplo&&p.posts.length&&!busy?`<button class="btn ghost" id="dlPortal" type="button">Arquivo para o portal</button>`:""}${!modoCliente&&!p.exemplo&&!busy&&sample&&p.posts.some(detailed)?`<button class="btn ghost" id="humAll" type="button">Humanizar tudo</button>`:""}${p.posts.length?`<button class="btn ghost" id="copyAll" type="button">Copiar pauta</button>`:""}${!modoCliente&&!p.exemplo&&!busy?`<button class="btn ghost" id="delBtn" type="button">Excluir</button>`:""}</div></div>
- ${modoCliente&&clientePautas.length>1?`<div class="months" role="group" aria-label="Escolher mês">${clientePautas.map((x,i)=>`<button type="button" data-mes="${i}" aria-pressed="${x===p}">${MESES[x.mes]} ${x.ano}</button>`).join("")}</div>`:""}<div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
+ ${modoCliente&&clientePautas.length>1?`<div class="months" role="group" aria-label="Escolher pauta">${clientePautas.map((x,i)=>`<button type="button" data-mes="${i}" aria-pressed="${x===p}">${esc(rotulo(x))}</button>`).join("")}</div>`:""}<div class="counts"><div class="count"><b>${p.posts.length}</b><span>posts</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot" style="background:${FCOLOR[f]}"></i>${f}</span></div>`).join("")}</div></div>`;
  if(modoCliente)html+=respostaHTML(p);
  html+=calStatusHTML(p);
  if(progress)html+=`<div class="panel progress"><div class="pl">${esc(progress.label)}<span>${esc(progress.detail||"")}</span></div><div class="track"><i style="width:${Math.round(progress.pct*100)}%"></i></div></div>`;
@@ -860,7 +860,7 @@ function renderResult(progress){
  const dh=$("#dlHtml");if(dh)dh.onclick=()=>baixar(`${nomeArquivo(p)}.html`,()=>pautaHTML(p),dh);
  const dp=$("#dlPdf");if(dp)dp.onclick=()=>baixar(`${nomeArquivo(p)}.pdf`,()=>pautaPDF(p),dp);
  /* The external client portal (portal/painel.html) imports this file */
- const dpo=$("#dlPortal");if(dpo)dpo.onclick=()=>baixar(`portal-${nomeArquivo(p)}.json`,()=>JSON.stringify(limpar(p)),dpo);
+ const dpo=$("#dlPortal");if(dpo)dpo.onclick=()=>baixar(`portal-${nomeArquivo(p)}.json`,()=>JSON.stringify({...limpar(p),n:numMes(p).i||p.n||1}),dpo);
  if(modoCliente)bindResposta(p);
  const del=$("#delBtn");if(del)del.onclick=()=>confirmDelete(del,p);
  const lib=$("#libBtn");if(lib)lib.onclick=()=>liberar(p,lib);
@@ -1089,7 +1089,7 @@ function postMd(x,p){let s=`## ${x.dia}/${p.mes+1} (${DIAS[dow(x.dia,p.mes,p.ano
  if(x.arte)s+=`\nArte: "${x.arte.frase}" — ${x.arte.direcao}\n`;
  if(x.telas)s+=`\nTelas:\n${x.telas.map((t,j)=>`${j+1}. ${t.texto}${t.recurso?" ("+t.recurso+")":""}`).join("\n")}\n`;
  if(x.legenda)s+=`\nLegenda:\n${x.legenda}\n\nCTA: ${x.cta}\nHashtags: ${(x.hashtags||[]).join(" ")}\n`;return s}
-function toMarkdown(p){const e=p.estrategia||{};let s=`# Pauta ${p.cliente} · ${MESES[p.mes]} ${p.ano}\n${p.arroba||""}${p.nicho?" · "+p.nicho:""}\nObjetivo: ${p.objetivo}\n${p.perfil&&p.perfil.resumo?"\n## Sobre o cliente\n"+p.perfil.resumo+"\n":""}${p.briefing&&(p.briefing.temas||[]).length?"\nTemas: "+p.briefing.temas.join("; ")+"\n":""}\n## Estratégia\n${e.resumo||""}\n\nPilares:\n${(e.pilares||[]).map(x=>`- ${x.nome} (${x.pct}%): ${x.descricao}`).join("\n")}\n\nFrequência: ${e.frequencia||""}\n`;
+function toMarkdown(p){const e=p.estrategia||{};let s=`# Pauta ${p.cliente} · ${rotulo(p)}\n${p.arroba||""}${p.nicho?" · "+p.nicho:""}\nObjetivo: ${p.objetivo}\n${p.perfil&&p.perfil.resumo?"\n## Sobre o cliente\n"+p.perfil.resumo+"\n":""}${p.briefing&&(p.briefing.temas||[]).length?"\nTemas: "+p.briefing.temas.join("; ")+"\n":""}\n## Estratégia\n${e.resumo||""}\n\nPilares:\n${(e.pilares||[]).map(x=>`- ${x.nome} (${x.pct}%): ${x.descricao}`).join("\n")}\n\nFrequência: ${e.frequencia||""}\n`;
  if((e.datas||[]).length)s+=`\nDatas:\n${e.datas.map(d=>`- ${d.dia}/${p.mes+1} ${d.nome}: ${d.uso}`).join("\n")}\n`;
  s+=`\n## Calendário\n| Data | Dia | Formato | Pilar | Tema |\n|---|---|---|---|---|\n${sorted(p).map(x=>`| ${x.dia}/${p.mes+1} | ${DIAS[dow(x.dia,p.mes,p.ano)]} | ${x.formato} | ${x.pilar} | ${x.tema} |`).join("\n")}\n\n# Posts\n\n`;
  return s+sorted(p).map(x=>postMd(x,p)).join("\n---\n\n")}
@@ -1216,7 +1216,7 @@ $("#form").addEventListener("submit",async e=>{
  if(!totalPosts())return;
  if([...anexos,...anexosResumo,...(form.conteudos||[]).flatMap(c=>c.arquivos)].some(a=>a.lendo)){setNote("Espere terminar de ler o PDF.",true);return}
  busy=true;updateTotal();$("#genBtn").textContent="Gerando…";filtroFormato="Todos";filtroPilar=null;
- current={id:"pauta-"+Date.now().toString(36),cliente:b.cliente,arroba:b.arroba,nicho:b.nicho,mes:b.mes,ano:b.ano,objetivo:b.objetivo,briefing:b,estrategia:null,posts:[],criadoEm:new Date().toISOString()};
+ current={id:"pauta-"+Date.now().toString(36),n:proximoN(b.cliente,b.mes,b.ano),cliente:b.cliente,arroba:b.arroba,nicho:b.nicho,mes:b.mes,ano:b.ano,objetivo:b.objetivo,briefing:b,estrategia:null,posts:[],criadoEm:new Date().toISOString()};
  if(window.innerWidth<=980)$("#result").scrollIntoView({behavior:"smooth",block:"start"});
  try{
   /* Client material: new files or text update the saved profile; otherwise reuse it */
@@ -1276,7 +1276,7 @@ function renderSaved(){
  if(!db){box.innerHTML=`<div class="panel empty-state" style="grid-column:1/-1"><h3>Pautas salvas aparecem aqui</h3><p>Abra esta página no Claude, com sua conta, para salvar e ver o histórico.</p></div>`;return}
  if(!saved.length){box.innerHTML=`<div class="panel empty-state" style="grid-column:1/-1"><h3>Nenhuma pauta salva ainda</h3><p>Gere a primeira em Nova pauta. Ela fica guardada aqui por cliente e mês.</p></div>`;return}
  box.innerHTML=saved.map(p=>{const c=FORMATOS.map(f=>[f,p.posts.filter(x=>x.formato===f).length]).filter(x=>x[1]);
-  return `<button type="button" class="panel sv" data-open="${esc(p.id)}"><span class="tags"><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${statusChip(p)}</span><h3>${esc(p.cliente)}</h3><span class="m">${p.posts.length} posts · ${esc(p.objetivo)}</span><span class="mini">${c.map(([f,n])=>Array.from({length:n},()=>`<i class="dot" style="background:${FCOLOR[f]}" title="${f}"></i>`).join("")).join("")}</span></button>`}).join("");
+  return `<button type="button" class="panel sv" data-open="${esc(p.id)}"><span class="tags"><span class="tag mes">${esc(rotulo(p))}</span>${statusChip(p)}</span><h3>${esc(p.cliente)}</h3><span class="m">${p.posts.length} posts · ${esc(p.objetivo)}</span><span class="mini">${c.map(([f,n])=>Array.from({length:n},()=>`<i class="dot" style="background:${FCOLOR[f]}" title="${f}"></i>`).join("")).join("")}</span></button>`}).join("");
  box.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{const p=saved.find(s=>s.id===b.dataset.open);if(p){current=JSON.parse(JSON.stringify(p));filtroFormato="Todos";filtroPilar=null;renderResult();showView("nova")}})}
 let qpTodos=false;
 function demOk(c){const st=c&&c.demandas&&c.demandas.status;return !st||st==="ativo"}
@@ -1308,7 +1308,7 @@ function pastas(){
  Object.entries(clientes).forEach(([id,c])=>add(id,c.nome));
  saved.forEach(p=>add(slugC(p.cliente),p.cliente));
  acessos.forEach(a=>add(a.id,a.cliente));
- return Object.values(m).map(f=>{const c=clientes[f.id]||{};const ps=saved.filter(p=>slugC(p.cliente)===f.id).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes));
+ return Object.values(m).map(f=>{const c=clientes[f.id]||{};const ps=saved.filter(p=>slugC(p.cliente)===f.id).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes)||(numMes(a).i-numMes(b).i));
   return {...f,nome:c.nome||f.nome,dados:c,pautas:ps,acesso:acessos.find(a=>a.id===f.id)||null}}).sort((a,b)=>a.nome.localeCompare(b.nome,"pt"))}
 function pastaTexto(nome){const c=clientes[slugC(nome)];if(!c)return "";let t="";
  if(c.descricao)t+=`\nDescrição da marca: ${c.descricao}`;if((c.cores||[]).length)t+=`\nCores da marca: ${c.cores.join(", ")}`;return t?t+"\n":""}
@@ -1353,7 +1353,7 @@ function renderPasta(f){
   <div class="actions" style="margin-top:.9rem"><button type="button" class="btn ghost" id="cpLink">Copiar link</button><button type="button" class="btn ghost" id="cpMsg">Copiar mensagem</button></div>`
   :`<p class="lead">Ainda sem link. Abra uma pauta deste cliente e toque em Liberar para o cliente: o link e o código são criados na hora.</p>`}</div>
  <div class="panel card"><h3>Histórico de pautas</h3>${f.pautas.length?`<div class="hist">${f.pautas.map(p=>`<div class="hrow" data-hid="${esc(p.id)}">
-   <div class="h-info"><span class="tags"><span class="tag mes">${MESES[p.mes]} ${p.ano}</span>${statusChip(p)}</span><span class="m">${p.posts.length} posts · ${esc(p.objetivo||"")}</span>${p.statusNota?`<p class="h-nota">“${esc(p.statusNota)}”</p>`:""}</div>
+   <div class="h-info"><span class="tags"><span class="tag mes">${esc(rotulo(p))}</span>${statusChip(p)}</span><span class="m">${p.posts.length} posts · ${esc(p.objetivo||"")}</span>${p.statusNota?`<p class="h-nota">“${esc(p.statusNota)}”</p>`:""}</div>
    <div class="h-act"><button type="button" class="btn ghost" data-abrir="${esc(p.id)}">Abrir</button>
    <select data-st="${esc(p.id)}" aria-label="Resposta do cliente">${Object.entries(STATUS).map(([k,v])=>`<option value="${k}"${(p.status||"rascunho")===k?" selected":""}>${v[0]}</option>`).join("")}</select></div>
    <div class="h-nota-in" hidden><input type="text" placeholder="Comentário do cliente (opcional)" value="${esc(p.statusNota||"")}" aria-label="Comentário do cliente"><button type="button" class="btn ghost" data-stsave="${esc(p.id)}">Salvar resposta</button></div></div>`).join("")}</div>`
@@ -1398,8 +1398,8 @@ function erroPublicar(c){return c==="rate_limited"?"Muitas publicações seguida
 /* ---------- Client answer: approve, ask for changes or reject, sent to isadsign's WhatsApp ---------- */
 const RESP={aprovada:["Aprovar","Aprovada","✅"],revisao:["Pedir revisão","Pedido de revisão","✏️"],reprovada:["Reprovar","Reprovada","❌"]};
 let respEscolha=null;
-function respChave(p){return `pauta-resp-${TOKEN}-${p.ano}-${p.mes}`}
-function respSalva(p){try{return JSON.parse(localStorage.getItem(respChave(p))||"null")}catch(e){return null}}
+function respChave(p){return `pauta-resp-${TOKEN}-${p.id}`}
+function respSalva(p){try{const v=localStorage.getItem(respChave(p))||(numMes(p).t<2?localStorage.getItem(`pauta-resp-${TOKEN}-${p.ano}-${p.mes}`):null);return JSON.parse(v||"null")}catch(e){return null}}
 function respostaHTML(p){
  const wa=PORTAL._cfg&&PORTAL._cfg.whatsapp;if(!wa)return "";
  const feita=respSalva(p);
@@ -1416,14 +1416,20 @@ function bindResposta(p){
   card.outerHTML=respostaHTML(p);bindResposta(p);$("#respTxt").value=keep;$("#respTxt").focus()});
  const env=$("#respEnviar");if(!env||!respEscolha)return;
  const link=()=>{const t=($("#respTxt").value||"").trim();const v=RESP[respEscolha];
-  const msg=`${v[2]} ${v[1]}: pauta de ${MESES[p.mes]} ${p.ano}\nCliente: ${p.cliente}${t?`\nComentários: ${t}`:""}\n\n(enviado pela página da pauta)`;
+  const msg=`${v[2]} ${v[1]}: pauta de ${rotulo(p)}\nCliente: ${p.cliente}${t?`\nComentários: ${t}`:""}\n\n(enviado pela página da pauta)`;
   return `https://wa.me/${PORTAL._cfg.whatsapp}?text=${encodeURIComponent(msg)}`};
  env.href=link();$("#respTxt").addEventListener("input",()=>{env.href=link()});
  env.addEventListener("click",()=>{env.href=link();try{localStorage.setItem(respChave(p),JSON.stringify({tipo:respEscolha,em:new Date().toISOString()}))}catch(e){}
   setTimeout(()=>{respEscolha=null;const c=$("#respCard");if(c){c.outerHTML=respostaHTML(p);bindResposta(p)}},400)})}
 
 /* ---------- Export: clickable HTML and PDF ---------- */
-function nomeArquivo(p){return `pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}`}
+/* Várias pautas no mesmo mês: cada uma tem o seu número (Pauta 1, Pauta 2…) e a sua própria aprovação */
+function irmasMes(p,lista){const c=slugC(p.cliente);return (lista||[]).filter(x=>x&&!x.exemplo&&x.mes===p.mes&&x.ano===p.ano&&slugC(x.cliente)===c).sort((a,b)=>((a.n||0)-(b.n||0))||String(a.criadoEm||a.id).localeCompare(String(b.criadoEm||b.id)))}
+function numMes(p){if(!p||p.exemplo)return {i:0,t:0};const base=modoCliente?clientePautas:saved.map(x=>x.id===p.id?p:x);const L=base.some(x=>x&&x.id===p.id)?base:base.concat([p]);const ir=irmasMes(p,L);return {i:ir.findIndex(x=>x.id===p.id)+1,t:ir.length}}
+function rotulo(p){const {i,t}=numMes(p);return `${MESES[p.mes]} ${p.ano}`+(t>1&&i>0?` · Pauta ${i}`:"")}
+function sufixo(p){const {i,t}=numMes(p);return t>1&&i>1?`-${i}`:""}
+function proximoN(cliente,mes,ano){return irmasMes({cliente,mes,ano},saved).reduce((m,x,k)=>Math.max(m,x.n||k+1),0)+1}
+function nomeArquivo(p){return `pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}${sufixo(p)}`}
 async function baixar(nome,gerar,btn){
  const txt=btn.textContent;btn.disabled=true;btn.textContent="Gerando…";
  try{await downloads.save({filename:nome,data:await gerar()})}
@@ -1537,8 +1543,8 @@ async function liberar(p,btn){
   const id=slugC(p.cliente),prev=acessos.find(a=>a.id===id);
   const a=prev?{cliente:prev.cliente,token:prev.token,codigo:prev.codigo}:{cliente:p.cliente,token:novoToken(id),codigo:novoCodigo()};
   let lista=[];if(prev&&prev.payload){try{lista=(await abrir(prev.payload,prev.codigo)).pautas||[]}catch(e){lista=[]}}
-  lista=lista.filter(x=>!(x.mes===p.mes&&x.ano===p.ano));lista.push(limpar(p));lista.sort((x,y)=>(y.ano-x.ano)||(y.mes-x.mes));
-  a.payload=await trancar(a.cliente,a.codigo,lista);a.meses=lista.map(x=>`${MESES[x.mes]} ${x.ano}`);a.url=`${APP_URL}#${a.token}`;a.atualizadoEm=new Date().toISOString();
+  lista=lista.filter(x=>x.id!==p.id);lista.push({...limpar(p),n:numMes(p).i||p.n||1});lista.sort((x,y)=>(y.ano-x.ano)||(y.mes-x.mes)||((x.n||0)-(y.n||0)));
+  a.payload=await trancar(a.cliente,a.codigo,lista);a.meses=lista.map(x=>{const ir=irmasMes(x,lista);return `${MESES[x.mes]} ${x.ano}`+(ir.length>1?` · Pauta ${ir.findIndex(y=>y.id===x.id)+1}`:"")});a.url=`${APP_URL}#${a.token}`;a.atualizadoEm=new Date().toISOString();
   await db.collection("acessos").doc(id).set(a);
   if(p.status!=="aprovada"){p.status="liberada";p.statusEm=new Date().toISOString();await savePauta(p)}
   voltarDepois({view:"clientes",pasta:id,msg:`Pauta liberada para ${a.cliente}`});
@@ -1593,7 +1599,7 @@ function gateCliente(err){
   if($("#lembrar").checked)lsSet(normCod(inp.value));entrarCliente(d)});
  setTimeout(()=>inp.focus(),50)}
 function entrarCliente(d){
- clientePautas=(d.pautas||[]).filter(x=>x&&Array.isArray(x.posts)).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes));
+ clientePautas=(d.pautas||[]).filter(x=>x&&Array.isArray(x.posts)).sort((a,b)=>(b.ano-a.ano)||(b.mes-a.mes)||((a.n||0)-(b.n||0))||String(a.id).localeCompare(String(b.id)));
  $("#sairBtn").hidden=false;
  if(!clientePautas.length){$("#result").innerHTML=`<section class="panel gate"><h2>Nenhuma pauta ainda</h2><p>A pauta do mês aparece aqui assim que estiver pronta.</p></section>`;return}
  const n=new Date();current=clientePautas.find(x=>x.ano===n.getFullYear()&&x.mes===n.getMonth())||clientePautas[0];
@@ -1839,7 +1845,7 @@ function htmlCalendario(D){
   '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300;0,500;0,800;0,900;1,300;1,500;1,800;1,900&family=DM+Serif+Display&family=Caveat:wght@600&display=swap">'+
   '<style>'+CAL_CSS+'</style></head><body><div class="bar l"></div><div class="bar r"></div><main id="app"></main>'+
   '<script type="application/json" id="isa-data">'+data+'<\/script><script>('+calRuntime.toString()+')();<\/script></bo'+'dy></ht'+'ml>'}
-function arquivoCal(p){return `${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}.html`}
+function arquivoCal(p){return `${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}${sufixo(p)}.html`}
 function dataLocal(iso){const d=iso?new Date(iso):new Date();return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate())}
 function quandoBR(iso){if(!iso)return "";const d=new Date(iso);return `${pad2(d.getDate())}/${pad2(d.getMonth()+1)} às ${pad2(d.getHours())}:${pad2(d.getMinutes())}`}
 
@@ -1882,13 +1888,13 @@ function renderCalSheet(){
  const s=calSheet,sh=$("#calSheet");if(!s)return;const p=s.p;
  if(s.etapa==="ver"){
   sh.className="sheet wide";
-  sh.innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow">Calendário · ${MESES[s.doc.mes]} ${s.doc.ano}</p><h3 id="calShTitle">${esc(s.doc.cliente)}</h3></div>${downloads?`<button type="button" class="btn ghost sm" id="calDl">Baixar HTML</button>`:""}<button type="button" class="x" aria-label="Fechar">✕</button></div><iframe class="calprev" title="Calendário de ${esc(s.doc.cliente)}"></iframe>`;
+  sh.innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow">Calendário · ${esc(s.doc.rotulo||(MESES[s.doc.mes]+" "+s.doc.ano))}</p><h3 id="calShTitle">${esc(s.doc.cliente)}</h3></div>${downloads?`<button type="button" class="btn ghost sm" id="calDl">Baixar HTML</button>`:""}<button type="button" class="x" aria-label="Fechar">✕</button></div><iframe class="calprev" title="Calendário de ${esc(s.doc.cliente)}"></iframe>`;
   sh.querySelector("iframe").srcdoc=htmlCalendario(s.doc.data);
   const dl=$("#calDl");if(dl)dl.onclick=()=>baixar(s.doc.arquivo||"calendario.html",()=>htmlCalendario(s.doc.data),dl);
   sh.querySelector(".x").onclick=fecharCalSheet;return}
  sh.className="sheet";
  const posts=sorted(p),nS=Object.keys(s.sug).length,semTexto=posts.filter(x=>!detailed(x)).length;
- sh.innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow">Gerar calendário · ${MESES[p.mes]} ${p.ano}</p><h3 id="calShTitle">Horário de cada post</h3><p class="sub" style="margin:.25rem 0 0;color:var(--fg-2);font-size:.875rem">${s.pensando?"Claude está sugerindo os horários que faltam…":nS?`${nS} ${nS===1?"horário foi sugerido":"horários foram sugeridos"} (em rosa). Ajuste se quiser.`:"Horários lidos da pauta. Ajuste se quiser."}</p></div><button type="button" class="x" aria-label="Fechar">✕</button></div>
+ sh.innerHTML=`<div class="sh-top"><div class="t"><p class="eyebrow">Gerar calendário · ${esc(rotulo(p))}</p><h3 id="calShTitle">Horário de cada post</h3><p class="sub" style="margin:.25rem 0 0;color:var(--fg-2);font-size:.875rem">${s.pensando?"Claude está sugerindo os horários que faltam…":nS?`${nS} ${nS===1?"horário foi sugerido":"horários foram sugeridos"} (em rosa). Ajuste se quiser.`:"Horários lidos da pauta. Ajuste se quiser."}</p></div><button type="button" class="x" aria-label="Fechar">✕</button></div>
  <div class="hr-all"><label for="hrTodos">Mesmo horário para todos</label><input type="time" id="hrTodos" step="900"><button type="button" class="btn ghost sm" id="hrAplicar">Aplicar</button></div>
  <div class="hrs">${posts.map(x=>`<label class="hr-row${s.sug[x.id]?" sug":""}"><span class="d">${pad2(x.dia)}/${pad2(p.mes+1)}<small>${DIAS_C[dow(x.dia,p.mes,p.ano)]}</small></span><span class="tt"><b>${esc(x.titulo||x.tema)}</b><span><i class="dot" style="background:${FCOLOR[x.formato]}"></i>${x.formato}${x.horario?" · "+esc(x.horario):""}</span></span><input type="time" step="900" data-hr="${x.id}" value="${esc(s.horas[x.id]||"")}" aria-label="Horário do post de ${x.dia}/${p.mes+1}"></label>`).join("")}</div>
  <div class="sh-foot"><p class="note${semTexto?" err":""}">${semTexto?`${semTexto} ${semTexto===1?"post ainda não tem":"posts ainda não têm"} conteúdo completo; ${semTexto===1?"ele entra":"eles entram"} só com tema e objetivo.`:`${posts.length} posts · o calendário sai na estética de sempre, com o horário de cada post.`}</p><button type="button" class="btn ghost" id="calCancel">Cancelar</button><button type="button" class="btn lib" id="calGo"${s.gerando||s.pensando?" disabled":""}>${s.gerando?"Gerando…":"Gerar calendário"}</button></div>`;
@@ -1909,7 +1915,7 @@ function avisarAprovadas(){
  if(current&&!current.exemplo){const x=saved.find(y=>y.id===current.id);
   if(x&&(x.status!==current.status||x.statusEm!==current.statusEm)){current.status=x.status;current.statusNota=x.statusNota;current.statusEm=x.statusEm;if(!busy)renderResult()}}
  if(statusVistos&&!modoCliente){const novas=saved.filter(p=>p.status==="aprovada"&&statusVistos[p.id]&&statusVistos[p.id]!=="aprovada");
-  if(novas.length===1)toast(`${novas[0].cliente} aprovou ${MESES[novas[0].mes].toLowerCase()}. Já dá para gerar o calendário.`);
+  if(novas.length===1)toast(`${novas[0].cliente} aprovou a pauta de ${rotulo(novas[0]).toLowerCase()}. Já dá para gerar o calendário.`);
   else if(novas.length>1)toast(`${novas.length} pautas aprovadas. Já dá para gerar os calendários.`)}
  statusVistos=agora}
 function verCalendario(doc){calSheet={etapa:"ver",doc};renderCalSheet();$("#calScrim").hidden=false;document.body.style.overflow="hidden"}
@@ -1927,7 +1933,7 @@ async function gerarCalendario(){
   for(let i=0;i<n;i++)await db.collection("calpartes").doc(p.id+"_"+i).set({html:html.slice(i*CAL_PARTE,(i+1)*CAL_PARTE),cal:p.id,i});
   for(let i=n;i<antes;i++)await db.collection("calpartes").doc(p.id+"_"+i).delete().catch(()=>{});
   const cli=clientes[slugC(p.cliente)]||{};
-  const doc={pautaId:p.id,cliente:p.cliente,demandasId:(cli.demandas&&cli.demandas.id)||"",mes:p.mes,ano:p.ano,mesISO:`${p.ano}-${pad2(p.mes+1)}`,
+  const doc={pautaId:p.id,cliente:p.cliente,demandasId:(cli.demandas&&cli.demandas.id)||"",mes:p.mes,ano:p.ano,mesISO:`${p.ano}-${pad2(p.mes+1)}`,n:numMes(p).i||1,rotulo:rotulo(p),
    arquivo:arquivoCal(p),tamanho:html.length,partes:n,total:D.posts.length,aprovadoEm:dataLocal(p.statusEm),geradoEm:new Date().toISOString(),data:D};
   await db.collection("calendarios").doc(p.id).set(doc);
   calDocs[p.id]=doc;calSheet={etapa:"ver",doc};renderCalSheet();
