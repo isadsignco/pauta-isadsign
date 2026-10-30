@@ -23,9 +23,10 @@ create table if not exists public.pautas (
   ano           int  not null check (ano between 2020 and 2100),
   dados         jsonb not null,
   status        text not null default 'enviada' check (status in ('enviada','aprovada','revisao','reprovada')),
-  atualizado_em timestamptz not null default now(),
-  unique (token, mes, ano)
+  atualizado_em timestamptz not null default now()
 );
+-- Várias pautas no mesmo mês para o mesmo cliente (cada uma com a sua aprovação)
+create index if not exists pautas_token_mes on public.pautas (token, ano, mes);
 
 create table if not exists public.respostas (
   id         bigint generated always as identity primary key,

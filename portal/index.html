@@ -27,7 +27,7 @@
 /* Client portal: the client opens …/portal/#<token> (one link per client), types their code, lands on their profile
    with every pauta listed by month, and opens each one to read and answer it. */
 (function(){
-const {MESES,RESP,STATUS,$,esc,normCod,cfg,sb,toast,statusChip,Pauta,ligarSheet}=window.P;
+const {MESES,RESP,STATUS,$,esc,normCod,cfg,sb,toast,statusChip,Pauta,ligarSheet,rotuloPauta,irmasPauta}=window.P;
 const TOKEN=decodeURIComponent((location.hash||"").slice(1)||new URLSearchParams(location.search).get("c")||"");
 const LS="pauta-codigo-"+TOKEN;
 const lsGet=()=>{try{return localStorage.getItem(LS)}catch(e){return null}};
@@ -72,7 +72,7 @@ $("#sairBtn").onclick=()=>{lsSet(null);dados=null;view=null;gate()};
 /* atual = -1 shows the profile; otherwise the index of the open pauta */
 function mostrar(){
   if(atual<0||!(dados.pautas||[])[atual])return perfil();
-  const it=dados.pautas[atual],p={...it.dados,cliente:it.dados.cliente||dados.cliente,mes:it.mes,ano:it.ano};
+  const it=dados.pautas[atual],ir=irmasPauta(it,dados.pautas),k=ir.indexOf(it)+1,p={...it.dados,cliente:it.dados.cliente||dados.cliente,mes:it.mes,ano:it.ano,rotulo:rotuloPauta(it,dados.pautas),sufixo:ir.length>1&&k>1?`-${k}`:""};
   view=new Pauta($("#app"),p,{status:it.status,mesesHTML:`<div class="no-print"><button type="button" class="btn link" id="voltarPerfil">‹ Meu perfil</button></div>`,antesHTML:respostaHTML(it),onRender:r=>{
     r.querySelector("#voltarPerfil").onclick=()=>history.back();
     ligarResposta(it)}});
@@ -84,8 +84,8 @@ window.addEventListener("popstate",e=>{if(!dados)return;if(view)view.close();atu
 function perfil(){
   view=null;const ps=dados.pautas||[],ult=ps[0]&&ps[0].dados||{},pf=ult.perfil||{};
   const pend=ps.filter(x=>x.status==="enviada"),ap=ps.filter(x=>x.status==="aprovada").length;
-  const card=(x)=>{const i=ps.indexOf(x),d=x.dados||{};return `<button type="button" class="post${x.status==="enviada"?" pend":""}" data-abrir="${i}"><span class="tags"><span class="tag mes">${MESES[x.mes]} ${x.ano}</span>${statusChip(x.status)}</span>
-    <h3>Pauta de ${MESES[x.mes].toLowerCase()}</h3><p>${esc((d.estrategia&&d.estrategia.resumo)||d.objetivo||"")}</p><span class="m">${(d.posts||[]).length} posts${d.objetivo?" · "+esc(d.objetivo):""}</span></button>`};
+  const card=(x)=>{const i=ps.indexOf(x),d=x.dados||{};return `<button type="button" class="post${x.status==="enviada"?" pend":""}" data-abrir="${i}"><span class="tags"><span class="tag mes">${esc(rotuloPauta(x,ps))}</span>${statusChip(x.status)}</span>
+    <h3>Pauta de ${MESES[x.mes].toLowerCase()}${irmasPauta(x,ps).length>1?` (${irmasPauta(x,ps).indexOf(x)+1})`:""}</h3><p>${esc((d.estrategia&&d.estrategia.resumo)||d.objetivo||"")}</p><span class="m">${(d.posts||[]).length} posts${d.objetivo?" · "+esc(d.objetivo):""}</span></button>`};
   const li=a=>`<ul>${a.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`;
   $("#app").innerHTML=`<section class="panel head"><div><p class="eyebrow"><span>Seu perfil</span>${ult.arroba?`<span class="tag">${esc(ult.arroba)}</span>`:""}</p>
    <h1>${esc(dados.cliente)}</h1>${ult.nicho?`<p class="sub">${esc(ult.nicho)}</p>`:""}</div>
@@ -138,7 +138,7 @@ function ligarResposta(it){
     const c=$("#respCard");if(c)c.scrollIntoView({block:"center"})}}
 /* E-mail to isadsign (FormSubmit, or Web3Forms if configured); the answer is already saved, so a failure here only skips the e-mail */
 function avisarPorEmail(it,tipo,txt){
-  const v=RESP[tipo],mes=`${MESES[it.mes]} ${it.ano}`,assunto=`${v[2]} ${dados.cliente}: ${v[1].toLowerCase()} da pauta de ${mes}`;
+  const v=RESP[tipo],mes=rotuloPauta(it,dados.pautas),assunto=`${v[2]} ${dados.cliente}: ${v[1].toLowerCase()} da pauta de ${mes}`;
   const campos={cliente:dados.cliente,pauta:mes,resposta:v[1],comentarios:txt||"(sem comentários)",painel:(cfg.siteUrl||"")+"painel.html"};
   const post=(url,body)=>fetch(url,{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(body)}).catch(()=>{});
   const fs=cfg.formsubmit||destinoAviso;

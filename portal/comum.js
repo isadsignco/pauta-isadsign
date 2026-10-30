@@ -29,7 +29,11 @@ async function copy(text){try{await navigator.clipboard.writeText(text);toast("C
 function statusChip(s){return `<span class="chip-st st-${esc(s||"enviada")}">${esc(STATUS[s]||STATUS.enviada)}</span>`}
 function sorted(p){return [...(p.posts||[])].sort((a,b)=>a.dia-b.dia||FORMATOS.indexOf(a.formato)-FORMATOS.indexOf(b.formato))}
 function baixarArquivo(nome,blob){const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download=nome;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
-function nomeArquivo(p){return `pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}`}
+/* Várias pautas no mesmo mês: "Novembro 2026 · Pauta 2". A ordem vem do número que o app grava (n). */
+function nPauta(y){return +((y&&y.dados&&y.dados.n)||(y&&y.n))||0}
+function irmasPauta(x,lista){return (lista||[]).filter(y=>y&&y.mes===x.mes&&y.ano===x.ano&&(x.token==null||y.token===x.token)).sort((a,b)=>(nPauta(a)-nPauta(b))||String(a.id).localeCompare(String(b.id)))}
+function rotuloPauta(x,lista){const ir=irmasPauta(x,lista),i=ir.indexOf(x)+1;return `${MESES[x.mes]} ${x.ano}`+(ir.length>1&&i>0?` · Pauta ${i}`:"")}
+function nomeArquivo(p){return `pauta-${slug(p.cliente)}-${slug(MESES[p.mes])}-${p.ano}${p.sufixo||""}`}
 
 /* ---------- Pauta view (read-only) ---------- */
 function Pauta(root,p,opts){
@@ -38,7 +42,7 @@ function Pauta(root,p,opts){
 Pauta.prototype.today=function(){const n=new Date(),p=this.p;return n.getFullYear()===p.ano&&n.getMonth()===p.mes?n.getDate():null};
 Pauta.prototype.render=function(){
   const p=this.p,mes=MESES[p.mes],counts=FORMATOS.map(f=>[f,(p.posts||[]).filter(x=>x.formato===f).length]).filter(c=>c[1]);
-  let h=`<section class="panel head"><div><p class="eyebrow"><span>${esc(p.arroba||p.nicho||"Pauta")}</span><span class="tag mes">${mes} ${p.ano}</span>${this.opts.status?statusChip(this.opts.status):""}</p>
+  let h=`<section class="panel head"><div><p class="eyebrow"><span>${esc(p.arroba||p.nicho||"Pauta")}</span><span class="tag mes">${esc(p.rotulo||(mes+" "+p.ano))}</span>${this.opts.status?statusChip(this.opts.status):""}</p>
   <h1>${esc(p.cliente)}: pauta de ${mes.toLowerCase()}</h1>${p.estrategia&&p.estrategia.resumo?`<p class="sub">${esc(p.estrategia.resumo)}</p>`:""}</div>
   ${this.opts.mesesHTML||""}
   <div class="counts"><div class="count"><b>${(p.posts||[]).length}</b><span>posts no mês</span></div>${counts.map(([f,n])=>`<div class="count"><b>${n}</b><span><i class="dot f-${fslug(f)}"></i>${f}</span></div>`).join("")}</div>
@@ -192,5 +196,5 @@ async function pautaPDF(p){
   const total=doc.internal.getNumberOfPages();for(let i=1;i<=total;i++){doc.setPage(i);doc.setFont("helvetica","normal");doc.setFontSize(8);doc.setTextColor(...CINZA);doc.text(latin(`Pauta ${p.cliente} · ${mes} ${p.ano} · isadsign`),M,H-24);doc.text(`${i}/${total}`,W-M,H-24,{align:"right"})}
   return doc.output("blob")}
 
-window.P={MESES,DIAS,DIAS_C,FORMATOS,STATUS,RESP,$,esc,slug,normCod,cfg,sb,toast,copy,statusChip,sorted,Pauta,ligarSheet,pautaHTML,pautaPDF,baixarArquivo,nomeArquivo};
+window.P={rotuloPauta,irmasPauta,MESES,DIAS,DIAS_C,FORMATOS,STATUS,RESP,$,esc,slug,normCod,cfg,sb,toast,copy,statusChip,sorted,Pauta,ligarSheet,pautaHTML,pautaPDF,baixarArquivo,nomeArquivo};
 })();

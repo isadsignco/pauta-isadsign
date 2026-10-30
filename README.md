@@ -12,7 +12,7 @@ O app roda no claude.ai, como página da Central isadsign, e usa o Claude da pr�
 - **Formatos**: quantidade de Carrossel, Reels, Estático e Stories, ajustada automaticamente às datas escolhidas.
 - **Temas**: lista de temas que precisam aparecer no mês.
 - **Cada post** sai com descrição completa do conteúdo, como produzir (checklist), direção visual, melhor horário, o que medir, ganchos, slides ou roteiro com minutagem, legenda, CTA e hashtags.
-- Pautas salvas por cliente e mês, exportação em Markdown e "Refazer post".
+- Pautas salvas por cliente e mês (mais de uma por mês, se precisar), exportação em Markdown e "Refazer post".
 - **Liberar para o cliente**: cada cliente recebe link e código de acesso próprios e vê só as pautas dele.
 - **Clientes**: uma pasta por marca, com nome, nicho, descrição breve, cores, link de visualização com código, histórico de pautas com status (rascunho, enviada, aprovada, pediu revisão, reprovada) e botão de excluir cliente.
 - **Etiqueta do mês** em cada pauta, nas Salvas e no histórico.
@@ -50,6 +50,8 @@ Site comum, fora do Claude, onde o cliente vê a pauta e responde, e a resposta 
 - As pautas continuam sendo geradas no app do Claude. No app, toque em **Arquivo para o portal** e envie o arquivo no painel, em **Publicar pauta**.
 
 Banco: `supabase/setup.sql` cria tudo numa instalação nova; `supabase/02-links.sql` adiciona os links numa instalação que já existia.
+
+**Várias pautas no mesmo mês**: o mesmo cliente pode ter quantas pautas quiser no mesmo mês (Pauta 1, Pauta 2…), cada uma com a sua aprovação. Publicar uma pauta nova não substitui mais a outra do mês; publicar de novo a mesma pauta só atualiza. Numa instalação que já existia, rode uma vez `supabase/03-varias-pautas.sql`.
 
 Arquivos: `portal/index.html` (cliente), `portal/painel.html` (painel), `portal/comum.js` e `portal/estilo.css` (compartilhados), `portal/config.js` (chaves públicas), `supabase/setup.sql` (banco).
 
