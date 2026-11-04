@@ -1,0 +1,4 @@
+teste/.clientes-local.json
+node_modules/
+.wrangler/
+deploy.log

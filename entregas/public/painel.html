@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#282828">
+<title>Entregas isadsign</title>
+<link rel="icon" href="/icone.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,700;0,800;0,900;1,700;1,800;1,900&display=swap">
+<style>
+/* Mesmo visual do painel Demandas: grafite, creme, pink e lima; Archivo preto itálico; barras creme nas laterais */
+:root{--grafite:#282828;--grafite-2:#303030;--grafite-3:#3a3a3a;--creme:#F3E8CC;--pink:#E9349E;--lima:#9ABC05;--amarelo:#FCDD6C;--bege:#ACA492;
+  --linha:rgba(243,232,204,.16);--linha-forte:rgba(243,232,204,.42);--font:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --r-pill:999px;--r-box:24px;--gut:clamp(30px,4vw,64px);color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{font-size:15px}
+@media (min-width:1800px){html{font-size:18px}}
+@media (min-width:2600px){html{font-size:23px}}
+html,body{background:var(--grafite);color:var(--creme);margin:0}
+body{font-family:var(--font);line-height:1.45;-webkit-font-smoothing:antialiased;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--pink);outline-offset:2px}
+h1,h2,h3{text-wrap:balance}
+.barra{position:fixed;top:12px;bottom:12px;width:10px;border-radius:var(--r-pill);background:var(--creme);z-index:12;pointer-events:none}
+.barra.esq{left:8px}.barra.dir{right:8px}
+@media (min-width:1800px){.barra{width:14px}}
+
+/* topo */
+.site-topo{position:sticky;top:0;z-index:10;background:var(--grafite);border-bottom:1.5px solid var(--linha);padding-top:env(safe-area-inset-top,0px)}
+.site-topo-in{max-width:1600px;margin:0 auto;padding:12px var(--gut);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.marca{font-weight:900;font-style:italic;font-size:1.55rem;letter-spacing:-.04em;text-decoration:none;white-space:nowrap;display:flex;align-items:center;gap:8px}
+.marca i{width:.65rem;height:.65rem;border-radius:50%;background:var(--pink);display:inline-block}
+.marca small{font-style:normal;font-weight:700;font-size:.8rem;letter-spacing:0;color:var(--bege)}
+.topo-acoes{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.espaco{display:flex;flex-direction:column;gap:4px;min-width:150px;font-size:.78rem;font-weight:700;color:var(--bege);font-variant-numeric:tabular-nums}
+.espaco .tr{height:6px;border-radius:var(--r-pill);background:var(--grafite-3);overflow:hidden}
+.espaco .tr i{display:block;height:100%;background:var(--lima);border-radius:inherit}
+.espaco.cheio .tr i{background:var(--pink)}
+
+/* botões */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:var(--r-pill);padding:.6rem 1.1rem;font-weight:800;font-size:.95rem;background:var(--creme);color:var(--grafite);text-decoration:none;white-space:nowrap}
+.btn:hover{filter:brightness(1.05)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn-pink{background:var(--pink);color:var(--creme);font-style:italic}
+.btn-lima{background:var(--lima);color:var(--grafite);font-style:italic}
+.btn-linha{background:none;border:1.5px solid var(--linha-forte);color:var(--creme);font-weight:700}
+.btn-linha:hover{border-color:var(--creme)}
+.btn-texto{background:none;border:0;color:var(--bege);font-weight:700;padding:.3rem .2rem;text-decoration:underline;text-underline-offset:3px}
+.btn-texto:hover{color:var(--creme)}
+.btn-mini{padding:.4rem .8rem;font-size:.82rem}
+.btn svg,.ico svg{width:1.05em;height:1.05em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ico{width:2.25rem;height:2.25rem;border-radius:50%;border:1.5px solid var(--linha-forte);background:none;display:inline-grid;place-items:center;color:var(--creme);flex:none;text-decoration:none}
+.ico:hover{border-color:var(--creme)}
+.ico.perigo:hover{border-color:var(--pink);color:var(--pink)}
+.inp{width:100%;min-width:0;background:var(--grafite-2);border:1.5px solid var(--linha);border-radius:14px;padding:.65rem .85rem;outline:none}
+.inp:focus{border-color:var(--pink)}
+.etq{display:block;font-size:.72rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--bege);margin:0 0 6px}
+.mini{font-size:.82rem;color:var(--bege)}
+.chip{display:inline-flex;align-items:center;gap:6px;border-radius:var(--r-pill);padding:2px 10px;font-size:.75rem;font-weight:800;white-space:nowrap;background:var(--grafite-3);color:var(--creme)}
+.chip.lima{background:var(--lima);color:var(--grafite)}
+.chip.pink{background:var(--pink);color:var(--creme)}
+.chip.linha{background:none;border:1.5px solid var(--linha-forte);color:var(--bege)}
+.caixa{border:1.5px solid var(--linha-forte);border-radius:var(--r-box);padding:clamp(16px,1.6vw,30px);display:flex;flex-direction:column;gap:14px;min-width:0}
+.caixa-cab{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.secao-tit{margin:0;font-weight:900;font-style:italic;font-size:clamp(1.35rem,1.6vw,2.2rem);letter-spacing:-.035em;line-height:1}
+.seg{display:inline-flex;flex-wrap:wrap;gap:2px;background:var(--grafite-2);border:1.5px solid var(--linha);border-radius:var(--r-pill);padding:3px}
+.seg button{border:0;background:none;border-radius:var(--r-pill);padding:.4rem .9rem;font-weight:700;font-size:.85rem;color:var(--bege);display:inline-flex;gap:6px;align-items:center}
+.seg button[aria-pressed="true"]{background:var(--creme);color:var(--grafite)}
+.seg button small{font-variant-numeric:tabular-nums;opacity:.75}
+
+main{max-width:1600px;margin:0 auto;padding:clamp(24px,3vw,48px) var(--gut) 80px}
+.heroi{display:flex;align-items:flex-end;justify-content:space-between;gap:16px 32px;flex-wrap:wrap;border-bottom:1.5px solid var(--creme);padding-bottom:18px;margin-bottom:22px}
+.heroi h1{margin:0;font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(2.6rem,6.4vw,7.5rem);letter-spacing:-.055em;line-height:.86}
+.heroi h1 em{color:var(--pink);font-style:italic}
+.heroi p{margin:.6rem 0 0;color:var(--bege);max-width:46ch}
+
+/* entrada */
+.login{min-height:100vh;display:grid;place-items:center;padding:24px 34px}
+.login .in{width:100%;max-width:30rem;display:flex;flex-direction:column;gap:14px}
+.login h1{margin:0;font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(3.2rem,13vw,6.6rem);letter-spacing:-.06em;line-height:.85}
+.login h1 em{color:var(--pink)}
+.login p{margin:0;color:var(--bege)}
+.login form{display:flex;gap:8px;margin-top:10px}
+.login .inp{border-radius:var(--r-pill);padding:.8rem 1.1rem}
+.login .erro{color:var(--pink);font-weight:700;min-height:1.4em}
+
+/* kpis e filtros */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:22px}
+.kpi{border:1.5px solid var(--linha-forte);border-radius:var(--r-box);padding:14px 18px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.kpi b{font-weight:900;font-style:italic;font-size:clamp(1.6rem,2.4vw,2.8rem);letter-spacing:-.045em;line-height:1;font-variant-numeric:tabular-nums}
+.kpi span{font-size:.8rem;font-weight:700;color:var(--bege)}
+.kpi.lima{border-color:var(--lima)}.kpi.lima b{color:var(--lima)}
+.kpi.pink{border-color:var(--pink)}.kpi.pink b{color:var(--pink)}
+@media (max-width:860px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ferr{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.ferr .busca{flex:1 1 220px;max-width:340px;border-radius:var(--r-pill)}
+
+/* pastas */
+.pastas{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:clamp(14px,1.4vw,26px)}
+@media (min-width:1800px){.pastas{grid-template-columns:repeat(auto-fill,minmax(330px,1fr))}}
+.pasta{position:relative;text-align:left;text-decoration:none;background:var(--grafite-2);border:1.5px solid var(--linha-forte);border-radius:6px var(--r-box) var(--r-box) var(--r-box);padding:20px 18px 16px;margin-top:16px;display:flex;flex-direction:column;gap:12px;min-width:0;color:var(--creme);transition:border-color .15s,transform .15s}
+.pasta:before{content:"";position:absolute;left:-1.5px;top:-17px;width:44%;height:18px;border-radius:12px 18px 0 0;background:var(--cor,var(--grafite-3));border:1.5px solid var(--cor,var(--linha-forte));border-bottom:0}
+.pasta:hover{border-color:var(--cor,var(--creme));transform:translateY(-2px)}
+.pasta .l1{display:flex;gap:12px;align-items:center;min-width:0}
+.pasta .nm{font-weight:900;font-style:italic;font-size:1.3rem;letter-spacing:-.03em;line-height:1.05;overflow-wrap:anywhere}
+.pasta .de{display:block;font-style:normal;font-weight:700;font-size:.75rem;color:var(--bege);letter-spacing:0;margin-top:3px}
+.pasta .num{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:.82rem;font-weight:700;color:var(--bege);font-variant-numeric:tabular-nums}
+.pasta .num b{color:var(--creme);font-weight:900;font-style:italic;font-size:1.05rem}
+.pasta .pal{display:flex;height:10px;border-radius:var(--r-pill);overflow:hidden;margin-top:auto}
+.pasta .pal i{flex:1}
+.pasta.vazia{opacity:.78}
+.pasta.oculta{opacity:.5}
+.grupo-tit{margin:34px 0 4px;font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bege)}
+.vazio{border:1.5px dashed var(--linha-forte);border-radius:var(--r-box);padding:28px;text-align:center;color:var(--bege)}
+
+/* disco */
+.disco{width:3.2rem;height:3.2rem;border-radius:50%;overflow:hidden;flex:none;display:grid;place-items:center;background:var(--creme)}
+.disco img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:50% 50%}
+.disco .disco-letra{font-weight:900;font-style:italic;font-size:1.4rem}
+.disco.sem-logo{background:var(--cor,var(--grafite-3))}
+.disco.g{width:clamp(4.5rem,7vw,7.5rem);height:clamp(4.5rem,7vw,7.5rem)}
+.disco.g .disco-letra{font-size:2.6rem}
+
+/* pasta aberta */
+.abre-cab{display:flex;align-items:center;gap:clamp(14px,2vw,28px);flex-wrap:wrap;border-bottom:1.5px solid var(--creme);padding-bottom:18px;margin-bottom:22px}
+.abre-cab .t{flex:1 1 280px;min-width:0}
+.abre-cab h1{margin:4px 0 6px;font-weight:900;font-style:italic;text-transform:uppercase;font-size:clamp(2.2rem,5.2vw,6rem);letter-spacing:-.05em;line-height:.88;overflow-wrap:anywhere}
+.abre-cab .chips{display:flex;gap:6px;flex-wrap:wrap}
+.abre-cab .acoes{display:flex;gap:8px;flex-wrap:wrap}
+.colunas{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:clamp(14px,1.4vw,28px);align-items:start}
+.colunas>div{display:flex;flex-direction:column;gap:clamp(14px,1.4vw,28px);min-width:0}
+@media (max-width:1100px){.colunas{grid-template-columns:minmax(0,1fr)}}
+
+.solta{position:relative;border:2px dashed var(--lima);border-radius:22px;padding:clamp(22px,3vw,48px) 18px;text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center;cursor:pointer;transition:background .15s}
+.solta input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.solta b{font-weight:900;font-style:italic;font-size:clamp(1.3rem,1.8vw,2.2rem);letter-spacing:-.03em;color:var(--lima);pointer-events:none}
+.solta span{pointer-events:none;color:var(--bege);font-size:.88rem}
+.solta.arrasta{background:rgba(154,188,5,.12)}
+.envio-cfg{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:end}
+.fila{display:flex;flex-direction:column;gap:8px}
+.up{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:center;background:var(--grafite-2);border-radius:14px;padding:10px 12px}
+.up b{font-weight:700;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.up small{font-size:.78rem;color:var(--bege);font-variant-numeric:tabular-nums;white-space:nowrap}
+.up .tr{grid-column:1/-1;height:6px;border-radius:var(--r-pill);background:var(--grafite-3);overflow:hidden}
+.up .tr i{display:block;height:100%;width:0;background:var(--lima);border-radius:inherit;transition:width .25s}
+.up.erro .tr i{background:var(--pink)}
+.up.ok{opacity:.65}
+
+.arqs-grupo{display:flex;flex-direction:column}
+.arqs-grupo h3{margin:10px 0 2px;font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bege);display:flex;gap:8px;align-items:center}
+.arq{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-top:1.5px solid var(--linha)}
+.arq .th{width:3.4rem;height:3.4rem;border-radius:12px;overflow:hidden;background:var(--grafite-3);display:grid;place-items:center;font-size:.7rem;font-weight:900;color:var(--bege)}
+.arq .th img,.arq .th video{width:100%;height:100%;object-fit:cover;display:block}
+.arq .o{min-width:0;display:flex;flex-direction:column;gap:3px}
+.arq .o b{font-weight:800;overflow-wrap:anywhere;line-height:1.25}
+.arq .o .meta{display:flex;gap:6px 10px;flex-wrap:wrap;align-items:center;font-size:.78rem;font-weight:700;color:var(--bege);font-variant-numeric:tabular-nums}
+.arq .ac{display:flex;gap:6px}
+@media (max-width:600px){.arq{grid-template-columns:auto minmax(0,1fr)}.arq .ac{grid-column:2}}
+
+.acesso .codigo{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-weight:700;font-size:clamp(1.6rem,2.4vw,2.6rem);letter-spacing:.14em;color:var(--amarelo)}
+.acesso .lk{display:flex;gap:8px;align-items:center;background:var(--grafite-2);border-radius:14px;padding:8px 8px 8px 14px;min-width:0}
+.acesso .lk span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.85rem;color:var(--bege)}
+.acesso .linha-bt{display:flex;gap:8px;flex-wrap:wrap}
+
+.prev-cli{border-radius:18px;padding:18px;background:var(--fundo);color:var(--texto);font-family:var(--f-texto);display:flex;flex-direction:column;gap:12px;border:1.5px solid var(--linha-forte)}
+.prev-cli .l1{display:flex;gap:12px;align-items:center}
+.prev-cli .disco{background:var(--logo-fundo,#fff);width:2.8rem;height:2.8rem}
+.prev-cli .disco.sem-logo{background:var(--destaque)}
+.prev-cli .disco .disco-letra{color:var(--sobre-destaque);font-style:normal;font-family:var(--f-titulo)}
+.prev-cli .ey{font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--destaque-texto)}
+.prev-cli .nm{font-family:var(--f-titulo);font-weight:var(--peso-titulo);font-size:1.5rem;line-height:1;letter-spacing:-.02em}
+.prev-cli .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.prev-cli .cards i{aspect-ratio:4/5;border-radius:10px;background:var(--superficie-2);display:block;position:relative}
+.prev-cli .cards i:after{content:"";position:absolute;left:8%;right:8%;bottom:8%;height:14%;border-radius:999px;background:var(--destaque)}
+.cores{display:flex;flex-direction:column;gap:10px}
+.cor-lin{display:grid;grid-template-columns:5.6rem minmax(0,1fr);gap:10px;align-items:center}
+.cor-lin>span{font-size:.8rem;font-weight:800;color:var(--bege)}
+.amostras{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.amostras button{width:1.9rem;height:1.9rem;border-radius:50%;border:2px solid var(--linha-forte);padding:0}
+.amostras button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--grafite),0 0 0 4px var(--pink);border-color:transparent}
+.amostras .auto{width:auto;padding:0 10px;border-radius:var(--r-pill);font-size:.75rem;font-weight:800;background:none;color:var(--bege)}
+.amostras .auto[aria-pressed="true"]{background:var(--creme);color:var(--grafite);box-shadow:none}
+.amostras input[type=color]{width:1.9rem;height:1.9rem;border:0;padding:0;background:none;border-radius:50%;cursor:pointer}
+.fontes{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.logo-lin{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.logo-lin label{position:relative;overflow:hidden}
+.logo-lin label input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+/* modal e aviso */
+.fundo-modal{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{width:100%;max-width:30rem;background:var(--grafite);border:2px solid var(--pink);border-radius:var(--r-box);padding:22px;display:flex;flex-direction:column;gap:14px}
+.modal h2{margin:0;font-weight:900;font-style:italic;font-size:1.8rem;letter-spacing:-.04em}
+.modal .bts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.aviso{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);transform:translateX(-50%);z-index:60;background:var(--creme);color:var(--grafite);border-radius:var(--r-pill);padding:.7rem 1.3rem;font-weight:800;max-width:calc(100% - 48px);text-align:center;box-shadow:0 14px 34px rgba(0,0,0,.4)}
+.rodape{position:fixed;left:0;right:0;bottom:0;z-index:9;pointer-events:none;display:flex;justify-content:center;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 6px)}
+.rodape span{pointer-events:auto;background:var(--grafite);border:1.5px solid var(--linha);border-radius:var(--r-pill);padding:3px 12px;font-size:.75rem;font-weight:800;font-style:italic;color:var(--bege)}
+.rodape b{color:var(--pink)}
+@media (max-width:700px){.site-topo-in{padding:10px 30px}.topo-acoes .btn span{display:none}.espaco{min-width:110px}.envio-cfg{grid-template-columns:minmax(0,1fr)}.fontes{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<span class="barra esq" aria-hidden="true"></span><span class="barra dir" aria-hidden="true"></span>
+
+<section class="login" id="vLogin" hidden>
+  <div class="in">
+    <span class="marca" aria-hidden="true"><i></i>isadsign.co</span>
+    <h1>Entre<em>gas</em></h1>
+    <p>Pastas de arquivos dos clientes: você sobe, eles baixam, e tudo some em 30 dias.</p>
+    <form id="fLogin">
+      <label for="senha" class="etq" style="position:absolute;left:-9999px">Senha</label>
+      <input class="inp" id="senha" type="password" placeholder="Sua senha do painel" autocomplete="current-password" required>
+      <button class="btn btn-pink">Entrar</button>
+    </form>
+    <p class="erro" id="loginErro" role="alert"></p>
+  </div>
+</section>
+
+<div id="vApp" hidden>
+  <header class="site-topo">
+    <div class="site-topo-in">
+      <a class="marca" href="#/"><i></i>entregas <small>isadsign.co</small></a>
+      <div class="topo-acoes">
+        <div class="espaco" id="espaco" title="O R2 da Cloudflare é gratuito até 10 GB"></div>
+        <button class="btn btn-linha btn-mini" id="btSync" title="Puxar clientes, cores, fontes e logos do Demandas"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.6-4.5M4 4v3h3M4 13a8 8 0 0 0 14.6 4.5M20 20v-3h-3"/></svg><span>Demandas</span></button>
+        <button class="btn btn-pink btn-mini" id="btNova"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Nova pasta</span></button>
+        <button class="btn-texto" id="btSair">Sair</button>
+      </div>
+    </div>
+  </header>
+  <main id="tela"></main>
+</div>
+
+<div class="fundo-modal" id="modal" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTit" id="modalIn"></div></div>
+<div class="aviso" id="aviso" hidden role="status"></div>
+<div class="rodape"><span><b>@</b>isadsign.co</span></div>
+
+<script src="/tema.js"></script>
+<script>
+(function(){
+  var T=window.TemaEntregas,$=function(i){return document.getElementById(i)};
+  var K="entregas:adm",visao=null,aberta=null,filtro="ativos",busca="",fila=[],enviando=0;
+  var PARTE=50*1024*1024,PARALELO=2,LIMITE=10*1024*1024*1024;
+  var MESES=["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+  var pastaEnvio=MESES[new Date().getMonth()];
+  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+  function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
+  function aviso(t,ms){var a=$("aviso");a.textContent=t;a.hidden=false;clearTimeout(aviso.t);aviso.t=setTimeout(function(){a.hidden=true},ms||2800)}
+  function diasAte(iso){return Math.ceil((new Date(iso)-Date.now())/864e5)}
+  function quando(iso){if(!iso)return "";var d=Math.floor((Date.now()-new Date(iso))/864e5);return d<=0?"hoje":d===1?"ontem":"há "+d+" dias"}
+  function api(rota,o){o=o||{};var h={authorization:"Bearer "+(ls(K)||"")};if(o.corpo&&!(o.corpo instanceof Blob))h["content-type"]="application/json";if(o.tipo)h["content-type"]=o.tipo;
+    return fetch(rota,{method:o.metodo||"GET",headers:h,body:o.corpo?(o.corpo instanceof Blob?o.corpo:JSON.stringify(o.corpo)):undefined}).then(function(r){return r.json().catch(function(){return{}}).then(function(d){
+      if(r.status===401&&rota.indexOf("/entrar")<0){sair();throw new Error("Entre de novo")}if(!r.ok)throw new Error(d.erro||"Algo deu errado");return d})})}
+  function sair(){ls(K,null);$("vApp").hidden=true;$("vLogin").hidden=false;setTimeout(function(){$("senha").focus()},50)}
+
+  /* ---------- entrada ---------- */
+  $("fLogin").onsubmit=function(e){e.preventDefault();$("loginErro").textContent="";
+    api("/api/admin/entrar",{metodo:"POST",corpo:{senha:$("senha").value}}).then(function(d){ls(K,d.token);$("senha").value="";iniciar()}).catch(function(er){$("loginErro").textContent=er.message})};
+  $("btSair").onclick=sair;
+
+  function iniciar(){$("vLogin").hidden=true;$("vApp").hidden=false;carregar().then(rotear)}
+  function carregar(){return api("/api/admin/visao").then(function(d){visao=d;pintarEspaco()})}
+  function pintarEspaco(){var u=visao.bytes||0,p=Math.min(100,u/LIMITE*100);var e=$("espaco");e.className="espaco"+(p>85?" cheio":"");
+    e.innerHTML='<span>'+T.bytes(u)+' de 10 GB</span><span class="tr"><i style="width:'+Math.max(p,u?1.5:0).toFixed(1)+'%"></i></span>'}
+
+  /* ---------- rotas ---------- */
+  function rotear(){var m=location.hash.match(/^#\/p\/([a-z0-9]+)/);if(m)abrirPasta(m[1]);else{aberta=null;home()}window.scrollTo(0,0)}
+  window.addEventListener("hashchange",function(){if(ls(K))rotear()});
+
+  function cliPor(id){return visao&&visao.clientes.find(function(c){return c.id===id})}
+  function corDe(c){return T.tema(c.ident).destaque}
+  function disco(c,g){var t=T.tema(c.ident);return '<span class="disco'+(g?" g":"")+(c.ident.logo?"":" sem-logo")+'" style="--cor:'+t.destaque+';'+(c.ident.logo?"background:"+(c.ident.logoFundo||"#F3E8CC"):"color:"+t.sobreDestaque)+'">'+T.logoHTML(c.ident,"Logo de "+c.nome)+'</span>'}
+
+  /* ---------- tela inicial ---------- */
+  function home(){
+    var cs=visao.clientes,ativos=cs.filter(function(c){return c.status==="ativo"&&!c.oculto}),comArq=cs.filter(function(c){return c.arquivos>0});
+    var nArq=cs.reduce(function(s,c){return s+c.arquivos},0);
+    var vencem=0;// arquivos que somem nos próximos 5 dias aparecem dentro de cada pasta
+    var sy=visao.sync,txtSync=sy&&sy.em?"Demandas lido "+quando(sy.em):"Demandas ainda não sincronizado";
+    $("tela").innerHTML=
+      '<div class="heroi"><div><h1>Pastas dos <em>clientes</em></h1><p>Suba reels, posts e PDFs na pasta do cliente. Ele entra com link e código, baixa, e cada arquivo some sozinho em '+(visao.validadeDias||30)+' dias.</p></div><span class="mini">'+esc(txtSync)+'</span></div>'+
+      '<div class="kpis"><div class="kpi"><b>'+ativos.length+'</b><span>clientes ativos</span></div><div class="kpi lima"><b>'+nArq+'</b><span>arquivos no ar</span></div><div class="kpi"><b>'+comArq.length+'</b><span>pastas com arquivos</span></div><div class="kpi pink"><b>'+T.bytes(visao.bytes||0)+'</b><span>de 10 GB grátis</span></div></div>'+
+      '<div class="ferr"><div class="seg" role="group" aria-label="Filtrar pastas">'+
+        [["ativos","Ativos",ativos.length],["arquivos","Com arquivos",comArq.length],["todos","Todos",cs.filter(function(c){return !c.oculto}).length],["ocultos","Escondidas",cs.filter(function(c){return c.oculto}).length]].map(function(f){return '<button data-filtro="'+f[0]+'" aria-pressed="'+(filtro===f[0])+'">'+f[1]+' <small>'+f[2]+'</small></button>'}).join("")+
+      '</div><input class="inp busca" id="busca" placeholder="Buscar cliente" value="'+esc(busca)+'" aria-label="Buscar cliente"></div><div id="grade"></div>';
+    pintarGrade();
+    $("busca").oninput=function(){busca=this.value;pintarGrade()};
+  }
+  function pintarGrade(){
+    var q=busca.trim().toLowerCase();
+    var lista=visao.clientes.filter(function(c){
+      if(q&&c.nome.toLowerCase().indexOf(q)<0)return false;
+      if(filtro==="ocultos")return c.oculto; if(c.oculto)return false;
+      if(filtro==="ativos")return c.status==="ativo"||c.arquivos>0||c.origem==="manual";
+      if(filtro==="arquivos")return c.arquivos>0; return true;
+    }).sort(function(a,b){return (b.arquivos>0)-(a.arquivos>0)||(b.ultimoEnvio>a.ultimoEnvio?1:b.ultimoEnvio<a.ultimoEnvio?-1:0)||a.nome.localeCompare(b.nome,"pt-BR")});
+    if(!lista.length){$("grade").innerHTML='<div class="vazio">'+(visao.clientes.length?"Nenhuma pasta neste filtro.":"Nenhuma pasta ainda. Toque em <b>Demandas</b> para puxar seus clientes, ou crie uma <b>Nova pasta</b>.")+'</div>';return}
+    $("grade").innerHTML='<div class="pastas">'+lista.map(cartaoPasta).join("")+'</div>';
+  }
+  function cartaoPasta(c){
+    var t=T.tema(c.ident),pal=(c.ident.paleta||[]).length?c.ident.paleta:[t.fundo,t.destaque,t.texto],mae=c.maeId&&cliPor(c.maeId);
+    return '<a class="pasta'+(c.arquivos?"":" vazia")+(c.oculto?" oculta":"")+'" href="#/p/'+c.id+'" style="--cor:'+t.destaque+'">'+
+      '<div class="l1">'+disco(c)+'<div style="min-width:0"><div class="nm">'+esc(c.nome)+(mae?'<span class="de">de '+esc(mae.nome)+'</span>':'')+'</div></div></div>'+
+      '<div class="num"><span><b>'+c.arquivos+'</b> '+(c.arquivos===1?"arquivo":"arquivos")+'</span>'+(c.bytes?'<span>'+T.bytes(c.bytes)+'</span>':'')+(c.ultimoEnvio?'<span>último '+quando(c.ultimoEnvio)+'</span>':'')+
+      (c.origem==="manual"?'<span class="chip linha">avulsa</span>':c.foraDemandas?'<span class="chip linha">fora do Demandas</span>':c.status&&c.status!=="ativo"?'<span class="chip linha">'+esc(c.status)+'</span>':'')+'</div>'+
+      '<div class="pal" aria-hidden="true">'+pal.map(function(h){return '<i style="background:'+esc(h)+'"></i>'}).join("")+'</div></a>';
+  }
+  document.addEventListener("click",function(e){var b=e.target.closest("[data-filtro]");if(b){filtro=b.dataset.filtro;home()}});
+
+  /* ---------- sincronizar ---------- */
+  $("btSync").onclick=function(){var b=this;b.disabled=true;aviso("Lendo o Demandas…",8000);
+    api("/api/admin/sincronizar",{metodo:"POST"}).then(function(r){aviso(r.msg,5000);return carregar()}).then(rotear).catch(function(e){aviso(e.message)}).then(function(){b.disabled=false})};
+
+  /* ---------- nova pasta ---------- */
+  function modal(html){$("modalIn").innerHTML=html;$("modal").hidden=false;var f=$("modalIn").querySelector("input,button");if(f)f.focus()}
+  function fecharModal(){$("modal").hidden=true;$("modalIn").innerHTML=""}
+  $("modal").addEventListener("click",function(e){if(e.target===$("modal")||e.target.closest("[data-fechar]"))fecharModal()});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("modal").hidden)fecharModal()});
+  $("btNova").onclick=function(){
+    modal('<h2 id="mTit">Nova pasta</h2><p class="mini" style="margin:0">Para alguém que não está no Demandas. Clientes do Demandas ganham pasta sozinhos.</p><label><span class="etq">Nome</span><input class="inp" id="nNome" maxlength="80" placeholder="Ex.: Café Aurora"></label><label><span class="etq">Cor</span><input type="color" id="nCor" value="#E9349E" style="width:3rem;height:2.4rem;border:0;background:none"></label><div class="bts"><button class="btn btn-linha" data-fechar>Cancelar</button><button class="btn btn-pink" id="nOk">Criar pasta</button></div>');
+    $("nOk").onclick=function(){var n=$("nNome").value.trim();if(!n){$("nNome").focus();return}
+      api("/api/admin/clientes",{metodo:"POST",corpo:{nome:n,cor:$("nCor").value}}).then(function(c){fecharModal();return carregar().then(function(){location.hash="#/p/"+c.id})}).catch(function(e){aviso(e.message)})};
+  };
+
+  /* ---------- pasta aberta ---------- */
+  var rasc=null;// rascunho da identidade
+  function abrirPasta(id){
+    $("tela").innerHTML='<p class="mini">Abrindo a pasta…</p>';
+    api("/api/admin/clientes/"+id).then(function(d){aberta=d;rasc=null;pintarPasta()}).catch(function(e){$("tela").innerHTML='<div class="vazio">'+esc(e.message)+' · <a href="#/">voltar</a></div>'});
+  }
+  function linkCli(c,comCodigo){return location.origin+"/p/"+c.slug+(comCodigo?"#"+c.codigo:"")}
+  function pintarPasta(){
+    var c=aberta,t=T.tema(c.ident),mae=c.maeId&&cliPor(c.maeId);
+    $("tela").innerHTML=
+      '<div class="abre-cab" style="--cor:'+t.destaque+'"><a class="btn-texto" href="#/" style="flex-basis:100%">← todas as pastas</a>'+disco(c,true)+
+        '<div class="t"><span class="etq">Pasta do cliente'+(mae?" · submarca de "+esc(mae.nome):"")+'</span><h1>'+esc(c.nome)+'</h1><div class="chips">'+
+          '<span class="chip lima">'+c.arquivos+' '+(c.arquivos===1?"arquivo":"arquivos")+'</span>'+(c.bytes?'<span class="chip">'+T.bytes(c.bytes)+'</span>':'')+
+          (c.origem==="manual"?'<span class="chip linha">pasta avulsa</span>':'<span class="chip linha">do Demandas'+(c.status?" · "+esc(c.status):"")+'</span>')+(c.oculto?'<span class="chip pink">escondida</span>':'')+'</div></div>'+
+        '<div class="acoes"><a class="btn btn-linha" href="'+esc(linkCli(c,true))+'" target="_blank" rel="noopener">Ver como o cliente ↗</a></div></div>'+
+      '<div class="colunas"><div>'+
+        '<section class="caixa"><div class="caixa-cab"><h2 class="secao-tit">Enviar arquivos</h2><span class="mini">qualquer tamanho · reels, posts, PDFs</span></div>'+
+          '<div class="envio-cfg"><label><span class="etq">Pasta dentro de '+esc(c.nome)+' (opcional)</span><input class="inp" id="pastaEnv" list="pastasUsadas" maxlength="60" value="'+esc(pastaEnvio)+'" placeholder="Ex.: Novembro, Campanha de Natal"></label><button class="btn-texto" id="semPasta">sem pasta</button></div>'+
+          '<datalist id="pastasUsadas">'+uniq(c.lista.map(function(a){return a.pasta}).filter(Boolean).concat(MESES)).map(function(p){return '<option value="'+esc(p)+'">'}).join("")+'</datalist>'+
+          '<label class="solta" id="solta"><input type="file" id="arqs" multiple><b>Solte os arquivos aqui</b><span>ou toque para escolher · envio continua mesmo com arquivos grandes</span></label>'+
+          '<div class="fila" id="fila"></div></section>'+
+        '<section class="caixa"><div class="caixa-cab"><h2 class="secao-tit">No ar agora</h2><span class="mini">some '+(visao.validadeDias||30)+' dias depois do envio</span></div><div id="listaArqs"></div></section>'+
+      '</div><div>'+
+        '<section class="caixa acesso"><div class="caixa-cab"><h2 class="secao-tit">Acesso do cliente</h2></div>'+
+          '<div><span class="etq">Código</span><div class="codigo">'+esc(c.codigo)+'</div></div>'+
+          '<div><span class="etq">Link da pasta</span><div class="lk"><span>'+esc(linkCli(c))+'</span><button class="btn btn-mini" data-copiar="link">Copiar</button></div></div>'+
+          '<div class="linha-bt"><button class="btn btn-pink btn-mini" data-copiar="msg">Copiar mensagem pronta</button><button class="btn btn-linha btn-mini" data-copiar="direto" title="Link que já entra sem digitar o código">Link que já entra</button><button class="btn-texto" id="novoCod">trocar código</button></div>'+
+          '<p class="mini" style="margin:0">Trocar o código desconecta quem já entrou.</p></section>'+
+        identHTML()+
+        '<section class="caixa"><div class="caixa-cab"><h2 class="secao-tit">Pasta</h2></div><div class="linha-bt" style="display:flex;gap:8px;flex-wrap:wrap">'+
+          '<button class="btn btn-linha btn-mini" id="btOculta">'+(c.oculto?"Mostrar de novo":"Esconder pasta")+'</button>'+
+          (c.origem==="manual"||c.foraDemandas?'<button class="btn btn-linha btn-mini" id="btApagaPasta" style="border-color:var(--pink);color:var(--pink)">Apagar pasta e arquivos</button>':'')+
+          '</div><p class="mini" style="margin:0">'+(c.oculto?"Escondida: o link não abre para o cliente.":"Esconder fecha o link para o cliente sem apagar nada.")+'</p></section>'+
+      '</div></div>';
+    pintarArquivos();pintarFila();ligarEnvio();
+  }
+  function uniq(a){var v={};return a.filter(function(x){if(v[x])return false;v[x]=1;return true})}
+
+  function pintarArquivos(){
+    var c=aberta,l=c.lista;
+    if(!l.length){$("listaArqs").innerHTML='<div class="vazio">Nada no ar nesta pasta.</div>';return}
+    var grupos=[],por={};l.forEach(function(a){var g=a.pasta||"Sem pasta";if(!por[g]){por[g]=[];grupos.push(g)}por[g].push(a)});
+    $("listaArqs").innerHTML=grupos.map(function(g){return '<div class="arqs-grupo"><h3>'+esc(g)+' <span class="chip">'+por[g].length+'</span></h3>'+por[g].map(linhaArq).join("")+'</div>'}).join("");
+  }
+  function linhaArq(a){
+    var d=diasAte(a.expira),th=a.tipo==="imagem"&&!/heic$/i.test(a.nome)?'<img src="'+esc(a.ver)+'" alt="" loading="lazy">':a.tipo==="video"?'<video src="'+esc(a.ver)+'#t=0.5" preload="metadata" muted playsinline></video>':esc(((/\.([a-z0-9]{1,4})$/i.exec(a.nome)||[])[1]||"ARQ").toUpperCase());
+    return '<div class="arq"><a class="th" href="'+esc(a.ver)+'" target="_blank" rel="noopener" aria-label="Abrir '+esc(a.nome)+'">'+th+'</a>'+
+      '<div class="o"><b>'+esc(a.nome)+'</b><div class="meta"><span>'+T.bytes(a.tamanho)+'</span><span>enviado '+quando(a.enviado)+'</span><span class="chip '+(d<=5?"pink":"linha")+'">'+(d<=1?"some hoje":"some em "+d+" dias")+'</span></div></div>'+
+      '<div class="ac"><a class="ico" href="'+esc(a.baixar)+'" download aria-label="Baixar" title="Baixar"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg></a>'+
+      '<button class="ico" data-renova="'+a.id+'" aria-label="Mais 30 dias" title="Deixar mais 30 dias a partir de hoje"><svg viewBox="0 0 24 24"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="8"/></svg></button>'+
+      '<button class="ico perigo" data-apaga="'+a.id+'" aria-label="Apagar" title="Apagar agora"><svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg></button></div></div>';
+  }
+
+  /* ---------- envio em partes ---------- */
+  function ligarEnvio(){
+    var s=$("solta");
+    $("arqs").onchange=function(){adicionar(this.files);this.value=""};
+    ["dragenter","dragover"].forEach(function(ev){s.addEventListener(ev,function(e){e.preventDefault();s.classList.add("arrasta")})});
+    ["dragleave","drop"].forEach(function(ev){s.addEventListener(ev,function(e){e.preventDefault();s.classList.remove("arrasta")})});
+    s.addEventListener("drop",function(e){adicionar(e.dataTransfer.files)});
+    $("pastaEnv").oninput=function(){pastaEnvio=this.value};
+    $("semPasta").onclick=function(){pastaEnvio="";$("pastaEnv").value=""};
+  }
+  function adicionar(files){[].forEach.call(files||[],function(f){fila.push({id:Math.random().toString(36).slice(2),f:f,cli:aberta.id,cliNome:aberta.nome,pasta:pastaEnvio.trim(),env:0,st:"espera"})});pintarFila();proximo()}
+  function pintarFila(){var el=$("fila");if(!el)return;var vis=fila.filter(function(x){return x.cli===(aberta&&aberta.id)});
+    el.innerHTML=vis.map(function(x){var p=x.f.size?x.env/x.f.size*100:100;
+      return '<div class="up'+(x.st==="erro"?" erro":x.st==="ok"?" ok":"")+'"><b title="'+esc(x.f.name)+'">'+esc(x.f.name)+'</b><small>'+(x.st==="ok"?"enviado":x.st==="erro"?esc(x.msg||"falhou")+' · <button class="btn-texto" data-tentar="'+x.id+'">tentar de novo</button>':x.st==="espera"?"na fila · "+T.bytes(x.f.size):Math.floor(p)+"% de "+T.bytes(x.f.size))+'</small><span class="tr"><i style="width:'+p.toFixed(1)+'%"></i></span></div>'}).join("")}
+  function proximo(){while(enviando<PARALELO){var x=fila.find(function(i){return i.st==="espera"});if(!x)break;enviar(x)}}
+  function xhrParte(url,blob,prog){return new Promise(function(ok,falha){var r=new XMLHttpRequest();r.open("PUT",url);r.setRequestHeader("authorization","Bearer "+(ls(K)||""));
+    r.upload.onprogress=function(e){prog(e.loaded)};r.onload=function(){var d={};try{d=JSON.parse(r.responseText)}catch(e){}if(r.status===200)ok(d);else falha(new Error(d.erro||"erro "+r.status))};r.onerror=function(){falha(new Error("sem conexão"))};r.send(blob)})}
+  function enviar(x){
+    enviando++;x.st="enviando";x.env=0;pintarFila();
+    var f=x.f,total=Math.max(1,Math.ceil(f.size/PARTE)),partes=[],ini;
+    api("/api/admin/envio/inicio",{metodo:"POST",corpo:{cliente:x.cli,nome:f.name,tipo:f.type,pasta:x.pasta}}).then(function(d){ini=d;
+      var n=0;
+      function uma(){n++;if(n>total)return Promise.resolve();
+        var blob=f.slice((n-1)*PARTE,Math.min(f.size,n*PARTE)),base=(n-1)*PARTE,tent=0;
+        var url="/api/admin/envio/parte?cliente="+x.cli+"&arquivo="+d.arquivo+"&envio="+encodeURIComponent(d.envio)+"&n="+n;
+        function vai(){return xhrParte(url,blob,function(l){x.env=base+l;pintarFila()}).catch(function(e){if(++tent<4)return new Promise(function(r){setTimeout(r,1500*tent)}).then(vai);throw e})}
+        return vai().then(function(p){partes.push(p);return uma()});
+      }
+      return uma();
+    }).then(function(){return api("/api/admin/envio/fim",{metodo:"POST",corpo:{cliente:x.cli,arquivo:ini.arquivo,envio:ini.envio,partes:partes}})})
+    .then(function(){x.st="ok";x.env=f.size})
+    .catch(function(e){x.st="erro";x.msg=e.message;if(ini)api("/api/admin/envio/fim",{metodo:"POST",corpo:{cliente:x.cli,arquivo:ini.arquivo,envio:ini.envio,cancelar:true}}).catch(function(){})})
+    .then(function(){enviando--;pintarFila();
+      if(!fila.some(function(i){return i.st==="espera"||i.st==="enviando"})){var oks=fila.filter(function(i){return i.st==="ok"}).length;if(oks)aviso(oks===1?"Arquivo no ar":oks+" arquivos no ar");
+        fila=fila.filter(function(i){return i.st==="erro"});carregar();if(aberta)abrirPastaSilencioso()}
+      proximo()});
+  }
+  function abrirPastaSilencioso(){var id=aberta.id;api("/api/admin/clientes/"+id).then(function(d){if(aberta&&aberta.id===id){aberta=d;pintarArquivos();var ch=document.querySelector(".abre-cab .chip.lima");if(ch)ch.textContent=d.arquivos+" "+(d.arquivos===1?"arquivo":"arquivos")}})}
+  window.addEventListener("beforeunload",function(e){if(enviando){e.preventDefault();e.returnValue=""}});
+
+  /* ---------- identidade ---------- */
+  function idAtual(){return rasc||{paleta:aberta.ident.paleta.slice(),fundo:aberta.ident.fundo,texto:aberta.ident.texto,destaque:aberta.ident.destaque,fonteTitulo:aberta.ident.fonteTitulo,fonteTexto:aberta.ident.fonteTexto}}
+  function identHTML(){
+    var c=aberta,i=idAtual(),comLogo=!!c.ident.logo;
+    function linhaCor(k,rot){var v=i[k]||"";return '<div class="cor-lin"><span>'+rot+'</span><div class="amostras"><button class="auto" data-cor="'+k+'" data-v="" aria-pressed="'+!v+'">auto</button>'+
+      (i.paleta||[]).map(function(h){return '<button style="background:'+esc(h)+'" data-cor="'+k+'" data-v="'+esc(h)+'" aria-pressed="'+(v===h)+'" aria-label="'+esc(h)+'" title="'+esc(h)+'"></button>'}).join("")+
+      '<input type="color" data-cor-livre="'+k+'" value="'+esc(v||"#E9349E")+'" aria-label="Outra cor para '+rot+'" title="Outra cor"></div></div>'}
+    return '<section class="caixa" id="cxIdent"><div class="caixa-cab"><h2 class="secao-tit">Identidade da pasta</h2><span class="mini">'+(c.manual?"ajustada por você":c.origem==="manual"?"pasta avulsa":"vem do Demandas")+'</span></div>'+
+      '<div class="prev-cli" id="prevCli"></div>'+
+      ((i.paleta||[]).length?'':'<p class="mini" style="margin:0">Este cliente não tem paleta no Demandas, então a pasta usa a cor dele no painel. Adicione cores no Perfil do Demandas ou escolha aqui.</p>')+
+      '<div class="cores">'+linhaCor("destaque","Destaque")+linhaCor("fundo","Fundo")+linhaCor("texto","Texto")+'</div>'+
+      '<div class="fontes"><label><span class="etq">Fonte dos títulos</span><input class="inp" id="fTit" value="'+esc(i.fonteTitulo||"")+'" placeholder="Ex.: Montserrat"></label><label><span class="etq">Fonte dos textos</span><input class="inp" id="fTxt" value="'+esc(i.fonteTexto||"")+'" placeholder="Ex.: Inter"></label></div>'+
+      '<p class="mini" style="margin:-4px 0 0">Fontes do Google Fonts aparecem iguais; as outras viram uma fonte parecida do aparelho.</p>'+
+      '<div><span class="etq">Logo</span><div class="logo-lin">'+disco(c)+'<label class="btn btn-linha btn-mini">'+(comLogo?"Trocar logo":"Subir logo")+'<input type="file" id="logoArq" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label>'+
+        (comLogo?'<label class="mini" style="display:flex;gap:6px;align-items:center">fundo <input type="color" id="logoFundo" value="'+esc(c.ident.logoFundo||"#FFFFFF")+'" style="width:2rem;height:2rem;border:0;background:none"></label><button class="btn-texto" id="logoTira">tirar</button>':'')+'</div></div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button class="btn btn-lima btn-mini" id="salvaIdent"'+(rasc?"":" disabled")+'>Salvar identidade</button>'+
+        (c.manual&&c.identDemandas?'<button class="btn-texto" id="voltaDem">voltar ao que está no Demandas</button>':'')+(rasc?'<button class="btn-texto" id="descarta">descartar</button>':'')+'</div></section>';
+  }
+  function pintarPrev(){var p=$("prevCli");if(!p)return;var i=Object.assign({},aberta.ident,idAtual()),t=T.tema(i);
+    T.aplicar(p,t);T.fontes(p,i);p.style.setProperty("--logo-fundo",aberta.ident.logoFundo||"#FFFFFF");
+    p.innerHTML='<div class="l1"><span class="disco'+(i.logo?"":" sem-logo")+'">'+T.logoHTML(i,"")+'</span><div><div class="ey">Arquivos para você</div><div class="nm">'+esc(aberta.nome)+'</div></div></div><div class="cards"><i></i><i></i><i></i></div>'}
+  function repintarIdent(){var cx=$("cxIdent");if(!cx)return;var tmp=document.createElement("div");tmp.innerHTML=identHTML();cx.replaceWith(tmp.firstChild);pintarPrev()}
+  var _pp=pintarPasta;pintarPasta=function(){_pp();pintarPrev()};
+
+  document.addEventListener("click",function(e){var b;
+    if((b=e.target.closest("[data-cor]"))){rasc=idAtual();rasc[b.dataset.cor]=b.dataset.v;repintarIdent();return}
+    if((b=e.target.closest("#salvaIdent"))){api("/api/admin/clientes/"+aberta.id,{metodo:"PATCH",corpo:{ident:idAtual()}}).then(function(){aviso("Identidade salva");rasc=null;return recarregarAberta()}).catch(function(er){aviso(er.message)});return}
+    if((b=e.target.closest("#descarta"))){rasc=null;repintarIdent();return}
+    if((b=e.target.closest("#voltaDem"))){api("/api/admin/clientes/"+aberta.id,{metodo:"PATCH",corpo:{usarDemandas:true}}).then(function(){aviso("De volta ao Demandas");rasc=null;return recarregarAberta()});return}
+    if((b=e.target.closest("#logoTira"))){api("/api/admin/clientes/"+aberta.id+"/logo",{metodo:"DELETE"}).then(recarregarAberta);return}
+    if((b=e.target.closest("[data-copiar]"))){var c=aberta,k=b.dataset.copiar,txt=k==="link"?linkCli(c):k==="direto"?linkCli(c,true):
+        "Oi! Seus arquivos estão nesta pasta: "+linkCli(c)+"\nCódigo de acesso: "+c.codigo+"\nCada arquivo fica disponível por 30 dias, então baixe e guarde com você 💗";
+      (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){aviso(k==="msg"?"Mensagem copiada":"Link copiado")}).catch(function(){prompt("Copie:",txt)});return}
+    if((b=e.target.closest("#novoCod"))){if(!confirm("Trocar o código de "+aberta.nome+"? Quem já entrou vai precisar do código novo."))return;
+      api("/api/admin/clientes/"+aberta.id+"/codigo",{metodo:"POST"}).then(function(){aviso("Código novo criado");return recarregarAberta()});return}
+    if((b=e.target.closest("[data-renova]"))){api("/api/admin/arquivos/"+aberta.id+"/"+b.dataset.renova,{metodo:"PATCH"}).then(function(){aviso("Fica mais 30 dias");abrirPastaSilencioso()}).catch(function(er){aviso(er.message)});return}
+    if((b=e.target.closest("[data-apaga]"))){var a=aberta.lista.find(function(x){return x.id===b.dataset.apaga});if(!a||!confirm("Apagar “"+a.nome+"” agora? O cliente não vai mais conseguir baixar."))return;
+      api("/api/admin/arquivos/"+aberta.id+"/"+a.id,{metodo:"DELETE"}).then(function(){aviso("Arquivo apagado");carregar();abrirPastaSilencioso()});return}
+    if((b=e.target.closest("[data-tentar]"))){var x=fila.find(function(i){return i.id===b.dataset.tentar});if(x){x.st="espera";x.msg="";pintarFila();proximo()}return}
+    if((b=e.target.closest("#btOculta"))){api("/api/admin/clientes/"+aberta.id,{metodo:"PATCH",corpo:{oculto:!aberta.oculto}}).then(function(){aviso(aberta.oculto?"Pasta visível de novo":"Pasta escondida");return recarregarAberta()});return}
+    if((b=e.target.closest("#btApagaPasta"))){if(!confirm("Apagar a pasta de "+aberta.nome+" com todos os arquivos? Não dá para desfazer."))return;
+      api("/api/admin/clientes/"+aberta.id,{metodo:"DELETE"}).then(function(){aviso("Pasta apagada");return carregar()}).then(function(){location.hash="#/"}).catch(function(er){aviso(er.message)});return}
+  });
+  document.addEventListener("input",function(e){var t=e.target;
+    if(t.dataset&&t.dataset.corLivre){rasc=idAtual();rasc[t.dataset.corLivre]=t.value.toUpperCase();clearTimeout(t._t);t._t=setTimeout(repintarIdent,180);return}
+    if(t.id==="fTit"||t.id==="fTxt"){rasc=idAtual();rasc[t.id==="fTit"?"fonteTitulo":"fonteTexto"]=t.value;clearTimeout(t._t);t._t=setTimeout(function(){pintarPrev();var s=$("salvaIdent");if(s)s.disabled=false},400)}
+  });
+  document.addEventListener("change",function(e){var t=e.target;
+    if(t.id==="logoArq"&&t.files[0]){var f=t.files[0];if(f.size>3*1048576){aviso("Logo até 3 MB");return}
+      api("/api/admin/clientes/"+aberta.id+"/logo",{metodo:"PUT",corpo:f,tipo:f.type}).then(function(){aviso("Logo atualizada");return recarregarAberta()}).catch(function(er){aviso(er.message)})}
+    if(t.id==="logoFundo"){api("/api/admin/clientes/"+aberta.id,{metodo:"PATCH",corpo:{logoFundo:t.value}}).then(recarregarAberta)}
+  });
+  function recarregarAberta(){return carregar().then(function(){return api("/api/admin/clientes/"+aberta.id)}).then(function(d){aberta=d;rasc=null;pintarPasta()})}
+
+  if(ls(K))iniciar();else sair();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Seus arquivos</title>
+<link rel="icon" href="/icone.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+:root{--fundo:#F7F4EE;--texto:#1D1D1F;--destaque:#E9349E;--sobre-destaque:#fff;--destaque-texto:#E9349E;--superficie:#fff;--superficie-2:#EFEBE4;--suave:#6E6E73;--linha:rgba(0,0,0,.1);
+  --f-titulo:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",Arial,sans-serif;--f-texto:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;--peso-titulo:700;
+  --r:22px;--max:76rem}
+*{box-sizing:border-box}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+@media (min-width:1800px){html{font-size:20px}}
+@media (min-width:2600px){html{font-size:26px}}
+body{margin:0;min-height:100vh;background:var(--fundo);color:var(--texto);font-family:var(--f-texto);line-height:1.45;-webkit-font-smoothing:antialiased;transition:background .4s,color .4s}
+[hidden]{display:none!important}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--destaque-texto)}
+:focus-visible{outline:3px solid var(--destaque);outline-offset:3px;border-radius:8px}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 0 max(16px,env(safe-area-inset-left,0px))}
+
+/* disco da logo */
+.disco{width:4.5rem;height:4.5rem;border-radius:50%;overflow:hidden;flex:none;display:grid;place-items:center;background:var(--logo-fundo,#fff);box-shadow:0 0 0 1px var(--linha)}
+.disco img{width:100%;height:100%;object-fit:cover;display:block;transform-origin:50% 50%}
+.disco .disco-letra{font-family:var(--f-titulo);font-weight:var(--peso-titulo);font-size:2rem;color:var(--sobre-destaque)}
+.disco.sem-logo{background:var(--destaque)}
+
+/* entrada */
+.entrada{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 32px) 16px calc(env(safe-area-inset-bottom,0px) + 32px)}
+.cartao-entrada{width:100%;max-width:27rem;background:var(--superficie);border-radius:calc(var(--r) + 6px);padding:2.4rem 1.75rem 2rem;text-align:center;box-shadow:0 1px 2px rgba(0,0,0,.04),0 18px 50px rgba(0,0,0,.08)}
+.cartao-entrada .disco{width:6rem;height:6rem;margin:0 auto 1.25rem}
+.cartao-entrada .eyebrow{font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--destaque-texto);margin:0 0 .5rem}
+.cartao-entrada h1{font-family:var(--f-titulo);font-weight:var(--peso-titulo);font-size:clamp(1.9rem,7vw,2.6rem);line-height:1.05;letter-spacing:-.02em;margin:0 0 .6rem;text-wrap:balance}
+.cartao-entrada p{color:var(--suave);margin:0 0 1.5rem;text-wrap:pretty}
+.codigo{width:100%;background:var(--superficie-2);border:2px solid transparent;border-radius:16px;padding:1rem;font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:1.4rem;letter-spacing:.18em;text-align:center;text-transform:uppercase;outline:none}
+.codigo:focus{border-color:var(--destaque);background:var(--superficie)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;border:0;border-radius:999px;padding:.75rem 1.35rem;font-weight:600;font-size:1rem;background:var(--superficie-2);color:var(--texto);text-decoration:none;white-space:nowrap}
+.btn.prim{background:var(--destaque);color:var(--sobre-destaque)}
+.btn.prim:hover{filter:brightness(1.06)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn svg{width:1.1em;height:1.1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cartao-entrada .btn.prim{width:100%;margin-top:.85rem;padding:.95rem;font-size:1.05rem}
+.msg{min-height:1.4em;margin:.75rem 0 0;font-size:.9rem;color:#C4002B}
+.assinatura{margin-top:1.5rem;font-size:.8rem;color:var(--suave)}
+.assinatura b{font-weight:600;color:var(--texto)}
+
+/* pasta */
+.topo{padding:calc(env(safe-area-inset-top,0px) + clamp(28px,5vw,64px)) 0 clamp(20px,3vw,36px)}
+.topo .wrap{display:flex;align-items:center;gap:clamp(16px,2.4vw,32px);flex-wrap:wrap}
+.topo .disco{width:clamp(4.5rem,9vw,7rem);height:clamp(4.5rem,9vw,7rem)}
+.topo .t{flex:1 1 18rem;min-width:0}
+.topo .eyebrow{font-size:.85rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--destaque-texto);margin:0 0 .35rem}
+.topo h1{font-family:var(--f-titulo);font-weight:var(--peso-titulo);font-size:clamp(2.2rem,6.5vw,4.6rem);line-height:.98;letter-spacing:-.025em;margin:0;overflow-wrap:anywhere;text-wrap:balance}
+.topo .sub{color:var(--suave);margin:.6rem 0 0;max-width:40rem;text-wrap:pretty}
+.topo .acoes{display:flex;gap:.5rem;flex-wrap:wrap}
+.barra-ferr{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--fundo) 86%,transparent);backdrop-filter:saturate(160%) blur(18px);-webkit-backdrop-filter:saturate(160%) blur(18px);border-bottom:1px solid var(--linha);padding:.7rem 0}
+.barra-ferr .wrap{display:flex;gap:.75rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.filtros{display:flex;gap:.4rem;flex-wrap:wrap}
+.filtros button{border:1px solid var(--linha);background:transparent;border-radius:999px;padding:.45rem .95rem;font-size:.9rem;font-weight:500;display:inline-flex;gap:.4rem;align-items:center}
+.filtros button small{font-size:.75rem;color:var(--suave);font-variant-numeric:tabular-nums}
+.filtros button[aria-pressed="true"]{background:var(--texto);color:var(--fundo);border-color:var(--texto)}
+.filtros button[aria-pressed="true"] small{color:inherit;opacity:.7}
+.resumo{font-size:.85rem;color:var(--suave);font-variant-numeric:tabular-nums}
+main.wrap{padding-top:clamp(24px,3vw,44px);padding-bottom:4rem}
+.grupo{margin-bottom:clamp(28px,3.5vw,48px)}
+.grupo h2{font-family:var(--f-titulo);font-weight:var(--peso-titulo);font-size:clamp(1.35rem,2.4vw,1.9rem);letter-spacing:-.02em;margin:0 0 1rem;display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap}
+.grupo h2 small{font-family:var(--f-texto);font-size:.85rem;font-weight:500;color:var(--suave);letter-spacing:0}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,15rem),1fr));gap:clamp(12px,1.4vw,22px)}
+@media (min-width:1800px){.grade{grid-template-columns:repeat(auto-fill,minmax(14rem,1fr))}}
+.arq{background:var(--superficie);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;min-width:0;box-shadow:0 1px 2px rgba(0,0,0,.04),0 6px 22px rgba(0,0,0,.05)}
+.prev{position:relative;aspect-ratio:4/5;background:var(--superficie-2);display:grid;place-items:center;border:0;padding:0;width:100%;overflow:hidden}
+.prev img,.prev video{width:100%;height:100%;object-fit:cover;display:block}
+.prev .icone{width:34%;max-width:5rem;color:var(--destaque-texto)}
+.prev .icone svg{width:100%;height:auto;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+.prev .ext{position:absolute;bottom:.7rem;left:50%;transform:translateX(-50%);font-size:.75rem;font-weight:700;letter-spacing:.1em;color:var(--suave)}
+.prev .play{position:absolute;width:3.4rem;height:3.4rem;border-radius:50%;background:rgba(0,0,0,.55);display:grid;place-items:center;backdrop-filter:blur(8px)}
+.prev .play svg{width:1.2rem;height:1.2rem;fill:#fff;margin-left:3px}
+.prev .tag{position:absolute;top:.7rem;left:.7rem;background:rgba(0,0,0,.55);color:#fff;font-size:.7rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border-radius:999px;padding:.2rem .6rem;backdrop-filter:blur(8px)}
+.info{padding:.9rem 1rem 1rem;display:flex;flex-direction:column;gap:.35rem;flex:1}
+.info b{font-weight:600;font-size:.98rem;line-height:1.3;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.info .meta{font-size:.8rem;color:var(--suave);display:flex;gap:.35rem .7rem;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.info .meta .fim{color:var(--destaque-texto);font-weight:600}
+.info .btn{margin-top:auto;align-self:stretch;padding:.6rem 1rem;font-size:.92rem}
+.vazio{text-align:center;padding:4rem 1rem;color:var(--suave)}
+.vazio b{display:block;font-family:var(--f-titulo);font-weight:var(--peso-titulo);font-size:1.6rem;color:var(--texto);margin-bottom:.4rem}
+.rodape{padding:2rem 0 calc(env(safe-area-inset-bottom,0px) + 2rem);border-top:1px solid var(--linha);font-size:.85rem;color:var(--suave)}
+.rodape .wrap{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.rodape a{color:inherit;font-weight:600}
+
+/* visualizador */
+.lb{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.88);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 12px) 12px calc(env(safe-area-inset-bottom,0px) + 12px)}
+.lb .lb-topo{display:flex;align-items:center;gap:.75rem;color:#fff;padding:.25rem .25rem .75rem}
+.lb .lb-topo b{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.lb .lb-corpo{flex:1;min-height:0;display:grid;place-items:center}
+.lb img,.lb video,.lb iframe{max-width:100%;max-height:100%;border-radius:14px;background:#000}
+.lb iframe{width:min(100%,60rem);height:100%;background:#fff;border:0}
+.lb .btn.fechar{background:rgba(255,255,255,.14);color:#fff}
+.aviso{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);z-index:60;background:var(--texto);color:var(--fundo);border-radius:999px;padding:.7rem 1.2rem;font-size:.92rem;font-weight:500;max-width:calc(100% - 32px);text-align:center;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.progresso{height:4px;border-radius:2px;background:var(--superficie-2);overflow:hidden;margin-top:.4rem}
+.progresso i{display:block;height:100%;background:var(--destaque);width:0;transition:width .2s}
+@media (max-width:560px){.grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.info{padding:.7rem .75rem .8rem}.info b{font-size:.9rem}.prev .tag{display:none}.topo .acoes{width:100%}.topo .acoes .btn{flex:1}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div id="carregando" class="entrada"><p style="color:var(--suave)">Abrindo a pasta…</p></div>
+
+<section id="entrada" class="entrada" hidden>
+  <div class="cartao-entrada">
+    <div class="disco" id="eDisco"></div>
+    <p class="eyebrow">Sua pasta de arquivos</p>
+    <h1 id="eNome">Olá!</h1>
+    <p>Digite o código que a Isa te enviou para ver e baixar seus arquivos.</p>
+    <form id="fEntrar" autocomplete="off">
+      <label for="cod" class="eyebrow" style="position:absolute;left:-9999px">Código de acesso</label>
+      <input id="cod" class="codigo" placeholder="XXXX-XXXX" maxlength="12" inputmode="text" autocapitalize="characters" spellcheck="false" required>
+      <button class="btn prim" id="btEntrar">Entrar</button>
+      <p class="msg" id="eMsg" role="alert"></p>
+    </form>
+    <p class="assinatura">Arquivos entregues por <b>@isadsign.co</b></p>
+  </div>
+</section>
+
+<section id="naoAchou" class="entrada" hidden>
+  <div class="cartao-entrada">
+    <p class="eyebrow">Pasta não encontrada</p>
+    <h1>Esse link não abre nenhuma pasta.</h1>
+    <p>Confira o link com a Isa. Ele pode ter mudado.</p>
+  </div>
+</section>
+
+<div id="pasta" hidden>
+  <header class="topo">
+    <div class="wrap">
+      <div class="disco" id="pDisco"></div>
+      <div class="t">
+        <p class="eyebrow">Arquivos para você</p>
+        <h1 id="pNome"></h1>
+        <p class="sub" id="pSub"></p>
+      </div>
+      <div class="acoes">
+        <button class="btn prim" id="btTudo" hidden><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg><span>Baixar tudo</span></button>
+        <button class="btn" id="btSair" title="Sair desta pasta neste aparelho">Sair</button>
+      </div>
+    </div>
+  </header>
+  <nav class="barra-ferr" aria-label="Filtrar arquivos">
+    <div class="wrap"><div class="filtros" id="filtros"></div><span class="resumo" id="resumo"></span></div>
+  </nav>
+  <main class="wrap" id="lista"></main>
+  <footer class="rodape"><div class="wrap"><span>Cada arquivo fica disponível por 30 dias. Baixe e guarde com você.</span><span>Entregue por <a href="https://instagram.com/isadsign.co" target="_blank" rel="noopener">@isadsign.co</a></span></div></footer>
+</div>
+
+<div class="lb" id="lb" hidden role="dialog" aria-modal="true" aria-label="Visualizar arquivo">
+  <div class="lb-topo"><b id="lbNome"></b><a class="btn prim" id="lbBaixar" href="#">Baixar</a><button class="btn fechar" id="lbFechar">Fechar</button></div>
+  <div class="lb-corpo" id="lbCorpo"></div>
+</div>
+<div class="aviso" id="aviso" hidden role="status"></div>
+
+<script src="/tema.js"></script>
+<script>
+(function(){
+  var T=window.TemaEntregas,$=function(i){return document.getElementById(i)};
+  var slug=(location.pathname.match(/^\/p\/([a-z0-9-]+)/)||[])[1]||"";
+  var CHAVE="entregas:"+slug, dados=null, filtro="tudo";
+  function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+  function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
+  function aviso(t,ms){var a=$("aviso");a.textContent=t;a.hidden=false;clearTimeout(aviso.t);aviso.t=setTimeout(function(){a.hidden=true},ms||2800)}
+  function mostra(id){["carregando","entrada","naoAchou","pasta"].forEach(function(x){$(x).hidden=x!==id})}
+  function dataBR(iso){var d=new Date(iso);return String(d.getDate()).padStart(2,"0")+"/"+String(d.getMonth()+1).padStart(2,"0")}
+  function diasAte(iso){return Math.ceil((new Date(iso)-Date.now())/864e5)}
+
+  function vestir(id){
+    var t=T.tema(id);T.aplicar(document.documentElement,t);T.fontes(document.documentElement,id);
+    document.documentElement.style.setProperty("--logo-fundo",id.logoFundo||"#FFFFFF");
+    var m=document.querySelector('meta[name="theme-color"]')||document.head.appendChild(Object.assign(document.createElement("meta"),{name:"theme-color"}));m.content=t.fundo;
+    ["eDisco","pDisco"].forEach(function(k){var d=$(k);d.innerHTML=T.logoHTML(id,"Logo de "+id.nome);d.classList.toggle("sem-logo",!id.logo)});
+    document.title=id.nome+" · arquivos";
+  }
+
+  function api(rota,o){o=o||{};var h={};var tk=ls(CHAVE);if(tk)h.authorization="Bearer "+tk;if(o.corpo)h["content-type"]="application/json";
+    return fetch(rota,{method:o.metodo||"GET",headers:h,body:o.corpo?JSON.stringify(o.corpo):undefined}).then(function(r){return r.json().catch(function(){return{}}).then(function(d){if(!r.ok){var e=new Error(d.erro||"Erro");e.status=r.status;throw e}return d})})}
+
+  function entrar(cod){
+    $("btEntrar").disabled=true;$("eMsg").textContent="";
+    return api("/api/c/entrar",{metodo:"POST",corpo:{slug:slug,codigo:cod}}).then(function(d){ls(CHAVE,d.token);return abrir()})
+      .catch(function(e){mostra("entrada");$("eMsg").textContent=e.status===401?"Código não confere. Confira com a Isa.":"Não deu para entrar agora. Tente de novo."; $("cod").focus()})
+      .then(function(){$("btEntrar").disabled=false});
+  }
+  function abrir(){
+    return api("/api/c/pasta").then(function(d){dados=d;vestir(d);render();mostra("pasta")})
+      .catch(function(e){if(e.status===401){ls(CHAVE,null);mostra("entrada");setTimeout(function(){$("cod").focus()},50)}else{mostra("entrada");$("eMsg").textContent="Sem conexão. Tente de novo em instantes."}});
+  }
+
+  var ROT={video:"Reels e vídeos",imagem:"Posts e imagens",pdf:"PDFs",zip:"Pacotes",outro:"Outros"};
+  var CURTO={video:"Reels",imagem:"Posts",pdf:"PDFs",zip:"Pacotes",outro:"Outros"};
+  var ICO={
+    video:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m10 9 5 3-5 3z"/></svg>',
+    pdf:'<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>',
+    zip:'<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M11 6h1M11 9h1M11 12h1M10 15h3v3h-3z"/></svg>',
+    outro:'<svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>',
+    imagem:'<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="2"/><path d="m21 16-5-5-9 9"/></svg>'
+  };
+  function ext(n){var m=/\.([a-z0-9]{1,5})$/i.exec(n);return m?m[1].toUpperCase():""}
+  function prev(a){
+    if(a.tipo==="imagem"&&!/heic$/i.test(a.nome))return '<img src="'+esc(a.ver)+'" alt="" loading="lazy" decoding="async">';
+    if(a.tipo==="video")return '<video src="'+esc(a.ver)+'#t=0.5" preload="metadata" muted playsinline></video><span class="play"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></span><span class="tag">'+esc(ext(a.nome)||"Vídeo")+'</span>';
+    return '<span class="icone">'+(ICO[a.tipo]||ICO.outro)+'</span><span class="ext">'+esc(ext(a.nome))+'</span>';
+  }
+  function cartao(a){
+    var d=diasAte(a.expira);
+    return '<article class="arq"><button class="prev" data-ver="'+esc(a.id)+'" aria-label="Ver '+esc(a.nome)+'">'+prev(a)+'</button>'+
+      '<div class="info"><b title="'+esc(a.nome)+'">'+esc(a.nome)+'</b><div class="meta"><span>'+T.bytes(a.tamanho)+'</span><span class="'+(d<=5?"fim":"")+'">'+(d<=1?"Último dia":d<=5?"Some em "+d+" dias":"Até "+dataBR(a.expira))+'</span></div>'+
+      '<a class="btn prim" href="'+esc(a.baixar)+'" download><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>Baixar</a></div></article>';
+  }
+  function render(){
+    var arqs=dados.arquivos||[];
+    $("pNome").textContent=dados.nome;
+    var total=arqs.reduce(function(s,a){return s+a.tamanho},0);
+    $("pSub").textContent=arqs.length?("Tem "+arqs.length+(arqs.length===1?" arquivo":" arquivos")+" esperando por você. Cada um fica aqui por "+(dados.validadeDias||30)+" dias, então baixe e guarde."):"Assim que a Isa enviar algo, aparece aqui.";
+    $("btTudo").hidden=arqs.length<2;
+    var cont={};arqs.forEach(function(a){cont[a.tipo]=(cont[a.tipo]||0)+1});
+    var tipos=["video","imagem","pdf","zip","outro"].filter(function(t){return cont[t]});
+    if(filtro!=="tudo"&&!cont[filtro])filtro="tudo";
+    $("filtros").innerHTML=(tipos.length>1?'<button data-f="tudo" aria-pressed="'+(filtro==="tudo")+'">Tudo <small>'+arqs.length+'</small></button>':"")+
+      (tipos.length>1?tipos.map(function(t){return '<button data-f="'+t+'" aria-pressed="'+(filtro===t)+'">'+CURTO[t]+' <small>'+cont[t]+'</small></button>'}).join(""):"");
+    $("resumo").textContent=arqs.length?T.bytes(total)+" no total":"";
+    var vis=arqs.filter(function(a){return filtro==="tudo"||a.tipo===filtro});
+    if(!vis.length){$("lista").innerHTML='<div class="vazio"><b>Nada por aqui ainda</b>Quando chegar arquivo novo, ele aparece nesta pasta.</div>';return}
+    // agrupa pela pasta que a Isa escolheu ao enviar; sem pasta, pelo tipo
+    var grupos=[],porNome={};
+    vis.forEach(function(a){var g=a.pasta||ROT[a.tipo]||"Arquivos";if(!porNome[g]){porNome[g]={nome:g,itens:[]};grupos.push(porNome[g])}porNome[g].itens.push(a)});
+    $("lista").innerHTML=grupos.map(function(g){return '<section class="grupo"><h2>'+esc(g.nome)+' <small>'+g.itens.length+(g.itens.length===1?" arquivo":" arquivos")+'</small></h2><div class="grade">'+g.itens.map(cartao).join("")+'</div></section>'}).join("");
+  }
+
+  // visualizador
+  function ver(id){
+    var a=(dados.arquivos||[]).find(function(x){return x.id===id});if(!a)return;
+    $("lbNome").textContent=a.nome;$("lbBaixar").href=a.baixar;$("lbBaixar").setAttribute("download","");
+    var c=$("lbCorpo");
+    if(a.tipo==="imagem")c.innerHTML='<img src="'+esc(a.ver)+'" alt="'+esc(a.nome)+'">';
+    else if(a.tipo==="video")c.innerHTML='<video src="'+esc(a.ver)+'" controls autoplay playsinline></video>';
+    else if(a.tipo==="pdf")c.innerHTML='<iframe src="'+esc(a.ver)+'" title="'+esc(a.nome)+'"></iframe>';
+    else{location.href=a.baixar;return}
+    $("lb").hidden=false;$("lbFechar").focus();
+  }
+  function fecharLb(){$("lb").hidden=true;$("lbCorpo").innerHTML=""}
+
+  // baixar tudo: um .zip quando cabe na memória; senão, um arquivo de cada vez
+  function baixarTudo(){
+    var arqs=(dados.arquivos||[]).filter(function(a){return filtro==="tudo"||a.tipo===filtro});
+    var total=arqs.reduce(function(s,a){return s+a.tamanho},0);
+    var bt=$("btTudo"),txt=bt.querySelector("span");
+    if(total>700*1048576||!window.ReadableStream){
+      aviso("Baixando "+arqs.length+" arquivos, um de cada vez. Se o navegador pedir, permita vários downloads.",6000);
+      arqs.forEach(function(a,i){setTimeout(function(){var l=document.createElement("a");l.href=a.baixar;l.download="";document.body.appendChild(l);l.click();l.remove()},i*900)});return;
+    }
+    bt.disabled=true;txt.textContent="Preparando…";
+    import("https://cdn.jsdelivr.net/npm/client-zip@2.4.6/index.js").then(function(m){
+      var feitos=0,nomes={};
+      function arquivos(){return arqs.map(function(a){var n=a.nome,k=1;while(nomes[n.toLowerCase()])n=a.nome.replace(/(\.[^.]+)?$/," ("+(++k)+")$1");nomes[n.toLowerCase()]=1;
+        return fetch(a.baixar).then(function(r){feitos++;txt.textContent="Baixando "+feitos+"/"+arqs.length;return{name:(a.pasta?a.pasta.replace(/[\\/:*?"<>|]/g,"_")+"/":"")+n,input:r,lastModified:new Date(a.enviado)}})})}
+      return Promise.all(arquivos()).then(function(fs){return m.downloadZip(fs).blob()}).then(function(blob){
+        var l=document.createElement("a");l.href=URL.createObjectURL(blob);l.download=(dados.nome||"arquivos").replace(/[\\/:*?"<>|]/g,"")+" - arquivos.zip";document.body.appendChild(l);l.click();setTimeout(function(){URL.revokeObjectURL(l.href);l.remove()},4000);
+      });
+    }).catch(function(){aviso("Não deu para montar o .zip. Baixe um por um.",5000)}).then(function(){bt.disabled=false;txt.textContent="Baixar tudo"});
+  }
+
+  document.addEventListener("click",function(e){var b;
+    if((b=e.target.closest("[data-f]"))){filtro=b.dataset.f;render();return}
+    if((b=e.target.closest("[data-ver]"))){ver(b.dataset.ver);return}
+  });
+  $("lbFechar").onclick=fecharLb;
+  $("lb").addEventListener("click",function(e){if(e.target===$("lb")||e.target===$("lbCorpo"))fecharLb()});
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&!$("lb").hidden)fecharLb()});
+  $("btTudo").onclick=baixarTudo;
+  $("btSair").onclick=function(){ls(CHAVE,null);dados=null;$("cod").value="";mostra("entrada")};
+  $("fEntrar").onsubmit=function(e){e.preventDefault();entrar($("cod").value)};
+  $("cod").addEventListener("input",function(){var v=this.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,8);this.value=v.length>4?v.slice(0,4)+"-"+v.slice(4):v});
+  // links assinados valem 6 horas: renova quando a página volta a ficar visível
+  document.addEventListener("visibilitychange",function(){if(!document.hidden&&dados&&Date.now()-(abrir.em||0)>3*3600e3){abrir.em=Date.now();abrir()}});
+
+  if(!slug){mostra("naoAchou");return}
+  fetch("/api/c/ident/"+slug).then(function(r){if(r.status===404)throw 404;return r.json()}).then(function(id){
+    vestir(id);$("eNome").textContent="Olá, "+id.nome+"!";
+    // o link pode trazer o código depois do # (não vai para o servidor)
+    var h=decodeURIComponent(location.hash.slice(1));
+    if(h&&/^[A-Za-z0-9-]{8,10}$/.test(h)){history.replaceState(null,"",location.pathname);return entrar(h)}
+    if(ls(CHAVE)){abrir.em=Date.now();return abrir()}
+    mostra("entrada");setTimeout(function(){$("cod").focus()},60);
+  }).catch(function(e){if(e===404)mostra("naoAchou");else{mostra("entrada");$("eMsg").textContent="Sem conexão. Tente de novo em instantes."}});
+})();
+</script>
+</body>
+</html>

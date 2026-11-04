@@ -1,0 +1,95 @@
+# Publica o portal "Entregas isadsign" (pasta entregas/) na Cloudflare: Worker + R2.
+# Precisa de 3 segredos no repositório (Settings > Secrets and variables > Actions):
+#   CLOUDFLARE_API_TOKEN   token com "Edit Cloudflare Workers" + "Workers R2 Storage: Edit"
+#   CLOUDFLARE_ACCOUNT_ID  ID da conta Cloudflare
+#   ENTREGAS_SENHA         senha do painel da Isa
+name: Entregas (Cloudflare)
+
+on:
+  push:
+    branches: [main]
+    paths: ["entregas/**", ".github/workflows/entregas.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: entregas-deploy
+  cancel-in-progress: false
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      ENTREGAS_SENHA: ${{ secrets.ENTREGAS_SENHA }}
+    steps:
+      - name: Conferir segredos
+        id: seg
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ] || [ -z "$ENTREGAS_SENHA" ]; then
+            echo "::warning::Faltam segredos (CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, ENTREGAS_SENHA). Veja entregas/README.md."
+            echo "ok=0" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=1" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.seg.outputs.ok == '1'
+
+      - uses: actions/setup-node@v4
+        if: steps.seg.outputs.ok == '1'
+        with:
+          node-version: 20
+
+      - name: Criar o armazenamento (R2), se ainda não existe
+        if: steps.seg.outputs.ok == '1'
+        working-directory: entregas
+        run: npx --yes wrangler@4 r2 bucket create entregas-isadsign || echo "Bucket já existe."
+
+      - name: Publicar o Worker
+        if: steps.seg.outputs.ok == '1'
+        id: deploy
+        working-directory: entregas
+        run: |
+          set -o pipefail
+          npx --yes wrangler@4 deploy 2>&1 | tee deploy.log
+          url=$(grep -Eo 'https://[a-zA-Z0-9.-]+\.workers\.dev' deploy.log | head -1)
+          if [ -z "$url" ]; then
+            echo "::error::Não achei o endereço workers.dev. Na Cloudflare, abra Workers & Pages uma vez para escolher seu subdomínio workers.dev e rode de novo."
+            exit 1
+          fi
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "### Portal no ar: $url/painel" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Gravar a senha do painel
+        if: steps.seg.outputs.ok == '1'
+        working-directory: entregas
+        run: printf '%s' "$ENTREGAS_SENHA" | npx --yes wrangler@4 secret put ADMIN_SENHA
+
+      - name: Publicar a chave pública e o endereço na branch dados
+        if: steps.seg.outputs.ok == '1'
+        env:
+          URL: ${{ steps.deploy.outputs.url }}
+        run: |
+          set -euo pipefail
+          for i in 1 2 3 4 5 6; do
+            if curl -fsS "$URL/api/sync/chave" -o /tmp/chave.json; then break; fi
+            sleep 5
+          done
+          jq -e .jwk.x /tmp/chave.json > /dev/null
+          git fetch origin dados --depth 1
+          git worktree add /tmp/dados origin/dados
+          cd /tmp/dados
+          mkdir -p entregas
+          jq '{v, alg, info, jwk, criada}' /tmp/chave.json > entregas/chave-publica.json
+          printf '%s\n' "$URL" > entregas/url.txt
+          git add entregas/chave-publica.json entregas/url.txt
+          if git diff --cached --quiet; then echo "Nada mudou."; exit 0; fi
+          git config user.name "isadsign-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Entregas: chave pública e endereço do portal"
+          git push origin HEAD:dados

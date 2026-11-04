@@ -30,3 +30,7 @@ Quando o cliente responde no portal (`portal/`), a pauta no app do Claude també
 2. A tarefa agendada "Aprovações do portal → Pauta isadsign" (8h23, 12h23, 16h23, 20h23, e toda vez que a Isa abre o app) lê esse arquivo e marca a pauta do app como aprovada, pediu revisão ou reprovada.
 
 Configurar uma vez: no Supabase, SQL Editor, rode `supabase/status-sync.sql`.
+
+## Entregas isadsign (portal de arquivos)
+
+A pasta `entregas/` é o portal onde os clientes baixam reels, posts e PDFs, cada um na pasta com a própria identidade visual. Roda na Cloudflare. Configuração e funcionamento em [`entregas/README.md`](entregas/README.md).
