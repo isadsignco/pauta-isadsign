@@ -1,0 +1,12 @@
+{
+  "v": 1,
+  "alg": "ECDH-P256+HKDF-SHA256+A256GCM",
+  "info": "entregas-isadsign v1",
+  "jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "C46bceNO6etMmH9q4Wyd8U8FZd8pKe8CwiOkeryElRU",
+    "y": "qEQyWBQkz0WWlCgei2xoj1fmoCCMzkuyNWQMHnQKVXA"
+  },
+  "criada": "2026-11-05T00:12:44.791Z"
+}
