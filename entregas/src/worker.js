@@ -97,10 +97,10 @@ async function tokenValido(env, tok, tipo) {
 }
 function bearer(req) { const h = req.headers.get("authorization") || ""; return h.startsWith("Bearer ") ? h.slice(7) : ""; }
 async function exigeAdmin(env, req) { return !!(await tokenValido(env, bearer(req), "adm")); }
-async function linkArquivo(env, cliId, arqId, baixar, horas = 6) {
+async function linkArquivo(env, cliId, arqId, baixar, adm, horas = 6) {
   const exp = Date.now() + horas * 3600000;
-  const corpo = `f.${cliId}.${arqId}.${exp}`;
-  return `/api/f/${cliId}/${arqId}?e=${exp}&s=${await assinar(env, corpo)}${baixar ? "&d=1" : ""}`;
+  const corpo = `f.${cliId}.${arqId}.${exp}${adm ? ".a" : ""}`;
+  return `/api/f/${cliId}/${arqId}?e=${exp}&s=${await assinar(env, corpo)}${baixar ? "&d=1" : ""}${adm ? "&a=1" : ""}`;
 }
 
 /* ---------------- arquivos ---------------- */
@@ -117,7 +117,7 @@ function expiraDe(cli, obj) {
   const base = cli.renovado && cli.renovado[obj.key.split("/")[2]];
   return base || new Date(+new Date(md.enviado || obj.uploaded) + VALIDADE_DIAS * DIA).toISOString();
 }
-async function arquivosDe(env, cli, comLinks) {
+async function arquivosDe(env, cli, comLinks, adm) {
   const objs = await listarTudo(env, "arq/" + cli.id + "/", { include: ["customMetadata", "httpMetadata"] });
   const agora = Date.now();
   const lista = [];
@@ -127,7 +127,7 @@ async function arquivosDe(env, cli, comLinks) {
     if (+new Date(expira) <= agora) continue;
     const id = o.key.split("/")[2];
     const item = { id, nome: md.nome || id, pasta: md.pasta || "", tipo: md.tipo || tipoDe(md.nome || "", o.httpMetadata && o.httpMetadata.contentType), mime: (o.httpMetadata && o.httpMetadata.contentType) || "", tamanho: o.size, enviado: md.enviado || new Date(o.uploaded).toISOString(), expira };
-    if (comLinks) { item.ver = await linkArquivo(env, cli.id, id, false); item.baixar = await linkArquivo(env, cli.id, id, true); }
+    if (comLinks) { item.ver = await linkArquivo(env, cli.id, id, false, adm); item.baixar = await linkArquivo(env, cli.id, id, true, adm); }
     lista.push(item);
   }
   lista.sort((a, b) => (b.enviado > a.enviado ? 1 : -1));
@@ -135,9 +135,9 @@ async function arquivosDe(env, cli, comLinks) {
 }
 function nomeArquivoSeguro(n) { return texto(n, 180).replace(/[\\/:*?"<>|]/g, "_") || "arquivo"; }
 
-async function servirArquivo(env, req, cliId, arqId, url) {
-  const e = +url.searchParams.get("e"), s = url.searchParams.get("s") || "";
-  if (!e || e < Date.now() || !(await iguais(s, await assinar(env, `f.${cliId}.${arqId}.${e}`)))) return new Response("Link expirado. Atualize a página.", { status: 403 });
+async function servirArquivo(env, req, cliId, arqId, url, ctx) {
+  const e = +url.searchParams.get("e"), s = url.searchParams.get("s") || "", adm = !!url.searchParams.get("a");
+  if (!e || e < Date.now() || !(await iguais(s, await assinar(env, `f.${cliId}.${arqId}.${e}${adm ? ".a" : ""}`)))) return new Response("Link expirado. Atualize a página.", { status: 403 });
   const cli = await cliente(env, cliId);
   if (!cli) return new Response("Não encontrado", { status: 404 });
   const chave = `arq/${cliId}/${arqId}`;
@@ -165,6 +165,11 @@ async function servirArquivo(env, req, cliId, arqId, url) {
     h.set("content-length", String(len));
     status = 206;
   } else h.set("content-length", String(obj.size));
+  // download do cliente (não conta a Isa, nem o .zip, que é registrado de uma vez só)
+  if (url.searchParams.get("d") && !adm && !url.searchParams.get("z") && req.method === "GET" && (!range || /^bytes=0-/.test(range))) {
+    const reg = registrar(env, req, cliId, { tipo: "baixou", arq: arqId, nome }, "").catch(e => console.error("log", e));
+    if (ctx && ctx.waitUntil) ctx.waitUntil(reg); else await reg;
+  }
   return new Response(obj.body, { status, headers: h });
 }
 
@@ -182,6 +187,34 @@ function identidadePublica(c, extra = {}) {
     ...extra
   };
 }
+/* ---------------- acessos do cliente ---------------- */
+function aparelho(ua) {
+  ua = String(ua || "");
+  const d = /iPad/.test(ua) ? "iPad" : /iPhone/.test(ua) ? "iPhone" : /Android/.test(ua) ? (/Mobile/.test(ua) ? "Celular Android" : "Tablet Android")
+    : /Macintosh/.test(ua) ? "Mac" : /Windows/.test(ua) ? "Computador Windows" : /CrOS/.test(ua) ? "Chromebook" : /Linux/.test(ua) ? "Computador Linux" : "";
+  const n = /Instagram/.test(ua) ? "Instagram" : /WhatsApp/.test(ua) ? "WhatsApp" : /FBAN|FBAV/.test(ua) ? "Facebook" : /Edg\//.test(ua) ? "Edge"
+    : /OPR\//.test(ua) ? "Opera" : /SamsungBrowser/.test(ua) ? "Samsung Internet" : /CriOS|Chrome\//.test(ua) ? "Chrome" : /FxiOS|Firefox\//.test(ua) ? "Firefox" : /Safari\//.test(ua) ? "Safari" : "";
+  return [d, n].filter(Boolean).join(" · ") || "Aparelho não identificado";
+}
+async function sessaoDe(tok) { return b64u(await crypto.subtle.digest("SHA-256", enc.encode(String(tok || "")))).slice(0, 10); }
+async function ehIsa(env, req) { const t = req.headers.get("x-isa"); return !!(t && await tokenValido(env, t, "adm")); }
+async function lerLog(env, cliId) { return (await lerJSON(env, "log/" + cliId + ".json")) || { eventos: [], ultimo: "" }; }
+async function registrar(env, req, cliId, evento, sessao) {
+  if (await ehIsa(env, req)) return; // a Isa abrindo a pasta do cliente não conta
+  const log = await lerLog(env, cliId);
+  const agora = new Date().toISOString(), t = Date.now();
+  const ult = log.eventos[0];
+  // abrir a pasta várias vezes seguidas na mesma sessão vira um acesso só ("ficou até…")
+  if (evento.tipo === "abriu" && ult && ult.sessao === sessao && (ult.tipo === "abriu" || ult.tipo === "entrou") && t - +new Date(ult.ate || ult.em) < 30 * 60000) ult.ate = agora;
+  // o mesmo arquivo baixado de novo em poucos minutos (o celular às vezes repete o pedido)
+  else if (evento.tipo === "baixou" && log.eventos.slice(0, 20).some(x => x.tipo === "baixou" && x.arq === evento.arq && t - +new Date(x.em) < 10 * 60000)) return;
+  else log.eventos.unshift({ em: agora, sessao, disp: aparelho(req.headers.get("user-agent")), ...evento });
+  log.eventos = log.eventos.slice(0, 300);
+  log.ultimo = agora;
+  await gravarJSON(env, "log/" + cliId + ".json", log);
+}
+function eventosPublicos(log) { return (log.eventos || []).map(({ sessao, ...x }) => x); }
+
 function identDoDemandas(d) {
   const pal = (Array.isArray(d.paleta) ? d.paleta : []).map(hexOk).filter(Boolean).slice(0, 12);
   const fontes = Array.isArray(d.fontes) ? d.fontes.filter(f => f && f.nome) : [];
@@ -192,8 +225,9 @@ function identDoDemandas(d) {
     fonteTitulo: tit ? texto(tit.nome, 60) : "", fonteTexto: txt ? texto(txt.nome, 60) : ""
   };
 }
-function resumoAdmin(c, arqs) {
+function resumoAdmin(c, arqs, log) {
   return {
+    ultimoAcesso: (log && log.ultimo) || "", nAcessos: log ? (log.eventos || []).filter(x => x.tipo !== "baixou").length : 0,
     id: c.id, nome: c.nome, slug: c.slug, codigo: c.codigo, status: c.status || "", origem: c.demId ? "demandas" : "manual",
     maeId: c.maeId || "", foraDemandas: !!c.foraDemandas, manual: !!c.identManual, oculto: !!c.oculto,
     ident: identidadePublica(c), identDemandas: c.identDemandas || null,
@@ -309,7 +343,7 @@ async function limpar(env) {
 }
 
 /* ---------------- rotas ---------------- */
-async function api(req, env, url) {
+async function api(req, env, url, ctx) {
   const p = url.pathname.replace(/\/+$/, "");
   const m = req.method;
   let r;
@@ -325,7 +359,7 @@ async function api(req, env, url) {
     const h = new Headers(); o.writeHttpMetadata(h); h.set("cache-control", "public, max-age=86400"); h.set("x-content-type-options", "nosniff");
     return new Response(o.body, { headers: h });
   }
-  if ((r = p.match(/^\/api\/f\/([a-z0-9]+)\/([a-z0-9]+)$/)) && (m === "GET" || m === "HEAD")) return servirArquivo(env, req, r[1], r[2], url);
+  if ((r = p.match(/^\/api\/f\/([a-z0-9]+)\/([a-z0-9]+)$/)) && (m === "GET" || m === "HEAD")) return servirArquivo(env, req, r[1], r[2], url, ctx);
 
   /* cliente */
   if ((r = p.match(/^\/api\/c\/ident\/([a-z0-9-]+)$/)) && m === "GET") {
@@ -337,7 +371,9 @@ async function api(req, env, url) {
     await new Promise(ok => setTimeout(ok, 350));
     const c = (await clientes(env)).find(x => x.slug === String(b.slug || "") && !x.oculto);
     if (!c || !(await iguais(normCodigo(b.codigo), normCodigo(c.codigo)))) return erro("Código não confere. Confira com a Isa.", 401);
-    return json({ token: await tokenNovo(env, ["cli", c.id, normCodigo(c.codigo).slice(0, 4)], 30) });
+    const token = await tokenNovo(env, ["cli", c.id, normCodigo(c.codigo).slice(0, 4)], 30);
+    await registrar(env, req, c.id, { tipo: "entrou" }, await sessaoDe(token)).catch(e => console.error("log", e));
+    return json({ token });
   }
   if (p === "/api/c/pasta" && m === "GET") {
     const t = await tokenValido(env, bearer(req), "cli");
@@ -345,7 +381,17 @@ async function api(req, env, url) {
     const c = await cliente(env, t[1]);
     // trocar o código encerra os acessos antigos
     if (!c || c.oculto || normCodigo(c.codigo).slice(0, 4) !== t[2]) return erro("Entre com o código", 401);
-    return json({ ...identidadePublica(c), arquivos: await arquivosDe(env, c, true), validadeDias: VALIDADE_DIAS });
+    const isa = await ehIsa(env, req);
+    if (!isa) await registrar(env, req, c.id, { tipo: "abriu" }, await sessaoDe(bearer(req))).catch(e => console.error("log", e));
+    return json({ ...identidadePublica(c), arquivos: await arquivosDe(env, c, true, isa), validadeDias: VALIDADE_DIAS });
+  }
+  if (p === "/api/c/evento" && m === "POST") {
+    const t = await tokenValido(env, bearer(req), "cli");
+    if (!t) return erro("Entre com o código", 401);
+    const b = await req.json().catch(() => ({}));
+    if (b.tipo !== "zip") return erro("Evento inválido");
+    await registrar(env, req, t[1], { tipo: "zip", n: Math.max(0, Math.min(500, +b.n || 0)) }, await sessaoDe(bearer(req))).catch(e => console.error("log", e));
+    return json({ ok: true });
   }
 
   /* admin */
@@ -363,7 +409,7 @@ async function api(req, env, url) {
     const todos = await clientes(env);
     const res = [];
     let total = 0;
-    for (const c of todos) { const a = await arquivosDe(env, c, false); total += a.reduce((s, x) => s + x.tamanho, 0); res.push(resumoAdmin(c, a)); }
+    for (const c of todos) { const a = await arquivosDe(env, c, false); total += a.reduce((s, x) => s + x.tamanho, 0); res.push(resumoAdmin(c, a, await lerLog(env, c.id))); }
     return json({ clientes: res, bytes: total, sync: await lerJSON(env, "sys/sync.json"), limpeza: await lerJSON(env, "sys/limpeza.json"), validadeDias: VALIDADE_DIAS });
   }
   if (p === "/api/admin/sincronizar" && m === "POST") return json(await sincronizar(env, true));
@@ -377,7 +423,7 @@ async function api(req, env, url) {
   if ((r = p.match(/^\/api\/admin\/clientes\/([a-z0-9]+)(\/[a-z]+)?$/))) {
     const c = await cliente(env, r[1]); if (!c) return erro("Pasta não encontrada", 404);
     const sub = r[2] || "";
-    if (!sub && m === "GET") { const a = await arquivosDe(env, c, true); return json({ ...resumoAdmin(c, a), lista: a }); }
+    if (!sub && m === "GET") { const a = await arquivosDe(env, c, true, true), log = await lerLog(env, c.id); return json({ ...resumoAdmin(c, a, log), lista: a, acessos: eventosPublicos(log) }); }
     if (!sub && m === "PATCH") {
       const b = await req.json().catch(() => ({}));
       if ("oculto" in b) c.oculto = !!b.oculto;
@@ -413,7 +459,7 @@ async function api(req, env, url) {
       if (c.demId && !c.foraDemandas) return erro("Esta pasta vem do Demandas. Para tirar do painel, use Esconder.");
       const objs = await listarTudo(env, "arq/" + c.id + "/");
       for (let i = 0; i < objs.length; i += 1000) await env.ARQ.delete(objs.slice(i, i + 1000).map(o => o.key));
-      await env.ARQ.delete(["logo/" + c.id, "cli/" + c.id + ".json"]);
+      await env.ARQ.delete(["logo/" + c.id, "cli/" + c.id + ".json", "log/" + c.id + ".json"]);
       return json({ ok: true });
     }
     return erro("Rota não encontrada", 404);
@@ -466,7 +512,7 @@ export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
     try {
-      if (url.pathname.startsWith("/api/")) return await api(req, env, url);
+      if (url.pathname.startsWith("/api/")) return await api(req, env, url, ctx);
       // páginas
       if (url.pathname === "/painel" || url.pathname === "/painel/") return env.ASSETS.fetch(new Request(new URL("/painel.html", url), req));
       if (/^\/p\/[a-z0-9-]+\/?$/.test(url.pathname)) return env.ASSETS.fetch(new Request(new URL("/pasta.html", url), req));

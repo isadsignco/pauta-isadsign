@@ -182,7 +182,7 @@ main.wrap{padding-top:clamp(24px,3vw,44px);padding-bottom:4rem}
     document.title=id.nome+" · arquivos";
   }
 
-  function api(rota,o){o=o||{};var h={};var tk=ls(CHAVE);if(tk)h.authorization="Bearer "+tk;if(o.corpo)h["content-type"]="application/json";
+  function api(rota,o){o=o||{};var h={};var tk=ls(CHAVE);if(tk)h.authorization="Bearer "+tk;var adm=ls("entregas:adm");if(adm)h["x-isa"]=adm;if(o.corpo)h["content-type"]="application/json";
     return fetch(rota,{method:o.metodo||"GET",headers:h,body:o.corpo?JSON.stringify(o.corpo):undefined}).then(function(r){return r.json().catch(function(){return{}}).then(function(d){if(!r.ok){var e=new Error(d.erro||"Erro");e.status=r.status;throw e}return d})})}
 
   function entrar(cod){
@@ -263,9 +263,9 @@ main.wrap{padding-top:clamp(24px,3vw,44px);padding-bottom:4rem}
     import("https://cdn.jsdelivr.net/npm/client-zip@2.4.6/index.js").then(function(m){
       var feitos=0,nomes={};
       function arquivos(){return arqs.map(function(a){var n=a.nome,k=1;while(nomes[n.toLowerCase()])n=a.nome.replace(/(\.[^.]+)?$/," ("+(++k)+")$1");nomes[n.toLowerCase()]=1;
-        return fetch(a.baixar).then(function(r){feitos++;txt.textContent="Baixando "+feitos+"/"+arqs.length;return{name:(a.pasta?a.pasta.replace(/[\\/:*?"<>|]/g,"_")+"/":"")+n,input:r,lastModified:new Date(a.enviado)}})})}
+        return fetch(a.baixar+"&z=1").then(function(r){feitos++;txt.textContent="Baixando "+feitos+"/"+arqs.length;return{name:(a.pasta?a.pasta.replace(/[\\/:*?"<>|]/g,"_")+"/":"")+n,input:r,lastModified:new Date(a.enviado)}})})}
       return Promise.all(arquivos()).then(function(fs){return m.downloadZip(fs).blob()}).then(function(blob){
-        var l=document.createElement("a");l.href=URL.createObjectURL(blob);l.download=(dados.nome||"arquivos").replace(/[\\/:*?"<>|]/g,"")+" - arquivos.zip";document.body.appendChild(l);l.click();setTimeout(function(){URL.revokeObjectURL(l.href);l.remove()},4000);
+        var l=document.createElement("a");l.href=URL.createObjectURL(blob);api("/api/c/evento",{metodo:"POST",corpo:{tipo:"zip",n:arqs.length}}).catch(function(){});l.download=(dados.nome||"arquivos").replace(/[\\/:*?"<>|]/g,"")+" - arquivos.zip";document.body.appendChild(l);l.click();setTimeout(function(){URL.revokeObjectURL(l.href);l.remove()},4000);
       });
     }).catch(function(){aviso("Não deu para montar o .zip. Baixe um por um.",5000)}).then(function(){bt.disabled=false;txt.textContent="Baixar tudo"});
   }

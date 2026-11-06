@@ -166,6 +166,22 @@ main{max-width:1600px;margin:0 auto;padding:clamp(24px,3vw,48px) var(--gut) 80px
 .acesso .lk{display:flex;gap:8px;align-items:center;background:var(--grafite-2);border-radius:14px;padding:8px 8px 8px 14px;min-width:0}
 .acesso .lk span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:.85rem;color:var(--bege)}
 .acesso .linha-bt{display:flex;gap:8px;flex-wrap:wrap}
+.visto{display:inline-flex;align-items:center;gap:6px}
+.visto i{width:8px;height:8px;border-radius:50%;background:var(--lima);flex:none}
+.visto.nunca i{background:none;border:1.5px solid var(--bege)}
+.ac-dia{margin:6px 0 0}
+.ac-dia h3{margin:8px 0 2px;font-size:.78rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--bege)}
+.ac-ev{display:grid;grid-template-columns:3.4rem 1.9rem minmax(0,1fr);gap:10px;align-items:start;padding:9px 0;border-top:1.5px solid var(--linha)}
+.ac-ev .hr{font-weight:900;font-style:italic;font-size:1.05rem;letter-spacing:-.02em;font-variant-numeric:tabular-nums;padding-top:3px}
+.ac-ev .ic{width:1.9rem;height:1.9rem;border-radius:50%;display:grid;place-items:center;background:var(--grafite-3);color:var(--creme)}
+.ac-ev .ic svg{width:.95rem;height:.95rem;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ac-ev.entrou .ic{background:var(--pink)}
+.ac-ev.baixou .ic,.ac-ev.zip .ic{background:var(--lima);color:var(--grafite)}
+.ac-ev .o{min-width:0;display:flex;flex-direction:column;gap:2px}
+.ac-ev .o b{font-weight:800;overflow-wrap:anywhere;line-height:1.3}
+.ac-ev .o small{font-size:.78rem;font-weight:700;color:var(--bege)}
+.chip.baixado{background:none;border:1.5px solid var(--lima);color:var(--lima)}
+.chip.nao-baixado{background:none;border:1.5px dashed var(--linha-forte);color:var(--bege)}
 
 .prev-cli{border-radius:18px;padding:18px;background:var(--fundo);color:var(--texto);font-family:var(--f-texto);display:flex;flex-direction:column;gap:12px;border:1.5px solid var(--linha-forte)}
 .prev-cli .l1{display:flex;gap:12px;align-items:center}
@@ -252,6 +268,13 @@ main{max-width:1600px;margin:0 auto;padding:clamp(24px,3vw,48px) var(--gut) 80px
   function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
   function aviso(t,ms){var a=$("aviso");a.textContent=t;a.hidden=false;clearTimeout(aviso.t);aviso.t=setTimeout(function(){a.hidden=true},ms||2800)}
   function diasAte(iso){return Math.ceil((new Date(iso)-Date.now())/864e5)}
+  var TZ="America/Sao_Paulo",FH=new Intl.DateTimeFormat("pt-BR",{timeZone:TZ,hour:"2-digit",minute:"2-digit"}),
+      FD=new Intl.DateTimeFormat("pt-BR",{timeZone:TZ,weekday:"long",day:"2-digit",month:"2-digit"}),FDc=new Intl.DateTimeFormat("pt-BR",{timeZone:TZ,day:"2-digit",month:"2-digit"}),
+      FK=new Intl.DateTimeFormat("en-CA",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"});
+  function diaK(iso){return FK.format(new Date(iso))}
+  function diaRot(iso){var k=diaK(iso);return k===diaK(Date.now())?"Hoje":k===diaK(Date.now()-864e5)?"Ontem":FD.format(new Date(iso))}
+  function hora(iso){return FH.format(new Date(iso))}
+  function diaHora(iso){var r=diaRot(iso);return (r==="Hoje"||r==="Ontem"?r.toLowerCase():FDc.format(new Date(iso)))+" às "+hora(iso)}
   function quando(iso){if(!iso)return "";var d=Math.floor((Date.now()-new Date(iso))/864e5);return d<=0?"hoje":d===1?"ontem":"há "+d+" dias"}
   function api(rota,o){o=o||{};var h={authorization:"Bearer "+(ls(K)||"")};if(o.corpo&&!(o.corpo instanceof Blob))h["content-type"]="application/json";if(o.tipo)h["content-type"]=o.tipo;
     return fetch(rota,{method:o.metodo||"GET",headers:h,body:o.corpo?(o.corpo instanceof Blob?o.corpo:JSON.stringify(o.corpo)):undefined}).then(function(r){return r.json().catch(function(){return{}}).then(function(d){
@@ -307,6 +330,7 @@ main{max-width:1600px;margin:0 auto;padding:clamp(24px,3vw,48px) var(--gut) 80px
     return '<a class="pasta'+(c.arquivos?"":" vazia")+(c.oculto?" oculta":"")+'" href="#/p/'+c.id+'" style="--cor:'+t.destaque+'">'+
       '<div class="l1">'+disco(c)+'<div style="min-width:0"><div class="nm">'+esc(c.nome)+(mae?'<span class="de">de '+esc(mae.nome)+'</span>':'')+'</div></div></div>'+
       '<div class="num"><span><b>'+c.arquivos+'</b> '+(c.arquivos===1?"arquivo":"arquivos")+'</span>'+(c.bytes?'<span>'+T.bytes(c.bytes)+'</span>':'')+(c.ultimoEnvio?'<span>último '+quando(c.ultimoEnvio)+'</span>':'')+
+      (c.ultimoAcesso?'<span class="visto" title="Último acesso do cliente"><i></i>visto '+diaHora(c.ultimoAcesso)+'</span>':c.arquivos?'<span class="visto nunca"><i></i>ainda não abriu</span>':'')+
       (c.origem==="manual"?'<span class="chip linha">avulsa</span>':c.foraDemandas?'<span class="chip linha">fora do Demandas</span>':c.status&&c.status!=="ativo"?'<span class="chip linha">'+esc(c.status)+'</span>':'')+'</div>'+
       '<div class="pal" aria-hidden="true">'+pal.map(function(h){return '<i style="background:'+esc(h)+'"></i>'}).join("")+'</div></a>';
   }
@@ -340,7 +364,8 @@ main{max-width:1600px;margin:0 auto;padding:clamp(24px,3vw,48px) var(--gut) 80px
       '<div class="abre-cab" style="--cor:'+t.destaque+'"><a class="btn-texto" href="#/" style="flex-basis:100%">← todas as pastas</a>'+disco(c,true)+
         '<div class="t"><span class="etq">Pasta do cliente'+(mae?" · submarca de "+esc(mae.nome):"")+'</span><h1>'+esc(c.nome)+'</h1><div class="chips">'+
           '<span class="chip lima">'+c.arquivos+' '+(c.arquivos===1?"arquivo":"arquivos")+'</span>'+(c.bytes?'<span class="chip">'+T.bytes(c.bytes)+'</span>':'')+
-          (c.origem==="manual"?'<span class="chip linha">pasta avulsa</span>':'<span class="chip linha">do Demandas'+(c.status?" · "+esc(c.status):"")+'</span>')+(c.oculto?'<span class="chip pink">escondida</span>':'')+'</div></div>'+
+          (c.origem==="manual"?'<span class="chip linha">pasta avulsa</span>':'<span class="chip linha">do Demandas'+(c.status?" · "+esc(c.status):"")+'</span>')+(c.oculto?'<span class="chip pink">escondida</span>':'')+
+          (c.ultimoAcesso?'<span class="chip lima">cliente viu '+diaHora(c.ultimoAcesso)+'</span>':'<span class="chip linha">cliente ainda não abriu</span>')+'</div></div>'+
         '<div class="acoes"><a class="btn btn-linha" href="'+esc(linkCli(c,true))+'" target="_blank" rel="noopener">Ver como o cliente ↗</a></div></div>'+
       '<div class="colunas"><div>'+
         '<section class="caixa"><div class="caixa-cab"><h2 class="secao-tit">Enviar arquivos</h2><span class="mini">qualquer tamanho · reels, posts, PDFs</span></div>'+
@@ -355,13 +380,14 @@ main{max-width:1600px;margin:0 auto;padding:clamp(24px,3vw,48px) var(--gut) 80px
           '<div><span class="etq">Link da pasta</span><div class="lk"><span>'+esc(linkCli(c))+'</span><button class="btn btn-mini" data-copiar="link">Copiar</button></div></div>'+
           '<div class="linha-bt"><button class="btn btn-pink btn-mini" data-copiar="msg">Copiar mensagem pronta</button><button class="btn btn-linha btn-mini" data-copiar="direto" title="Link que já entra sem digitar o código">Link que já entra</button><button class="btn-texto" id="novoCod">trocar código</button></div>'+
           '<p class="mini" style="margin:0">Trocar o código desconecta quem já entrou.</p></section>'+
+        '<section class="caixa"><div class="caixa-cab"><h2 class="secao-tit">Acessos do cliente</h2><span class="mini">horário de Brasília</span></div><div id="acessos"></div></section>'+
         identHTML()+
         '<section class="caixa"><div class="caixa-cab"><h2 class="secao-tit">Pasta</h2></div><div class="linha-bt" style="display:flex;gap:8px;flex-wrap:wrap">'+
           '<button class="btn btn-linha btn-mini" id="btOculta">'+(c.oculto?"Mostrar de novo":"Esconder pasta")+'</button>'+
           (c.origem==="manual"||c.foraDemandas?'<button class="btn btn-linha btn-mini" id="btApagaPasta" style="border-color:var(--pink);color:var(--pink)">Apagar pasta e arquivos</button>':'')+
           '</div><p class="mini" style="margin:0">'+(c.oculto?"Escondida: o link não abre para o cliente.":"Esconder fecha o link para o cliente sem apagar nada.")+'</p></section>'+
       '</div></div>';
-    pintarArquivos();pintarFila();ligarEnvio();
+    verTodos=false;pintarArquivos();pintarAcessos();pintarFila();ligarEnvio();
   }
   function uniq(a){var v={};return a.filter(function(x){if(v[x])return false;v[x]=1;return true})}
 
@@ -371,10 +397,27 @@ main{max-width:1600px;margin:0 auto;padding:clamp(24px,3vw,48px) var(--gut) 80px
     var grupos=[],por={};l.forEach(function(a){var g=a.pasta||"Sem pasta";if(!por[g]){por[g]=[];grupos.push(g)}por[g].push(a)});
     $("listaArqs").innerHTML=grupos.map(function(g){return '<div class="arqs-grupo"><h3>'+esc(g)+' <span class="chip">'+por[g].length+'</span></h3>'+por[g].map(linhaArq).join("")+'</div>'}).join("");
   }
+  function baixadoEm(id){var ev=(aberta.acessos||[]).find(function(x){return x.tipo==="baixou"&&x.arq===id});
+    if(ev)return ev.em;var z=(aberta.acessos||[]).find(function(x){return x.tipo==="zip"});var a=aberta.lista.find(function(x){return x.id===id});
+    return z&&a&&z.em>a.enviado?z.em:""}
+  var ICO_AC={entrou:'<svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>',
+    abriu:'<svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>',
+    baixou:'<svg viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>'};ICO_AC.zip=ICO_AC.baixou;
+  var verTodos=false;
+  function pintarAcessos(){var el=$("acessos");if(!el)return;var ev=aberta.acessos||[];
+    if(!ev.length){el.innerHTML='<div class="vazio">'+esc(aberta.nome)+' ainda não abriu a pasta. Assim que abrir, aparece aqui o dia, a hora e o que baixou.</div>';return}
+    var lim=verTodos?ev:ev.slice(0,15),dias=[],por={};
+    lim.forEach(function(x){var k=diaK(x.em);if(!por[k]){por[k]={rot:diaRot(x.em),itens:[]};dias.push(por[k])}por[k].itens.push(x)});
+    el.innerHTML=dias.map(function(d){return '<div class="ac-dia"><h3>'+esc(d.rot)+'</h3>'+d.itens.map(function(x){
+      var t=x.tipo==="entrou"?"Entrou com o código":x.tipo==="abriu"?"Abriu a pasta":x.tipo==="zip"?"Baixou tudo em .zip"+(x.n?" ("+x.n+" arquivos)":""):"Baixou "+x.nome;
+      var ate=x.ate&&hora(x.ate)!==hora(x.em)?" · ficou até "+hora(x.ate):"";
+      return '<div class="ac-ev '+esc(x.tipo)+'"><span class="hr">'+hora(x.em)+'</span><span class="ic">'+(ICO_AC[x.tipo]||ICO_AC.abriu)+'</span><div class="o"><b>'+esc(t)+'</b><small>'+esc((x.disp||"")+ate)+'</small></div></div>'}).join("")+'</div>'}).join("")+
+      (ev.length>15?'<button class="btn-texto" id="acTodos">'+(verTodos?"mostrar menos":"ver todos os "+ev.length+" registros")+'</button>':'');
+    var b=$("acTodos");if(b)b.onclick=function(){verTodos=!verTodos;pintarAcessos()}}
   function linhaArq(a){
     var d=diasAte(a.expira),th=a.tipo==="imagem"&&!/heic$/i.test(a.nome)?'<img src="'+esc(a.ver)+'" alt="" loading="lazy">':a.tipo==="video"?'<video src="'+esc(a.ver)+'#t=0.5" preload="metadata" muted playsinline></video>':esc(((/\.([a-z0-9]{1,4})$/i.exec(a.nome)||[])[1]||"ARQ").toUpperCase());
     return '<div class="arq"><a class="th" href="'+esc(a.ver)+'" target="_blank" rel="noopener" aria-label="Abrir '+esc(a.nome)+'">'+th+'</a>'+
-      '<div class="o"><b>'+esc(a.nome)+'</b><div class="meta"><span>'+T.bytes(a.tamanho)+'</span><span>enviado '+quando(a.enviado)+'</span><span class="chip '+(d<=5?"pink":"linha")+'">'+(d<=1?"some hoje":"some em "+d+" dias")+'</span></div></div>'+
+      '<div class="o"><b>'+esc(a.nome)+'</b><div class="meta"><span>'+T.bytes(a.tamanho)+'</span><span>enviado '+quando(a.enviado)+'</span>'+(baixadoEm(a.id)?'<span class="chip baixado">baixado '+diaHora(baixadoEm(a.id))+'</span>':'<span class="chip nao-baixado">não baixado</span>')+'<span class="chip '+(d<=5?"pink":"linha")+'">'+(d<=1?"some hoje":"some em "+d+" dias")+'</span></div></div>'+
       '<div class="ac"><a class="ico" href="'+esc(a.baixar)+'" download aria-label="Baixar" title="Baixar"><svg viewBox="0 0 24 24"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg></a>'+
       '<button class="ico" data-renova="'+a.id+'" aria-label="Mais 30 dias" title="Deixar mais 30 dias a partir de hoje"><svg viewBox="0 0 24 24"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="8"/></svg></button>'+
       '<button class="ico perigo" data-apaga="'+a.id+'" aria-label="Apagar" title="Apagar agora"><svg viewBox="0 0 24 24"><path d="M5 7h14M10 7V5h4v2M7 7l1 12h8l1-12"/></svg></button></div></div>';
@@ -417,8 +460,12 @@ main{max-width:1600px;margin:0 auto;padding:clamp(24px,3vw,48px) var(--gut) 80px
         fila=fila.filter(function(i){return i.st==="erro"});carregar();if(aberta)abrirPastaSilencioso()}
       proximo()});
   }
-  function abrirPastaSilencioso(){var id=aberta.id;api("/api/admin/clientes/"+id).then(function(d){if(aberta&&aberta.id===id){aberta=d;pintarArquivos();var ch=document.querySelector(".abre-cab .chip.lima");if(ch)ch.textContent=d.arquivos+" "+(d.arquivos===1?"arquivo":"arquivos")}})}
+  function abrirPastaSilencioso(){var id=aberta.id;api("/api/admin/clientes/"+id).then(function(d){if(aberta&&aberta.id===id){aberta=d;pintarArquivos();pintarAcessos();var ch=document.querySelector(".abre-cab .chip.lima");if(ch)ch.textContent=d.arquivos+" "+(d.arquivos===1?"arquivo":"arquivos")}})}
   window.addEventListener("beforeunload",function(e){if(enviando){e.preventDefault();e.returnValue=""}});
+  // com a pasta aberta, os acessos novos aparecem sozinhos (a cada minuto)
+  setInterval(function(){if(!aberta||document.hidden||enviando||!ls(K))return;var id=aberta.id,antes=JSON.stringify(aberta.acessos||[]);
+    api("/api/admin/clientes/"+id).then(function(d){if(!aberta||aberta.id!==id||JSON.stringify(d.acessos||[])===antes)return;aberta=d;pintarArquivos();pintarAcessos();
+      var ch=document.querySelector(".abre-cab .chips");if(ch){var v=ch.querySelector(".chip:last-child");if(v&&d.ultimoAcesso){v.className="chip lima";v.textContent="cliente viu "+diaHora(d.ultimoAcesso)}}}).catch(function(){})},60000);
 
   /* ---------- identidade ---------- */
   function idAtual(){return rasc||{paleta:aberta.ident.paleta.slice(),fundo:aberta.ident.fundo,texto:aberta.ident.texto,destaque:aberta.ident.destaque,fonteTitulo:aberta.ident.fonteTitulo,fonteTexto:aberta.ident.fonteTexto}}

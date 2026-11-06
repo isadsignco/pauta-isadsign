@@ -12,7 +12,10 @@ const aqui = path.dirname(fileURLToPath(import.meta.url));
 const dirClientes = process.argv[2];
 const tmp = mkdtempSync(path.join(os.tmpdir(), "entregas-"));
 const env = { ARQ: r2Falso(), ASSETS: assetsFalsos(path.join(aqui, "..", "public")), ADMIN_SENHA: "senha-teste-123" };
-const ctx = { waitUntil: p => p };
+const pend = [];
+const ctx = { waitUntil: p => pend.push(p) };
+const esperar = async () => { await Promise.all(pend.splice(0)); };
+const IPHONE = "Mozilla/5.0 (iPhone; CPU iPhone OS 18_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.1 Mobile/15E148 Safari/604.1";
 const B = "https://entregas.exemplo.workers.dev";
 let ok = 0;
 const passo = (t) => { ok++; console.log("✓", t); };
@@ -126,6 +129,43 @@ r = await chamar("GET", reel.ver, { headers: { range: "bytes=0-99" } });
 assert.equal(r.status, 206); assert.equal(r.headers.get("content-range"), `bytes 0-99/${parte1.length + parte2.length}`);
 assert.equal((await chamar("GET", reel.baixar.replace(/s=[^&]+/, "s=adulterado"))).status, 403);
 passo("download com nome original, vídeo com range, link adulterado recusado");
+
+// registro de acessos
+const uaCli = { "user-agent": IPHONE };
+const t2 = (await j("POST", "/api/c/entrar", { corpo: { slug: isa.slug, codigo: codAntes }, headers: uaCli })).d.token;
+await j("GET", "/api/c/pasta", { token: t2, headers: uaCli });
+await j("GET", "/api/c/pasta", { token: t2, headers: uaCli });
+await j("GET", "/api/c/pasta", { token: t2, headers: { ...uaCli, "x-isa": adm } }); // a Isa vendo não conta
+let pastaLinks = (await j("GET", "/api/c/pasta", { token: t2, headers: { "x-isa": adm } })).d.arquivos;
+assert.match(pastaLinks[0].baixar, /&a=1$/, "na visão da Isa os links são dela");
+await esperar();
+const pastaNova = (await j("GET", "/api/c/pasta", { token: t2, headers: uaCli })).d;
+const reelNovo = pastaNova.arquivos.find(a => a.tipo === "video");
+await (await chamar("GET", reelNovo.baixar, { headers: uaCli })).arrayBuffer();
+await (await chamar("GET", reelNovo.baixar, { headers: uaCli })).arrayBuffer(); // repetido: conta uma vez
+await (await chamar("GET", reelNovo.ver, { headers: { ...uaCli, range: "bytes=0-99" } })).arrayBuffer(); // assistir não é baixar
+await (await chamar("GET", reelNovo.baixar + "&z=1", { headers: uaCli })).arrayBuffer(); // parte do .zip
+await j("POST", "/api/c/evento", { token: t2, corpo: { tipo: "zip", n: 2 }, headers: uaCli });
+await esperar();
+let detA = (await j("GET", "/api/admin/clientes/" + isa.id, { token: adm })).d;
+await (await chamar("GET", detA.lista[0].baixar)).arrayBuffer(); // a Isa baixando pelo painel
+await esperar();
+detA = (await j("GET", "/api/admin/clientes/" + isa.id, { token: adm })).d;
+const tipos = detA.acessos.map(x => x.tipo);
+assert.deepEqual(tipos, ["zip", "entrou", "baixou", "entrou"]); // o reel já tinha sido baixado no passo anterior
+const baixadas = detA.acessos.filter(x => x.tipo === "baixou");
+assert.equal(new Set(baixadas.map(x => x.arq)).size, baixadas.length, "mesmo arquivo seguido conta uma vez");
+assert.equal(detA.acessos.filter(x => x.tipo === "zip").length, 1);
+const entrada = detA.acessos.find(x => x.tipo === "entrou");
+assert.equal(entrada.disp, "iPhone · Safari"); assert.ok(entrada.ate, "abrir de novo na mesma sessão estende o acesso");
+assert.equal(detA.acessos.filter(x => x.tipo === "abriu").length, 0, "reaberturas viraram um acesso só");
+assert.ok(!("sessao" in entrada));
+assert.ok(detA.ultimoAcesso);
+const visA = (await j("GET", "/api/admin/visao", { token: adm })).d;
+assert.equal(visA.clientes.find(c => c.id === isa.id).ultimoAcesso, detA.ultimoAcesso);
+assert.equal(visA.clientes.find(c => c.nome === "Katia").nAcessos, 1);
+console.log("   acessos:", detA.acessos.map(x => x.tipo + (x.nome ? " " + x.nome : "")).join(" | "));
+passo("acessos: entrada, dia/hora, aparelho, downloads e .zip; a Isa não aparece");
 
 // trocar o código derruba o acesso antigo
 const novo = (await j("POST", `/api/admin/clientes/${isa.id}/codigo`, { token: adm })).d.codigo;
